@@ -18,4 +18,3 @@ kotlin {
     jvmToolchain(18)
 }
 
-// Compare this snippet from token/build.gradle:
