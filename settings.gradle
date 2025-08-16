@@ -24,6 +24,4 @@ include 'cli'
 include 'analyzer'
 include 'formatter'
 include 'token'
-
-
 include 'common'
