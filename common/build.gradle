@@ -2,9 +2,6 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.0'
 }
 
-group = 'org.example'
-version = 'unspecified'
-
 repositories {
     mavenCentral()
 }
@@ -17,5 +14,5 @@ test {
     useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(18)
 }
