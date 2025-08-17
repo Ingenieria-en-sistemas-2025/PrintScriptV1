@@ -12,7 +12,7 @@ class OperatorRule(map: Map<String, Operator>): LexingRule {
         return best
     }
 
-    override fun build(lexeme: String, span: Span): Token {
+    override fun build(lexeme: String, span: Span): Token =
         OperatorToken(table.getValue(lexeme), span) // Ojo con esto por si no matchea, manejar casos
-    }
+
 }
