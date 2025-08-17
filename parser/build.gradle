@@ -10,6 +10,7 @@ dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     implementation project(':token')
     implementation project(':common')
+    implementation project(':ast')
 }
 
 test {
@@ -18,4 +19,3 @@ test {
 kotlin {
     jvmToolchain(18)
 }
-

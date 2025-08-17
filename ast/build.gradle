@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(':common')
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
 
@@ -18,4 +19,9 @@ test {
 }
 kotlin {
     jvmToolchain(21)
+}
+compileKotlin {
+    kotlinOptions {
+        languageVersion = "1.5"
+    }
 }
