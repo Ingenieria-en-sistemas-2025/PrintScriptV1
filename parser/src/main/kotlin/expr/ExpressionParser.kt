@@ -1,5 +1,6 @@
 package expr
 
+import Expression
 import TokenStream
 
 interface ExpressionParser {

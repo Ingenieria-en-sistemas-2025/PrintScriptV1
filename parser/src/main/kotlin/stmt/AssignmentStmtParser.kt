@@ -1,8 +1,10 @@
 package stmt
 
-import ast.Assignment
-import ast.Statement
-import parser.TokenStream
+import Assignment
+import Statement
+import TokenStream
+import expr.ExpressionParser
+
 
 // nombre = expr ;
 object AssignmentStmtParser : StmtParser {
