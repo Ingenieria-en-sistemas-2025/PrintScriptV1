@@ -2,7 +2,7 @@
 class TokenStream(private val tokens : List<Token>) {
     private var i = 0
     fun peek(lookahead: Int = 0) : Token{
-        return tokens.getOrElse(i+lookahead){EofToken}
+        return tokens.getOrElse(i+lookahead){EofToken(-1, -1)} // devuelve EOF si no hay más tokens
     }
     fun next(): Token{
         val actual: Token = peek()

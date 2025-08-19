@@ -1,7 +1,10 @@
 package stmt
 
-import ast.Statement
-import parser.TokenStream
+import Statement
+import TokenStream
+import VarDeclaration
+import expr.ExpressionParser
+
 
 // let nombre: tipo (= expr)? ;
 object LetStmtParser : StmtParser {

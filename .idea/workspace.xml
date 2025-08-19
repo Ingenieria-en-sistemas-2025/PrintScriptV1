@@ -4,39 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b164d751-7300-48e6-8481-c7ae0003e33e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/Assignment.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/Binary.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/Expression.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/Grouping.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/LiteralNumber.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/LiteralString.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/Println.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/ProgramNode.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/Statement.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/VarDeclaration.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ast/src/main/kotlin/Variable.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/FirstParser.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/Parser.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/TokenStream.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/expr/ExpressionParser.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/expr/RecursiveExpressionParser.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/head/Assign.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/head/FirstHeadDetector.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/head/Head.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/head/HeadDetector.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/head/Kw.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/head/Unknown.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/stmt/AssignmentStmtParser.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/stmt/LetStmtParser.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/stmt/PrintlnStmtParser.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/src/main/kotlin/stmt/StmtParser.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" />
+    <list default="true" id="b164d751-7300-48e6-8481-c7ae0003e33e" name="Changes" comment="correcciones">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/ast/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/parser/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ast/src/main/kotlin/Binary.kt" beforeDir="false" afterPath="$PROJECT_DIR$/ast/src/main/kotlin/Binary.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/kotlin/TokenStream.kt" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/kotlin/TokenStream.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +27,71 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PrintScriptV1" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PrintScriptV1" type="f1a62948:ProjectNode" />
+                <item name="PrintScriptV1" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PrintScriptV1" type="f1a62948:ProjectNode" />
+                <item name="PrintScriptV1" type="2d1252cf:ModuleNode" />
+                <item name="lexer" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PrintScriptV1" type="f1a62948:ProjectNode" />
+                <item name="PrintScriptV1" type="2d1252cf:ModuleNode" />
+                <item name="lexer" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PrintScriptV1" type="f1a62948:ProjectNode" />
+                <item name="PrintScriptV1" type="2d1252cf:ModuleNode" />
+                <item name="lexer" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="compileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PrintScriptV1" type="f1a62948:ProjectNode" />
+                <item name="PrintScriptV1" type="2d1252cf:ModuleNode" />
+                <item name="lexer" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="compileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+                <item name="org.jetbrains.kotlin:kotlin-stdlib:2.2.0" type="b3323d55:ExternalSystemViewDefaultContributor$DependencyExternalSystemNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PrintScriptV1" type="f1a62948:ProjectNode" />
+                <item name="PrintScriptV1" type="2d1252cf:ModuleNode" />
+                <item name="lexer" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="runtimeClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PrintScriptV1" type="f1a62948:ProjectNode" />
+                <item name="PrintScriptV1" type="2d1252cf:ModuleNode" />
+                <item name="lexer" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="testCompileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PrintScriptV1" type="f1a62948:ProjectNode" />
+                <item name="PrintScriptV1" type="2d1252cf:ModuleNode" />
+                <item name="lexer" type="2d1252cf:ModuleNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="testRuntimeClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -77,43 +112,70 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Gradle.PrintScriptV1 [dependencies].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "SHELLCHECK.PATH": "/Users/catalinapereyra/Library/Application Support/JetBrains/IntelliJIdea2024.1/plugins/Shell Script/shellcheck",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "/Users/pilarsilveyra/faculty/ingsis2/common/src/main/kotlin/Main.kt",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Gradle.PrintScriptV1 [dependencies].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrintScriptV1:analyzer [:analyzer:org.example.MainKt.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrintScriptV1:ast [:ast:org.example.MainKt.main()].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;/Users/catalinapereyra/Library/Application Support/JetBrains/IntelliJIdea2024.1/plugins/Shell Script/shellcheck&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;/Users/pilarsilveyra/faculty/ingsis2/common/src/main/kotlin/Main.kt&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\milig\faculty\ingsis\PrintScriptV1\ast\src\main\kotlin" />
-      <recent name="C:\Users\milig\faculty\ingsis\PrintScriptV1\parser\src\main\kotlin" />
-    </key>
-    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
-      <recent name="" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Gradle.PrintScriptV1 [compileKotlin]">
+}</component>
+  <component name="RunManager" selected="Kotlin.MainKt (1)">
+    <configuration name="PrintScriptV1 [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="dependencies" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="MainKt (1)" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.example.MainKt" />
+      <module name="PrintScriptV1.ast.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.example.MainKt" />
+      <module name="PrintScriptV1.analyzer.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="tests" factoryName="Autodetect">
       <module name="PrintScriptV1" />
       <option name="ENV_FILES" value="" />
@@ -150,75 +212,11 @@
       <option name="USE_PATTERN" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="PrintScriptV1 [compileKotlin]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="compileKotlin" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="PrintScriptV1 [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="dependencies" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="PrintScriptV1" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list />
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.PrintScriptV1 [compileKotlin]" />
+        <item itemvalue="Kotlin.MainKt (1)" />
+        <item itemvalue="Kotlin.MainKt" />
         <item itemvalue="Gradle.PrintScriptV1 [dependencies]" />
-        <item itemvalue="Gradle.PrintScriptV1" />
       </list>
     </recent_temporary>
   </component>
@@ -242,7 +240,8 @@
       <workItem from="1755211672304" duration="490000" />
       <workItem from="1755212174956" duration="2137000" />
       <workItem from="1755351828480" duration="3849000" />
-      <workItem from="1755456049230" duration="1794000" />
+      <workItem from="1755617829952" duration="51000" />
+      <workItem from="1755628755202" duration="515000" />
     </task>
     <task id="LOCAL-00001" summary="listo para empezar">
       <option name="closed" value="true" />
@@ -260,7 +259,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755212432460</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="correcciones">
+      <option name="closed" value="true" />
+      <created>1755537307169</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1755537307169</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -270,7 +277,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="listo para empezar" />
     <MESSAGE value="missing dependencies" />
-    <option name="LAST_COMMIT_MESSAGE" value="missing dependencies" />
+    <MESSAGE value="correcciones" />
+    <option name="LAST_COMMIT_MESSAGE" value="correcciones" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
