@@ -1,5 +1,6 @@
 package expr
 
+import Binary
 import Expression
 import IdentifierToken
 import LiteralNumber
@@ -10,7 +11,8 @@ import SeparatorToken
 import StringLiteralToken
 import TokenStream
 import Variable
-import org.example.ast.Binary
+import Grouping
+
 
 
 class RecursiveExpressionParser : ExpressionParser {
@@ -44,7 +46,7 @@ class RecursiveExpressionParser : ExpressionParser {
     private fun parseFactor(tokenStream : TokenStream) : Expression =
         when (val token = tokenStream.peek()){
             is NumberLiteralToken -> {tokenStream.next(); LiteralNumber(token.raw)}
-            is StringLiteralToken -> {tokenStream.next(); LiteralString(token.value)}
+            is StringLiteralToken -> {tokenStream.next(); LiteralString(token.literal)}
             is IdentifierToken -> {tokenStream.next(); Variable(token.identifier)}
             is SeparatorToken -> {
                 // Si hay parentesis, se debe parsear la expresion adentro (recursivo)
