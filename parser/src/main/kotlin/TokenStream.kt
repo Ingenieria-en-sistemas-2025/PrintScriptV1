@@ -1,9 +1,19 @@
 
 class TokenStream(private val tokens : List<Token>) {
     private var i = 0
-    fun peek(lookahead: Int = 0) : Token{
-        return tokens.getOrElse(i+lookahead){EofToken()} // devuelve EOF si no hay más tokens
+
+    fun peek(lookahead: Int = 0): Token {
+        val idx = i + lookahead
+        return if (idx < tokens.size) {
+            tokens[idx]
+        } else {
+            val eofPos: Position =
+                if (tokens.isNotEmpty()) tokens.last().span.end
+                else Position(1, 1)
+            EofToken(Span(eofPos, eofPos))
+        }
     }
+
     fun next(): Token{
         val actual: Token = peek()
         if(i < tokens.size){
@@ -11,6 +21,7 @@ class TokenStream(private val tokens : List<Token>) {
         }
         return actual
     }
+
     fun isAtEnd(): Boolean{
         return peek() is EofToken
     }

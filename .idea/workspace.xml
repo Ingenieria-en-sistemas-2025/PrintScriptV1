@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b164d751-7300-48e6-8481-c7ae0003e33e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/kotlin/TokenStream.kt" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/kotlin/TokenStream.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/kotlin/expr/RecursiveExpressionParser.kt" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/kotlin/expr/RecursiveExpressionParser.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,6 +196,7 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
       </set>
     </attachedChunks>
   </component>
@@ -214,6 +213,7 @@
       <workItem from="1755212174956" duration="2137000" />
       <workItem from="1755351828480" duration="3849000" />
       <workItem from="1755456049230" duration="1794000" />
+      <workItem from="1755719109777" duration="1563000" />
     </task>
     <task id="LOCAL-00001" summary="listo para empezar">
       <option name="closed" value="true" />
