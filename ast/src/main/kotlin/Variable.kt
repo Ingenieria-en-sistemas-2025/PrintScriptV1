@@ -1,4 +1,5 @@
 
 data class Variable(
-    val name : String
+    val name : String,
+    override val span: Span
 ) : Expression

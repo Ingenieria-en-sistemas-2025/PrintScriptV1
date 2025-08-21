@@ -1,3 +1,4 @@
 data class Println(
-    val value : Expression
+    val value : Expression,
+    override val span: Span
 ) : Statement

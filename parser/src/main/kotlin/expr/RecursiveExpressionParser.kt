@@ -12,7 +12,7 @@ import StringLiteralToken
 import TokenStream
 import Variable
 import Grouping
-
+import Span
 
 
 class RecursiveExpressionParser : ExpressionParser {
@@ -25,7 +25,8 @@ class RecursiveExpressionParser : ExpressionParser {
             if (! isPlusMinus) break // Si no hay + o -, termina
             val operator = (tokenStream.next() as OperatorToken).operator // Consume + o -
             val right = parseTerm(tokenStream)  // Se lee OTRO term a la derecha
-            left = Binary(left, right, operator) // Encadenamiento left, right y operador
+            val span = Span(left.span.start, right.span.end)
+            left = Binary(left, right, operator, span) // Encadenamiento left, right y operador
         }
         return left
     }
@@ -38,23 +39,24 @@ class RecursiveExpressionParser : ExpressionParser {
             if (! isMulDiv) break
             val operator = (tokenStream.next() as OperatorToken).operator // Consume * o /
             val right = parseFactor(tokenStream) // Lee OTRO factor a derecha
-            left = Binary(left, right, operator) // Encadena
+            val span = Span(left.span.start, right.span.end)
+            left = Binary(left, right, operator, span) // Encadena
         }
         return left
     }
 
     private fun parseFactor(tokenStream : TokenStream) : Expression =
         when (val token = tokenStream.peek()){
-            is NumberLiteralToken -> {tokenStream.next(); LiteralNumber(token.raw)}
-            is StringLiteralToken -> {tokenStream.next(); LiteralString(token.literal)}
-            is IdentifierToken -> {tokenStream.next(); Variable(token.identifier)}
+            is NumberLiteralToken -> {tokenStream.next(); LiteralNumber(token.raw, token.span)}
+            is StringLiteralToken -> {tokenStream.next(); LiteralString(token.literal, token.span)}
+            is IdentifierToken -> {tokenStream.next(); Variable(token.identifier, token.span)}
             is SeparatorToken -> {
                 // Si hay parentesis, se debe parsear la expresion adentro (recursivo)
                 if(token.separator == Separator.LPAREN){
-                    tokenStream.next()
+                    val lpar = tokenStream.next() as SeparatorToken
                     val expr = parseExpression(tokenStream)
-                    tokenStream.expectSep(Separator.RPAREN)
-                    Grouping(expr)
+                    val rpar = tokenStream.expectSep(Separator.RPAREN)
+                    Grouping(expr, Span(lpar.span.start, rpar.span.end))
                 } else error("Expresión inesperada: $token")
             }
             else -> error("Expresión inesperada: $token")

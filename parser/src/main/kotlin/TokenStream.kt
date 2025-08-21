@@ -29,13 +29,18 @@ class TokenStream(private val tokens : List<Token>) {
     // Verificadores: que el proximo token coincida con la gramática
     // (keyword/separador/operador). Si coincide, lo consumen (next())
     // y lo devuelven tipado. Si no, devuelve error.
+
+    private fun fail(expected: String, got: Token): Nothing {
+        throw ParseError(got.span, "Se esperaba $expected, encontrado $got")
+    }
+
     fun expectKeyword(expectedKeyword : Keyword) : KeywordToken{
         val nextToken = peek()
         if(nextToken is KeywordToken && nextToken.kind == expectedKeyword){
             next()
             return nextToken
         }
-        error("Se esperaba keyword $expectedKeyword, encontrado: $nextToken")
+        fail("keyword $expectedKeyword", nextToken)
     }
 
     fun expectSep(expectedSeparator: Separator): SeparatorToken {
@@ -44,7 +49,7 @@ class TokenStream(private val tokens : List<Token>) {
             next()
             return nextToken
         }
-        error("Se esperaba separador $expectedSeparator, encontrado: $nextToken")
+        fail("separador $expectedSeparator", nextToken)
     }
 
     fun expectOp(expectedOperator: Operator): OperatorToken {
@@ -53,7 +58,7 @@ class TokenStream(private val tokens : List<Token>) {
             next()
             return nextToken
         }
-        error("Se esperaba operador $expectedOperator, encontrado: $nextToken")
+        fail("operador $expectedOperator", nextToken)
     }
 
     fun expectIdentifier(): IdentifierToken{
@@ -62,7 +67,7 @@ class TokenStream(private val tokens : List<Token>) {
             next()
             return nextToken
         }
-        error("Se esperaba un identificador, pero llegó: $nextToken")
+        fail("identificador", nextToken)
     }
 
     fun expectTypeToken(): TypeToken {
@@ -71,7 +76,7 @@ class TokenStream(private val tokens : List<Token>) {
             next()
             return next
         }
-        error("Se esperaba un tipo, llegó: $next")
+        fail("tipo", next)
     }
 
     fun consumeIfOperator(expectedOp : Operator) : Boolean{

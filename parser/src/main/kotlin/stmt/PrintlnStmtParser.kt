@@ -1,6 +1,7 @@
 package stmt
 
 import Println
+import Span
 import Statement
 import TokenStream
 import expr.ExpressionParser
@@ -9,11 +10,12 @@ import expr.ExpressionParser
 // println(expr) ;
 object PrintlnStmtParser : StmtParser {
     override fun parse(tokenStream: TokenStream, expr: ExpressionParser): Statement {
-        tokenStream.expectKeyword(Keyword.PRINTLN) // println
+        val println = tokenStream.expectKeyword(Keyword.PRINTLN) // println
         tokenStream.expectSep(Separator.LPAREN) // (
         val expression = expr.parseExpression(tokenStream) // expr
         tokenStream.expectSep(Separator.RPAREN) // )
-        tokenStream.expectSep(Separator.SEMICOLON) // ;
-        return Println(expression)
+        val semicol = tokenStream.expectSep(Separator.SEMICOLON) // ;
+        val span = Span(println.span.start, semicol.span.end)
+        return Println(expression, span)
     }
 }

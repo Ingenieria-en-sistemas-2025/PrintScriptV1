@@ -1,4 +1,5 @@
 
 data class Grouping(
-    val expression : Expression
+    val expression : Expression,
+    override val span: Span
 ) : Expression

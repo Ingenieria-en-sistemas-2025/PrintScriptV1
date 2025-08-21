@@ -1,2 +1,1 @@
-interface Statement {
-}
+interface Statement { val span: Span }

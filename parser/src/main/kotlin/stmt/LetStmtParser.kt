@@ -1,5 +1,6 @@
 package stmt
 
+import Span
 import Statement
 import TokenStream
 import VarDeclaration
@@ -10,7 +11,7 @@ import expr.ExpressionParser
 object LetStmtParser : StmtParser {
     override fun parse(tokenStream: TokenStream, expr: ExpressionParser): Statement {
         tokenStream.expectKeyword(Keyword.LET) // let
-        val name = tokenStream.expectIdentifier().identifier // nombre
+        val name = tokenStream.expectIdentifier() // nombre
         tokenStream.expectSep(Separator.COLON) // :
         val declaredType = tokenStream.expectTypeToken().type // tipo (numb o str)
 
@@ -18,8 +19,9 @@ object LetStmtParser : StmtParser {
         val initializer =
             if (tokenStream.consumeIfOperator(Operator.ASSIGN)) expr.parseExpression(tokenStream)
             else null
-        tokenStream.expectSep(Separator.SEMICOLON) // ;
-        return VarDeclaration(name, declaredType, initializer)
+        val semicol = tokenStream.expectSep(Separator.SEMICOLON) // ;
+        val span = Span(name.span.start, semicol.span.end)
+        return VarDeclaration(name.identifier, declaredType, initializer, span)
     }
 
 }

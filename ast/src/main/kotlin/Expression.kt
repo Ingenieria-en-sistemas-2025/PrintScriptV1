@@ -1,1 +1,1 @@
-sealed interface Expression
+sealed interface Expression { val span: Span }
