@@ -138,4 +138,24 @@ class ParserTests{
         val first = ts.peek()
         assertTrue(first is KeywordToken && first.kind == Keyword.LET)
     }
+
+    @Test
+    fun testErrorCausedByMissingSemicolon() {
+        val tokens: List<Token> = listOf(
+            IdentifierToken("x", Span(Position(1,1), Position(1,1))),
+            OperatorToken(Operator.ASSIGN, Span(Position(1,3), Position(1,3))),
+            NumberLiteralToken("42", Span(Position(1,5), Position(1,6)))
+            // falta ;
+        )
+
+        val ts = TokenStream(tokens)
+        val parser = FirstParser()
+
+        val ex = assertThrows(ParseError::class.java) {
+            parser.parse(ts)
+        }
+
+        assertTrue(ex.message!!.contains("Se esperaba separador SEMICOLON"))
+        assertEquals(Position(1,6), ex.span.start)
+    }
 }

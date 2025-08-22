@@ -1,6 +1,6 @@
-enum class Separator {
-    LPAREN,
-    RPAREN,
-    SEMICOLON,
-    COLON
+enum class Separator(val value: String) {
+    LPAREN("("),
+    RPAREN(")"),
+    SEMICOLON(";"),
+    COLON(":")
 }

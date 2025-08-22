@@ -1,3 +1,3 @@
-enum class Type {
-    STRING, NUMBER
+enum class Type(val value: String) {
+    STRING("string"), NUMBER("number");
 }

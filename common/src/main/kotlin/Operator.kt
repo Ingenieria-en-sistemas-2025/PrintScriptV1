@@ -1,3 +1,7 @@
-enum class Operator {
-    ASSIGN, PLUS, MINUS, MULTIPLY, DIVIDE
+enum class Operator(val symbol: String) {
+    ASSIGN("="),
+    PLUS("+"),
+    MINUS("-"),
+    MULTIPLY("*"),
+    DIVIDE("/")
 }
