@@ -28,7 +28,7 @@ class PrintScriptMapConfig {
     fun rules(): List<LexingRule> = listOf(
         IdentifierOrKeywordRule(keywords(), types()),
         NumberRule(),
-        StringRule(),
+        StringRule,
         OperatorRule(operators()),
         SeparatorRule(separators()),
     )
