@@ -29,7 +29,7 @@ jacocoTestCoverageVerification {
             // GLOBAL (AGGREGATE) POR MÓDULO
             limit {
                 counter = 'LINE'
-                value   = 'COVERED_RATIO'
+                value   = 'COVEREDRATIO'
                 minimum = 0.80
             }
         }
