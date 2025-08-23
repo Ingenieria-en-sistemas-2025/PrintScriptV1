@@ -1,18 +1,34 @@
-
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class LexerTest {
 
+    private fun createTokenizer(src: String): Tokenizer {
+        val cfg = PrintScriptMapConfig()
+        return Tokenizer(src, cfg.rules(), cfg.triviaRules())
+    }
+
     private fun lexAllToStrings(src: String): List<String> {
-        val tz = Tokenizer(src, PrintScriptMapConfig().rules())
-        return tz.tokenize().map { it.toString() } // incluye EOF al final
+        val tokenizer = createTokenizer(src)
+        return when (val r = tokenizer.tokenize()) {
+            is Success -> r.value.map { it.toString() } // incluye EOF al final
+            is Failure -> fail("Lexing failure: ${r.error.message} @ ${r.error.span}")
+        }
+    }
+
+    private fun lexError(src: String): LexerError {
+        val tz = createTokenizer(src)
+        return when (val r = tz.tokenize()) {
+            is Success -> fail("Se esperaba Failure, pero se obtuvo Success con ${r.value.size} tokens")
+            is Failure -> r.error
+        }
     }
 
     @Test
-    fun let_con_string() {
+    fun letConString() {
         val src = """let name: string = "Joe";"""
         val actual = lexAllToStrings(src)
 
@@ -25,7 +41,7 @@ class LexerTest {
     }
 
     @Test
-    fun asignaciones_y_numeros_enteros_y_decimales() {
+    fun asignacionesYNumerosEnterosYDecimales() {
         val actual = lexAllToStrings("a = 3; b = 3.14;")
         val expected = listOf(
             "ID(a)", "OP(ASSIGN)", "NUM(3)", "SEP(SEMICOLON)",
@@ -35,7 +51,7 @@ class LexerTest {
     }
 
     @Test
-    fun expresion_con_parentesis_y_operadores() {
+    fun expresionConParentesisYOperadores() {
         val actual = lexAllToStrings("println((a + b) / 2);")
         val expected = listOf(
             "KW(PRINTLN)", "SEP(LPAREN)",
@@ -47,7 +63,7 @@ class LexerTest {
     }
 
     @Test
-    fun longest_match_identificador_no_keyword() {
+    fun longestMatchIdentificadorNoKeyword() {
         val actual = lexAllToStrings("letX=1;")
         val expected = listOf(
             "ID(letX)", "OP(ASSIGN)", "NUM(1)", "SEP(SEMICOLON)", "EOF"
@@ -56,7 +72,7 @@ class LexerTest {
     }
 
     @Test
-    fun string_con_comillas_simples() {
+    fun stringConComillasSimples() {
         val actual = lexAllToStrings("let s: string = 'hi';")
         val expected = listOf(
             "KW(LET)", "ID(s)", "SEP(COLON)", "TYPE(STRING)",
@@ -66,7 +82,7 @@ class LexerTest {
     }
 
     @Test
-    fun trivia_comentarios_y_espacios() {
+    fun triviaComentariosYEspacios() {
         val actual = lexAllToStrings(
             """
             // comentario
@@ -84,14 +100,13 @@ class LexerTest {
     }
 
     @Test
-    fun simbolo_desconocido_tira_lexerexception() {
-        assertFailsWith<LexerException> {
-            lexAllToStrings("let x = 5 $;")
-        }
+    fun simboloDesconocidoDevuelveFailure() {
+        val err = lexError("let x = 5 $;")
+        assertTrue(err is UnexpectedChar, "Se esperaba UnexpectedChar, fue ${err::class.simpleName}")
     }
 
     @Test
-    fun ejemplo_consiga_1() {
+    fun ejemploConsiga1() {
         val actual = lexAllToStrings(
             """
             let name: string = "Joe";

@@ -32,4 +32,8 @@ class PrintScriptMapConfig {
         OperatorRule(operators()),
         SeparatorRule(separators())
     )
+
+    fun triviaRules(): List<TriviaRule> = listOf(
+        BlockCommentRule, LineCommentRule, WhiteSpaceRule
+    )
 }

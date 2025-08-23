@@ -1,4 +1,4 @@
-internal class Scanner private constructor(private val input: String, private val index: Int, private val line: Int, private val column: Int) {
+class Scanner private constructor(private val input: String, private val index: Int, private val line: Int, private val column: Int) {
     constructor(scr: String): this(scr, 0, 1, 1)
 
     fun eof(): Boolean = index >= input.length
