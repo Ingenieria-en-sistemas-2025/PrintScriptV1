@@ -1,6 +1,5 @@
-data class Success<T>(val value: T): Result<T, Nothing> {
+data class Success<T>(val value: T) : Result<T, Nothing> {
     override val isSuccess: Boolean = true
-
 
     override fun getOrNull(): T = value
 
@@ -8,9 +7,7 @@ data class Success<T>(val value: T): Result<T, Nothing> {
 
     override fun <U> map(transform: (T) -> U): Result<U, Nothing> = Success(transform(value))
 
-
     override fun <U> flatMap(transform: (T) -> Result<U, Nothing>): Result<U, Nothing> = transform(value)
-
 
     override fun <R> fold(
         onSuccess: (T) -> R,

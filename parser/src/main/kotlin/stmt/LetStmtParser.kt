@@ -6,7 +6,6 @@ import TokenStream
 import VarDeclaration
 import expr.ExpressionParser
 
-
 // let nombre: tipo (= expr)? ;
 object LetStmtParser : StmtParser {
     override fun parse(tokenStream: TokenStream, expr: ExpressionParser): Statement {
@@ -17,11 +16,13 @@ object LetStmtParser : StmtParser {
 
         // expr
         val initializer =
-            if (tokenStream.consumeIfOperator(Operator.ASSIGN)) expr.parseExpression(tokenStream)
-            else null
+            if (tokenStream.consumeIfOperator(Operator.ASSIGN)) {
+                expr.parseExpression(tokenStream)
+            } else {
+                null
+            }
         val semicol = tokenStream.expectSep(Separator.SEMICOLON) // ;
         val span = Span(name.span.start, semicol.span.end)
         return VarDeclaration(name.identifier, declaredType, initializer, span)
     }
-
 }

@@ -4,10 +4,10 @@ import OperatorToken
 import Token
 import config.FormatterConfig
 
-class AssignmentSpacingRule (private val formatterConfig: FormatterConfig): FormattingRule {
+class AssignmentSpacingRule(private val formatterConfig: FormatterConfig) : FormattingRule {
     override fun apply(prev: Token?, current: Token, next: Token?): String? {
-        if (current is OperatorToken && current.operator == Operator.ASSIGN){
-            return if(formatterConfig.spaceAroundAssignment) " ${current.operator.symbol} " else current.operator.symbol
+        if (current is OperatorToken && current.operator == Operator.ASSIGN) {
+            return if (formatterConfig.spaceAroundAssignment) " ${current.operator.symbol} " else current.operator.symbol
         }
         return null
     }

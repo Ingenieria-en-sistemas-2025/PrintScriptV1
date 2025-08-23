@@ -12,10 +12,9 @@ object BlockCommentRule : TriviaRule {
         }
         // No se encontró cierre → span desde inicio hasta EOF
         val startPos = scanner.pos()
-        val endPos   = scanner.advance(rem.length).pos()
-        return Failure(UnterminatedCommentBlock(Span(startPos, endPos))
+        val endPos = scanner.advance(rem.length).pos()
+        return Failure(
+            UnterminatedCommentBlock(Span(startPos, endPos)),
         )
-
     }
-
 }

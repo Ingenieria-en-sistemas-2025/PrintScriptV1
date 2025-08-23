@@ -1,5 +1,5 @@
 
-class TokenStream(private val tokens : List<Token>) {
+class TokenStream(private val tokens: List<Token>) {
     private var i = 0
 
     fun peek(lookahead: Int = 0): Token {
@@ -8,21 +8,24 @@ class TokenStream(private val tokens : List<Token>) {
             tokens[idx]
         } else {
             val eofPos: Position =
-                if (tokens.isNotEmpty()) tokens.last().span.end
-                else Position(1, 1)
+                if (tokens.isNotEmpty()) {
+                    tokens.last().span.end
+                } else {
+                    Position(1, 1)
+                }
             EofToken(Span(eofPos, eofPos))
         }
     }
 
-    fun next(): Token{
+    fun next(): Token {
         val actual: Token = peek()
-        if(i < tokens.size){
+        if (i < tokens.size) {
             i += 1
         }
         return actual
     }
 
-    fun isAtEnd(): Boolean{
+    fun isAtEnd(): Boolean {
         return peek() is EofToken
     }
 
@@ -34,9 +37,9 @@ class TokenStream(private val tokens : List<Token>) {
         throw ParseError(got.span, "Se esperaba $expected, encontrado $got")
     }
 
-    fun expectKeyword(expectedKeyword : Keyword) : KeywordToken{
+    fun expectKeyword(expectedKeyword: Keyword): KeywordToken {
         val nextToken = peek()
-        if(nextToken is KeywordToken && nextToken.kind == expectedKeyword){
+        if (nextToken is KeywordToken && nextToken.kind == expectedKeyword) {
             next()
             return nextToken
         }
@@ -61,9 +64,9 @@ class TokenStream(private val tokens : List<Token>) {
         fail("operador $expectedOperator", nextToken)
     }
 
-    fun expectIdentifier(): IdentifierToken{
+    fun expectIdentifier(): IdentifierToken {
         val nextToken = peek()
-        if (nextToken is IdentifierToken){
+        if (nextToken is IdentifierToken) {
             next()
             return nextToken
         }
@@ -79,14 +82,13 @@ class TokenStream(private val tokens : List<Token>) {
         fail("tipo", next)
     }
 
-    fun consumeIfOperator(expectedOp : Operator) : Boolean{
+    fun consumeIfOperator(expectedOp: Operator): Boolean {
         val next = peek()
         val isExpected = next is OperatorToken && next.operator == expectedOp
-        if(isExpected){
+        if (isExpected) {
             next() // consume si coincide
             return true
         }
         return false
     }
-
 }

@@ -1,11 +1,11 @@
 package rules
 
+import Operator
+import OperatorToken
 import Separator
 import SeparatorToken
 import Token
 import WordLikeToken
-import Operator
-import OperatorToken
 import config.FormatterConfig
 
 class DefaultSpacingRule(private val config: FormatterConfig) : FormattingRule {
@@ -22,13 +22,16 @@ class DefaultSpacingRule(private val config: FormatterConfig) : FormattingRule {
         // No espacio entre palabra/keyword y (
         if (prev is WordLikeToken &&
             current is SeparatorToken && current.separator == Separator.LPAREN
-        ) return null
+        ) {
+            return null
+        }
 
         // Si venimos de :
         if (prev is SeparatorToken && prev.separator == Separator.COLON) {
             if (!config.spaceAfterColonInDecl) return null
             // Si fuera true, ColonSpacingRule ya metio el espacio
-            return null }
+            return null
+        }
 
         // Si venimos de =
         if (prev is OperatorToken && prev.operator == Operator.ASSIGN) {

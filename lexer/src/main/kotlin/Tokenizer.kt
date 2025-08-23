@@ -1,9 +1,12 @@
-class Tokenizer(src: String,
-                rules: List<LexingRule>, trivia: List<TriviaRule>) {
+class Tokenizer(
+    src: String,
+    rules: List<LexingRule>,
+    trivia: List<TriviaRule>,
+) {
 
     private val init = Scanner(src)
     private val rules: List<LexingRule> = rules.toList() // copia de solo lectura
-    private val trivia : List<TriviaRule> = trivia.toList()
+    private val trivia: List<TriviaRule> = trivia.toList()
 
     // Nucleo atomico -> Consume uno solo (lo pienso desp por tema memoria, habria que ver como usarlo sin acoplamiento)
     private fun lexOne(scanner: Scanner): Result<Pair<Token, Scanner>, LexerError> {
@@ -15,7 +18,7 @@ class Tokenizer(src: String,
                     matchToken(scAfterTrivia)
                 }
             },
-            onFailure = { Failure(it) }
+            onFailure = { Failure(it) },
         )
     }
 
@@ -35,21 +38,23 @@ class Tokenizer(src: String,
         }
     }
 
+    private fun nextTriviaAdvance(sc: Scanner): Result<Int, LexerError> {
+        for (tr in trivia) {
+            when (val r = tr.matchLen(sc)) {
+                is Success -> if (r.value > 0) return Success(r.value)
+                is Failure -> return r
+            }
+        }
+        return Success(0)
+    }
+
     private fun consumeAllTrivia(scanner: Scanner): Result<Scanner, LexerError> {
         var sc = scanner
-        triviaLoop@ while (!sc.eof()) {
-            var advanced = false
-            for (tr in trivia) {
-                when (val r = tr.matchLen(sc)) {
-                    is Success -> if (r.value > 0) {
-                        sc = sc.advance(r.value)
-                        advanced = true
-                        break // reintenta desde nueva posición
-                    }
-                    is Failure -> return r
-                }
+        while (!sc.eof()) {
+            when (val step = nextTriviaAdvance(sc)) {
+                is Failure -> return step
+                is Success -> if (step.value == 0) return Success(sc) else sc = sc.advance(step.value)
             }
-            if (!advanced) break@triviaLoop
         }
         return Success(sc)
     }
@@ -83,12 +88,13 @@ class Tokenizer(src: String,
         var bestRule: LexingRule? = null
         for (r in rules) {
             val len = r.matchLength(rem)
-            if (len > bestLen) { bestLen = len; bestRule = r }
+            if (len > bestLen) {
+                bestLen = len
+                bestRule = r
+            }
         }
         return BestMatch(bestRule, bestLen)
     }
 
-
     private data class BestMatch(val rule: LexingRule?, val len: Int)
-
 }

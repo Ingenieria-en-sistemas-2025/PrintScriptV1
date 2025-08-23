@@ -10,15 +10,14 @@ import stmt.LetStmtParser
 import stmt.PrintlnStmtParser
 import stmt.StmtParser
 
-
 class FirstParser(
     private val headDetector: HeadDetector = FirstHeadDetector(),
     private val expr: ExpressionParser = RecursiveExpressionParser(),
     private val stmtParsers: Map<Head, StmtParser> = mapOf(
         Kw(Keyword.LET) to LetStmtParser,
         Kw(Keyword.PRINTLN) to PrintlnStmtParser,
-        Assign to AssignmentStmtParser
-    )
+        Assign to AssignmentStmtParser,
+    ),
 ) : Parser {
 
     // no pasa nada con mutabilidad aca..?

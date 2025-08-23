@@ -3,7 +3,7 @@ sealed interface Result<out T, out E> { // out “solo puedo producir (devolver)
     val isSuccess: Boolean
     val isFailure: Boolean get() = !isSuccess
 
-    fun getOrNull (): T?
+    fun getOrNull(): T?
     fun errorOrNull(): E?
 
     fun <U> map(transform: (T) -> U): Result<U, E>
@@ -14,5 +14,4 @@ sealed interface Result<out T, out E> { // out “solo puedo producir (devolver)
         onSuccess: (T) -> R,
         onFailure: (E) -> R,
     ): R
-
 }
