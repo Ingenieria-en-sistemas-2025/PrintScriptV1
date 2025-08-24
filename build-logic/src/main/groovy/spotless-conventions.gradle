@@ -1,0 +1,26 @@
+plugins {
+    id 'com.diffplug.spotless'
+}
+
+// 2+ custom rules de formatter acá (ver comentarios)
+spotless {
+    kotlin {
+        target("**/*.kt")
+        // Usa ktlint como motor de formato
+        ktlint("0.50.0").editorConfigOverride([
+                "max_line_length": "400",    // REGLA 1 personalizada
+                "indent_size"     : "4"      // REGLA 2 personalizada
+        ])
+        trimTrailingWhitespace()         // paso adicional
+        endWithNewline()                 // paso adicional
+    }
+    kotlinGradle {
+        target("**/*.gradle.kts")
+        ktlint("0.50.0")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+// `check` NO formatea; solo verifica
+tasks.named("check") { dependsOn("spotlessCheck") }

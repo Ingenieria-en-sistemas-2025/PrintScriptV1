@@ -1,2 +1,1 @@
-sealed interface LexerError : LabeledError {
-}
+sealed interface LexerError : LabeledError

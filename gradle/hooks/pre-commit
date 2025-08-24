@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+set -e # cualquier error -> Se bloquea commit
+
+# 1) Formatear (auto-fix) y re-stagiar cambios
+./gradlew --quiet spotlessApply
+git add -A
+
+# 2) Lintear
+./gradlew --quiet detekt
+
+echo "pre-commit ok"

@@ -3,7 +3,7 @@ import rules.DefaultSpacingRule
 
 class Formatter(
     private val config: FormatterConfig,
-    private val registry: RuleRegistry = DefaultRuleRegistry(config)
+    private val registry: RuleRegistry = DefaultRuleRegistry(config),
 ) {
     private val defaultSpacing = DefaultSpacingRule(config)
 
@@ -12,7 +12,9 @@ class Formatter(
         fun emit(text: String) {
             if (text == " ") {
                 if (output.isNotEmpty() && output.last() != ' ' && output.last() != '\n') output.append(' ')
-            } else output.append(text)
+            } else {
+                output.append(text)
+            }
         }
 
         for (i in tokens.indices) {
@@ -34,5 +36,3 @@ class Formatter(
         return output.toString()
     }
 }
-
-

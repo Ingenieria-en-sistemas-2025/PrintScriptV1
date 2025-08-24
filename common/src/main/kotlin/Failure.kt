@@ -1,4 +1,4 @@
-data class Failure<E> (val error: E): Result<Nothing, E>{
+data class Failure<E> (val error: E) : Result<Nothing, E> {
 
     override val isSuccess: Boolean = false
     override fun getOrNull(): Nothing? = null

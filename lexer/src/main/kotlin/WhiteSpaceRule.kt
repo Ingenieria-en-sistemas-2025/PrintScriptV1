@@ -5,6 +5,5 @@ object WhiteSpaceRule : TriviaRule {
         var i = 0
         while (i < rem.length && rem[i].isWhitespace()) i++
         return Success(i) // 0 si no hay espacios
-
     }
 }

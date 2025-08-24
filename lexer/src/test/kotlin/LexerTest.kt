@@ -1,6 +1,5 @@
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -33,8 +32,14 @@ class LexerTest {
         val actual = lexAllToStrings(src)
 
         val expected = listOf(
-            "KW(LET)", "ID(name)", "SEP(COLON)", "TYPE(STRING)",
-            "OP(ASSIGN)", "STR(\"Joe\")", "SEP(SEMICOLON)", "EOF"
+            "KW(LET)",
+            "ID(name)",
+            "SEP(COLON)",
+            "TYPE(STRING)",
+            "OP(ASSIGN)",
+            "STR(\"Joe\")",
+            "SEP(SEMICOLON)",
+            "EOF",
         )
 
         assertEquals(expected, actual)
@@ -45,7 +50,7 @@ class LexerTest {
         val actual = lexAllToStrings("a = 3; b = 3.14;")
         val expected = listOf(
             "ID(a)", "OP(ASSIGN)", "NUM(3)", "SEP(SEMICOLON)",
-            "ID(b)", "OP(ASSIGN)", "NUM(3.14)", "SEP(SEMICOLON)", "EOF"
+            "ID(b)", "OP(ASSIGN)", "NUM(3.14)", "SEP(SEMICOLON)", "EOF",
         )
         assertEquals(expected, actual)
     }
@@ -57,7 +62,7 @@ class LexerTest {
             "KW(PRINTLN)", "SEP(LPAREN)",
             "SEP(LPAREN)", "ID(a)", "OP(PLUS)", "ID(b)", "SEP(RPAREN)",
             "OP(DIVIDE)", "NUM(2)",
-            "SEP(RPAREN)", "SEP(SEMICOLON)", "EOF"
+            "SEP(RPAREN)", "SEP(SEMICOLON)", "EOF",
         )
         assertEquals(expected, actual)
     }
@@ -66,7 +71,11 @@ class LexerTest {
     fun longestMatchIdentificadorNoKeyword() {
         val actual = lexAllToStrings("letX=1;")
         val expected = listOf(
-            "ID(letX)", "OP(ASSIGN)", "NUM(1)", "SEP(SEMICOLON)", "EOF"
+            "ID(letX)",
+            "OP(ASSIGN)",
+            "NUM(1)",
+            "SEP(SEMICOLON)",
+            "EOF",
         )
         assertEquals(expected, actual)
     }
@@ -75,8 +84,14 @@ class LexerTest {
     fun stringConComillasSimples() {
         val actual = lexAllToStrings("let s: string = 'hi';")
         val expected = listOf(
-            "KW(LET)", "ID(s)", "SEP(COLON)", "TYPE(STRING)",
-            "OP(ASSIGN)", "STR(\"hi\")", "SEP(SEMICOLON)", "EOF"
+            "KW(LET)",
+            "ID(s)",
+            "SEP(COLON)",
+            "TYPE(STRING)",
+            "OP(ASSIGN)",
+            "STR(\"hi\")",
+            "SEP(SEMICOLON)",
+            "EOF",
         )
         assertEquals(expected, actual)
     }
@@ -88,13 +103,13 @@ class LexerTest {
             // comentario
             let a: number = 12;   // otro
             println(a);
-            """.trimIndent()
+            """.trimIndent(),
         )
         val expected = listOf(
             "KW(LET)", "ID(a)", "SEP(COLON)", "TYPE(NUMBER)",
             "OP(ASSIGN)", "NUM(12)", "SEP(SEMICOLON)",
             "KW(PRINTLN)", "SEP(LPAREN)", "ID(a)", "SEP(RPAREN)", "SEP(SEMICOLON)",
-            "EOF"
+            "EOF",
         )
         assertEquals(expected, actual)
     }
@@ -112,7 +127,7 @@ class LexerTest {
             let name: string = "Joe";
             let lastName: string = "Doe";
             println(name + " " + lastName);
-            """.trimIndent()
+            """.trimIndent(),
         )
         // sanity general
         assertTrue(actual.contains("KW(LET)"))

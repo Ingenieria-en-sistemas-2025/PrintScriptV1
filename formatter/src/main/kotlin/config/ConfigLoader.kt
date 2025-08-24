@@ -22,8 +22,8 @@ object ConfigLoader {
         val bytes = Files.readAllBytes(path)
         return when (path.extension.lowercase()) {
             "yaml", "yml" -> yaml.readValue(bytes)
-            "json"        -> json.readValue(bytes)
-            else          -> json.readValue(bytes)
+            "json" -> json.readValue(bytes)
+            else -> json.readValue(bytes)
         }
     }
 }

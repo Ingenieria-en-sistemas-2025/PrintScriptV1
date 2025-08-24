@@ -1,5 +1,7 @@
-class ListTokenStream private constructor( private val list: List<Token>,
-                                           private val index: Int): TokenStream {
+class ListTokenStream private constructor(
+    private val list: List<Token>,
+    private val index: Int,
+) : TokenStream {
 
     companion object {
         fun of(tokens: List<Token>): ListTokenStream {

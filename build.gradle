@@ -1,0 +1,20 @@
+
+
+tasks.register('installGitHooks', Copy) {
+    from(layout.projectDirectory.dir('gradle/hooks'))
+    into(layout.projectDirectory.dir('.git/hooks'))
+    fileMode = 0775
+}
+
+tasks.register('printGitHooksStatus') {
+    def preCommit = layout.projectDirectory.file('.git/hooks/pre-commit')
+    def prePush   = layout.projectDirectory.file('.git/hooks/pre-push')
+
+    // Esta tarea no tiene inputs reales; hacela siempre "no up-to-date" para ver el estado
+    outputs.upToDateWhen { false }
+
+    doLast {
+        println "pre-commit: " + (preCommit.asFile.exists() ? 'OK' : 'MISSING')
+        println "pre-push  : " + (prePush.asFile.exists() ? 'OK' : 'MISSING')
+    }
+}

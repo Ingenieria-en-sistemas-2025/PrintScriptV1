@@ -1,4 +1,4 @@
-class StringRule(): LexingRule {
+object StringRule : LexingRule {
     override fun matchLength(string: String): Int {
         if (string.isEmpty()) return 0
         if (!startsWithSingleOrDoubleQuotes(string)) return 0
