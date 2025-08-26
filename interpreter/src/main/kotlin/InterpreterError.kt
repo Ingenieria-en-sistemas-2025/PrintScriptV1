@@ -1,0 +1,1 @@
+sealed interface InterpreterError : LabeledError

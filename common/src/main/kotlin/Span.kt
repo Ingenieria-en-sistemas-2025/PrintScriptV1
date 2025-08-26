@@ -1,3 +1,4 @@
+
 data class Span(val start: Position, val end: Position) {
     companion object {
         fun merge(a: Span, b: Span) = Span(
