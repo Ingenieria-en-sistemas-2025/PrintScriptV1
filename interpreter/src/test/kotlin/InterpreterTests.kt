@@ -1,5 +1,4 @@
-import org.example.InterpreterError
-import org.example.Output
+
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -11,20 +10,20 @@ class InterpreterTests {
         val eval = DefaultExprEvaluator()
         val actions = mapOf(
             VarDeclaration::class to VarDeclarationAction(),
-            Assignment::class     to AssignmentAction(),
-            Println::class        to PrintlnAction(),
+            Assignment::class to AssignmentAction(),
+            Println::class to PrintlnAction(),
         )
-        val exec = StmtActionExecutor(eval, actions)  //busca action en el map
+        val exec = StmtActionExecutor(eval, actions) // busca action en el map
         return ProgramInterpreter(exec)
     }
 
     @Test
     fun `println number 42`() {
         val stmts: List<Statement> = listOf(
-            Println( //aca usa la println action
+            Println( // aca usa la println action
                 value = LiteralNumber(raw = "42", span = s()),
-                span = s()
-            )
+                span = s(),
+            ),
         )
         val program = ProgramNode(statements = stmts)
 
@@ -35,6 +34,4 @@ class InterpreterTests {
             is Failure -> fail("Interpreter failed: ${res.error}")
         }
     }
-
-
 }

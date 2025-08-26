@@ -1,4 +1,3 @@
-import org.example.Output
 
-//resultado de ejecutar 1 sentencia
+// resultado de ejecutar 1 sentencia
 data class ExecResult(val env: Env, val out: Output)

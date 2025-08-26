@@ -1,3 +1,5 @@
+// define tareas utilitarias del repo
+
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '2.2.0'
     id 'spotless-conventions'
