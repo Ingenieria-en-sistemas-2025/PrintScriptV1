@@ -1,5 +1,5 @@
-internal class Scanner private constructor(private val input: String, private val index: Int, private val line: Int, private val column: Int) {
-    constructor(scr: String): this(scr, 0, 1, 1)
+class Scanner private constructor(private val input: String, private val index: Int, private val line: Int, private val column: Int) {
+    constructor(scr: String) : this(scr, 0, 1, 1)
 
     fun eof(): Boolean = index >= input.length
 
@@ -16,7 +16,10 @@ internal class Scanner private constructor(private val input: String, private va
         val end = (index + n).coerceAtMost(input.length)
         while (i < end) {
             val ch = input[i++]
-            if (ch == '\n') { l++; c = 1 } else { c++ }
+            if (ch == '\n') {
+                l++
+                c = 1
+            } else { c++ }
         }
         return Scanner(input, i, l, c)
     }
@@ -24,5 +27,4 @@ internal class Scanner private constructor(private val input: String, private va
     fun pos(): Position = Position(line, column)
     fun remaining(): String = if (eof()) "" else input.substring(index)
     fun spanFrom(start: Position): Span = Span(start, pos())
-
 }

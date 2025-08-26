@@ -1,42 +1,88 @@
-class Tokenizer(src: String,
-                rules: List<LexingRule>) {
+class Tokenizer(
+    src: String,
+    rules: List<LexingRule>,
+    trivia: List<TriviaRule>,
+) {
 
     private val init = Scanner(src)
     private val rules: List<LexingRule> = rules.toList() // copia de solo lectura
+    private val trivia: List<TriviaRule> = trivia.toList()
 
-    fun tokenize(): List<Token> {
-        val out = ArrayList<Token>()
-        var sc = init
-
-        while (true) {
-            sc = skipTrivial(sc)
-            if (sc.eof()) {
-                val p = sc.pos()
-                out.add(EofToken(Span(p, p)))
-                break
-            }
-
-            val rem = sc.remaining()
-            val start = sc.pos()
-
-            val (rule, len) = chooseBestMatch(rem)
-            if (len > 0) {
-                val lex = rem.substring(0, len)
-                val sc2 = sc.advance(len)
-                out.add(rule!!.build(lex, Span(start, sc2.pos())))
-                sc = sc2
-                continue
-            }
-
-            val bad = sc.peek()
-            val sc2 = sc.advance(1)
-            throw LexerException("Símbolo inesperado: '$bad'", Span(start, sc2.pos()))
-
-        }
-        return out.toList()
+    // Nucleo atomico -> Consume uno solo (lo pienso desp por tema memoria, habria que ver como usarlo sin acoplamiento)
+    private fun lexOne(scanner: Scanner): Result<Pair<Token, Scanner>, LexerError> {
+        return consumeAllTrivia(scanner).fold(
+            onSuccess = { scAfterTrivia ->
+                if (scAfterTrivia.eof()) {
+                    Success(eof(scAfterTrivia) to scAfterTrivia)
+                } else {
+                    matchToken(scAfterTrivia)
+                }
+            },
+            onFailure = { Failure(it) },
+        )
     }
 
-    // Longest match sobre todas las reglas
+    fun tokenize(): Result<List<Token>, LexerError> {
+        val out = ArrayList<Token>()
+        var cur = init
+        while (true) {
+            when (val step = lexOne(cur)) {
+                is Success -> {
+                    val (tok, next) = step.value
+                    out.add(tok)
+                    cur = next
+                    if (tok is EofToken) return Success(out)
+                }
+                is Failure -> return step
+            }
+        }
+    }
+
+    private fun nextTriviaAdvance(sc: Scanner): Result<Int, LexerError> {
+        for (tr in trivia) {
+            when (val r = tr.matchLen(sc)) {
+                is Success -> if (r.value > 0) return Success(r.value)
+                is Failure -> return r
+            }
+        }
+        return Success(0)
+    }
+
+    private fun consumeAllTrivia(scanner: Scanner): Result<Scanner, LexerError> {
+        var sc = scanner
+        while (!sc.eof()) {
+            when (val step = nextTriviaAdvance(sc)) {
+                is Failure -> return step
+                is Success -> if (step.value == 0) return Success(sc) else sc = sc.advance(step.value)
+            }
+        }
+        return Success(sc)
+    }
+
+    private fun matchToken(sc: Scanner): Result<Pair<Token, Scanner>, LexerError> {
+        val rem = sc.remaining()
+        val start = sc.pos()
+        val (rule, len) = chooseBestMatch(rem)
+
+        if (len > 0) {
+            val lex = rem.substring(0, len)
+            val next = sc.advance(len)
+            val tok = rule!!.build(lex, Span(start, next.pos()))
+            return Success(tok to next)
+        }
+
+        // Nada matcheó -> error con span real de 1 char
+        val next = sc.advance(1)
+        return Failure((UnexpectedChar(Span(start, next.pos()), rem[0])))
+    }
+
+    // Eof helper
+    private fun eof(sc: Scanner): Token {
+        val p = sc.pos()
+        return EofToken(Span(p, p))
+    }
+
+    // Longest match puro
     private fun chooseBestMatch(rem: String): BestMatch {
         var bestLen = 0
         var bestRule: LexingRule? = null
@@ -50,39 +96,5 @@ class Tokenizer(src: String,
         return BestMatch(bestRule, bestLen)
     }
 
-
-    private fun skipTrivial(scanner: Scanner): Scanner {
-        var sc = scanner
-        while (!sc.eof()){
-            val rem = sc.remaining()
-            val c = rem[0]
-
-            if (c.isWhitespace()) { sc = sc.advance(1); continue }
-
-            // Comentario de linea
-            if (rem.startsWith("//")) {
-                var i = 2
-                while (i < rem.length && rem[i] != '\n') i++
-                sc = sc.advance(i)
-                continue
-            }
-
-            // Comentario de bloque (no se si es necesario)
-            if (rem.startsWith("/*")) {
-                var i = 2
-                while (i < rem.length - 1 && !(rem[i] == '*' && rem[i + 1] == '/')) i++
-                if (i >= rem.length - 1) {
-                    throw LexerException("Comentario no cerrado", Span(sc.pos(), sc.pos()))
-                }
-                sc = sc.advance(i + 2)
-                continue
-            }
-
-            break
-        }
-        return sc
-    }
-
     private data class BestMatch(val rule: LexingRule?, val len: Int)
-
 }

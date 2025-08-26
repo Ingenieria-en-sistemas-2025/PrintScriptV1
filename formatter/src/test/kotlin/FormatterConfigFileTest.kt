@@ -1,11 +1,10 @@
+import config.ConfigLoader
+import config.FormatterConfig
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Files
 import java.nio.file.Path
-
-import config.FormatterConfig
-import config.ConfigLoader
 
 class FormatterConfigFileTest {
 
@@ -46,12 +45,14 @@ class FormatterConfigFileTest {
             IdentifierToken("name", dummySpan()),
             SeparatorToken(Separator.RPAREN, dummySpan()),
             SeparatorToken(Separator.SEMICOLON, dummySpan()),
-            EofToken(dummySpan()))
+            EofToken(dummySpan()),
+        )
         val out = formatWith(config, tokens)
         val expected = buildString {
             append("let name: string = \"Milagros\";\n")
             append("\n")
-            append("println(name);\n") }
+            append("println(name);\n")
+        }
         assertEquals(expected, out)
     }
 
@@ -81,12 +82,14 @@ class FormatterConfigFileTest {
             IdentifierToken("a", dummySpan()),
             SeparatorToken(Separator.RPAREN, dummySpan()),
             SeparatorToken(Separator.SEMICOLON, dummySpan()),
-            EofToken(dummySpan()))
+            EofToken(dummySpan()),
+        )
         val out = formatWith(config, tokens)
         val expected = buildString {
             append("let a :number=1;\n")
             append("\n\n") // 2 lineas en blanco
-            append("println(a);\n") }
+            append("println(a);\n")
+        }
         assertEquals(expected, out)
     }
 }

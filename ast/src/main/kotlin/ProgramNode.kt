@@ -1,3 +1,3 @@
 data class ProgramNode(
-    val statements : List<Statement>
+    val statements: List<Statement>,
 )

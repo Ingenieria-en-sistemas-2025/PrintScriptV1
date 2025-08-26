@@ -1,2 +1,1 @@
-class LexerException(message: String, val span: Span): RuntimeException(message) {
-}
+class LexerException(message: String, val span: Span) : RuntimeException(message)

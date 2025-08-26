@@ -10,10 +10,17 @@ plugins {
 }
 
 repositories {
+    mavenCentral()
     // Use the plugin portal to apply community plugins in convention plugins.
     gradlePluginPortal()
 }
 
 dependencies {
     implementation libs.kotlin.gradle.plugin
+    // ktlint gradle plugin
+    implementation 'org.jlleitschuh.gradle.ktlint:org.jlleitschuh.gradle.ktlint.gradle.plugin:13.0.0'
+    // spotless gradle plugin
+    implementation 'com.diffplug.spotless:spotless-plugin-gradle:6.25.0'
+    // JaCoCo: el plugin es built-in, no hace falta dependency extra
+    implementation 'io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.6'
 }
