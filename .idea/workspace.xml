@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b164d751-7300-48e6-8481-c7ae0003e33e" name="Changes" comment="interpreter done, missing semantic analisis">
+    <list default="true" id="b164d751-7300-48e6-8481-c7ae0003e33e" name="Changes" comment="result corrections">
+      <change afterPath="$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/kotlin/Operator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/kotlin/Operator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt" beforeDir="false" afterPath="$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interpreter/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/interpreter/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,17 +129,6 @@
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Gradle.InterpreterPrintTests.declare variable x = 42, assign x = 100 and print it.executor": "Debug",
-    "Gradle.InterpreterPrintTests.declare variable x = 42, assign x = 100 and print x + 1.executor": "Run",
-    "Gradle.InterpreterPrintTests.declare x=10, y=20, assign x=y, print x and y.executor": "Run",
-    "Gradle.InterpreterPrintTests.division by zero should fail.executor": "Run",
-    "Gradle.InterpreterPrintTests.executor": "Coverage",
-    "Gradle.InterpreterPrintTests.incompatible type should fail.executor": "Run",
-    "Gradle.InterpreterPrintTests.print string \"hello world\".executor": "Run",
-    "Gradle.InterpreterPrintTests.print undeclared variable should fail.executor": "Run",
-    "Gradle.InterpreterPrintTests.redeclare variable should fail.executor": "Run",
-    "Gradle.InterpreterPrintTests.unsupported binary operator should fail.executor": "Run",
-    "Gradle.InterpreterTests.declare variable x = 42 and print it.executor": "Run",
     "Gradle.InterpreterTests.executor": "Run",
     "Gradle.InterpreterTests.println number literal prints 42.executor": "Run",
     "Gradle.PrintScriptV1 [dependencies].executor": "Run",
@@ -177,8 +166,8 @@
       <recent name="actions" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.InterpreterPrintTests">
-    <configuration name="InterpreterPrintTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.InterpreterTests">
+    <configuration name="InterpreterTests" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -191,7 +180,7 @@
           <list>
             <option value=":interpreter:test" />
             <option value="--tests" />
-            <option value="&quot;InterpreterPrintTests&quot;" />
+            <option value="&quot;InterpreterTests&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -202,7 +191,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="InterpreterPrintTests.division by zero should fail" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="InterpreterTests.println number literal prints 42" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -215,7 +204,7 @@
           <list>
             <option value=":interpreter:test" />
             <option value="--tests" />
-            <option value="&quot;InterpreterPrintTests.division by zero should fail&quot;" />
+            <option value="&quot;InterpreterTests.println number literal prints 42&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -226,76 +215,68 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="InterpreterPrintTests.incompatible type should fail" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="PrintScriptV1 [compileKotlin]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
+        <option name="scriptParameters" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value=":interpreter:test" />
-            <option value="--tests" />
-            <option value="&quot;InterpreterPrintTests.incompatible type should fail&quot;" />
+            <option value="compileKotlin" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
+      <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="InterpreterPrintTests.redeclare variable should fail" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="PrintScriptV1 [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
+        <option name="scriptParameters" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value=":interpreter:test" />
-            <option value="--tests" />
-            <option value="&quot;InterpreterPrintTests.redeclare variable should fail&quot;" />
+            <option value="dependencies" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
+      <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="InterpreterPrintTests.unsupported binary operator should fail" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="PrintScriptV1" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
+        <option name="scriptParameters" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
-          <list>
-            <option value=":interpreter:test" />
-            <option value="--tests" />
-            <option value="&quot;InterpreterPrintTests.unsupported binary operator should fail&quot;" />
-          </list>
+          <list />
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
+      <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
     <configuration default="true" type="tests" factoryName="Autodetect">
@@ -336,11 +317,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.InterpreterPrintTests" />
-        <item itemvalue="Gradle.InterpreterPrintTests.incompatible type should fail" />
-        <item itemvalue="Gradle.InterpreterPrintTests.division by zero should fail" />
-        <item itemvalue="Gradle.InterpreterPrintTests.unsupported binary operator should fail" />
-        <item itemvalue="Gradle.InterpreterPrintTests.redeclare variable should fail" />
+        <item itemvalue="Gradle.InterpreterTests" />
+        <item itemvalue="Gradle.InterpreterTests.println number literal prints 42" />
+        <item itemvalue="Gradle.PrintScriptV1 [compileKotlin]" />
+        <item itemvalue="Gradle.PrintScriptV1 [dependencies]" />
+        <item itemvalue="Gradle.PrintScriptV1" />
       </list>
     </recent_temporary>
   </component>
@@ -366,7 +347,6 @@
       <workItem from="1755351828480" duration="3849000" />
       <workItem from="1755456049230" duration="1794000" />
       <workItem from="1755719109777" duration="1563000" />
-      <workItem from="1756220858284" duration="2568000" />
     </task>
     <task id="LOCAL-00001" summary="listo para empezar">
       <option name="closed" value="true" />
@@ -440,15 +420,7 @@
       <option name="project" value="LOCAL" />
       <updated>1756176335272</updated>
     </task>
-    <task id="LOCAL-00010" summary="interpreter done, missing semantic analisis">
-      <option name="closed" value="true" />
-      <created>1756179127236</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1756179127236</updated>
-    </task>
-    <option name="localTasksCounter" value="11" />
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -465,46 +437,70 @@
     <MESSAGE value="implement interpreter actions and stmt executor" />
     <MESSAGE value="program interpreter" />
     <MESSAGE value="result corrections" />
-    <MESSAGE value="interpreter done, missing semantic analisis" />
-    <option name="LAST_COMMIT_MESSAGE" value="interpreter done, missing semantic analisis" />
+    <option name="LAST_COMMIT_MESSAGE" value="result corrections" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
           <line>10</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
           <line>11</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
           <line>12</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
           <line>14</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
           <line>13</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
           <line>16</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
           <line>17</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
+          <line>30</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
+          <line>28</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
+          <line>32</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
+          <line>33</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
+          <line>34</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/ProgramInterpreter.kt</url>
@@ -559,104 +555,10 @@
           <line>28</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/DefaultExprEvaluator.kt</url>
-          <line>22</line>
-          <option name="timeStamp" value="40" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/DefaultExprEvaluator.kt</url>
-          <line>24</line>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
-          <line>118</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
-          <line>120</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
-          <line>122</line>
-          <option name="timeStamp" value="44" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
-          <line>123</line>
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
-          <line>124</line>
-          <option name="timeStamp" value="47" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
-          <line>126</line>
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
-          <line>16</line>
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/ProgramInterpreter.kt</url>
-          <line>16</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/ProgramInterpreter.kt</url>
-          <line>14</line>
-          <option name="timeStamp" value="53" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/DefaultExprEvaluator.kt</url>
-          <line>39</line>
-          <option name="timeStamp" value="54" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/DefaultExprEvaluator.kt</url>
-          <line>29</line>
-          <option name="timeStamp" value="55" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/DefaultExprEvaluator.kt</url>
-          <line>30</line>
-          <option name="timeStamp" value="56" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/DefaultExprEvaluator.kt</url>
-          <line>31</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="57" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/DefaultExprEvaluator.kt</url>
-          <line>32</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="58" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/interpreter/src/main/kotlin/DefaultExprEvaluator.kt</url>
-          <line>34</line>
-          <option name="timeStamp" value="59" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-function">
-          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterPrintTests.kt</url>
+          <url>file://$PROJECT_DIR$/interpreter/src/test/kotlin/InterpreterTests.kt</url>
           <line>9</line>
-          <properties class="InterpreterPrintTests" method="makeInterpreter">
+          <properties class="InterpreterTests" method="makeInterpreter">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
