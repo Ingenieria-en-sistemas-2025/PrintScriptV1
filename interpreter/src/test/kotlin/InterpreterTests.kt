@@ -1,4 +1,3 @@
-import org.example.InterpreterError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
