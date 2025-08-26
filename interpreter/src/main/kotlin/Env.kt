@@ -1,7 +1,3 @@
-
-
-import Span
-import Type
 import org.example.Binding
 import org.example.IncompatibleType
 import org.example.InterpreterError
