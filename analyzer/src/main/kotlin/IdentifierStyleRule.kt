@@ -1,27 +1,23 @@
-class IdentifierStyleRule : Rule {
+class IdentifierStyleRule(private val conventionProvider: (IdentifiersConfig) -> NameConvention = { IdentifierNaming.from(it) }) : Rule {
     override val id: String = "PS-ID-STYLE"
 
-    // ver de alguna manera de inyectar esto.
-
-    private fun isCamel(s: String) = s.matches(Regex("[a-z]+([A-Z][a-z0-9]*)*"))
-    private fun isSnake(s: String) = s.matches(Regex("[a-z]+(_[a-z0-9]+)*"))
-
     override fun check(program: ProgramNode, context: AnalyzerContext): List<Diagnostic> {
-        val out = mutableListOf<Diagnostic>()
-        fun ok(name: String) = when (context.config.identifiers.style) {
-            IdentifierStyle.CAMEL_CASE -> isCamel(name)
-            IdentifierStyle.SNAKE_CASE -> isSnake(name)
+        val config = context.config.identifiers
+        val convProvider = conventionProvider(config)
+        val severity = if (config.failOnViolation) Severity.ERROR else Severity.WARNING
+        val diags = mutableListOf<Diagnostic>()
+        val reported = mutableSetOf<Pair<String, Span>>() // evita duplicados exactos
+
+        fun report(name: String, span: Span) {
+            val key = name to span
+            if (reported.add(key)) {
+                diags += Diagnostic(id, "Identificador '$name' no respeta ${convProvider.id}", span, severity)
+            }
         }
+
         fun visitExpr(e: Expression) {
             when (e) {
-                is Variable -> if (!ok(e.name)) {
-                    out += Diagnostic(
-                        id,
-                        "Identificador '${e.name}' no respeta ${context.config.identifiers.style}",
-                        (e.span),
-                        Severity.WARNING,
-                    )
-                }
+                is Variable -> if (!convProvider.matches(e.name)) report(e.name, e.span)
                 is Binary -> {
                     visitExpr(e.left)
                     visitExpr(e.right)
@@ -34,30 +30,18 @@ class IdentifierStyleRule : Rule {
         for (st in program.statements) {
             when (st) {
                 is VarDeclaration -> {
-                    if (!ok(st.name)) {
-                        out += Diagnostic(
-                            id,
-                            "Variable '${st.name}' no respeta ${context.config.identifiers.style}",
-                            (st).span,
-                            Severity.WARNING,
-                        )
-                    }
-                    st.initializer?.let(::visitExpr)
+                    if (!convProvider.matches(st.name)) report(st.name, st.span)
+                    if (config.checkReferences) st.initializer?.let(::visitExpr)
                 }
                 is Assignment -> {
-                    if (!ok(st.name)) {
-                        out += Diagnostic(
-                            id,
-                            "Asignación a '${st.name}' no respeta ${context.config.identifiers.style}",
-                            (st).span,
-                            Severity.WARNING,
-                        )
-                    }
-                    visitExpr(st.value)
+                    if (!convProvider.matches(st.name)) report(st.name, st.span)
+                    if (config.checkReferences) visitExpr(st.value)
                 }
-                is Println -> visitExpr(st.value)
+                is Println -> {
+                    if (config.checkReferences) visitExpr(st.value)
+                }
             }
         }
-        return out
+        return diags
     }
 }
