@@ -1,4 +1,5 @@
 class DefaultAnalyzer(private val rules: List<Rule>) : Analyzer {
+
     override fun analize(program: ProgramNode, config: AnalyzerConfig): Result<DiagnosticReport, LabeledError> = try {
         val context = AnalyzerContext(config)
 
