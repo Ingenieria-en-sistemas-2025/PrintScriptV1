@@ -11,7 +11,6 @@ import LiteralString
 import NumberLiteralToken
 import Operator
 import OperatorToken
-import ParserError
 import ParserUtils.expectOperator
 import ParserUtils.expectSeparator
 import Result
@@ -101,10 +100,10 @@ class RecursiveExpressionParser : ExpressionParser {
                     if (token.separator == Separator.LPAREN) {
                         parseParenExpr(ts)
                     } else {
-                        Failure(ParserError(token.span, "Expresión inesperada: $token"))
+                        Failure(LabeledError.of(token.span, "Expresión inesperada: $token"))
                     }
 
-                else -> Failure(ParserError(token.span, "Expresión inesperada: $token"))
+                else -> Failure(LabeledError.of(token.span, "Expresión inesperada: $token"))
             }
         }
 

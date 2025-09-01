@@ -9,7 +9,7 @@ object ParserUtils {
             if (token is IdentifierToken) {
                 ts.next().map { (t, nextTs) -> (t as IdentifierToken) to nextTs } // consumo y devuelvo (token tipado, stream avanzado)
             } else {
-                Failure(ParserError(token.span, "Se esperaba identificador")) // reporto error sin avanzar el stream
+                Failure(LabeledError.of(token.span, "Se esperaba identificador")) // reporto error sin avanzar el stream
             }
         }
 
@@ -18,7 +18,7 @@ object ParserUtils {
             if (token is OperatorToken && token.operator == operator) {
                 ts.next().map { (t, nextTs) -> (t as OperatorToken) to nextTs }
             } else {
-                Failure(ParserError(token.span, "Se esperaba operador $operator"))
+                Failure(LabeledError.of(token.span, "Se esperaba operador $operator"))
             }
         }
 
@@ -27,7 +27,7 @@ object ParserUtils {
             if (token is SeparatorToken && token.separator == separator) {
                 ts.next().map { (t, nextTs) -> (t as SeparatorToken) to nextTs }
             } else {
-                Failure(ParserError(token.span, "Se esperaba separador $separator"))
+                Failure(LabeledError.of(token.span, "Se esperaba separador $separator"))
             }
         }
 
@@ -36,7 +36,7 @@ object ParserUtils {
             if (token is KeywordToken && token.kind == kw) {
                 ts.next().map { (t, nextTs) -> (t as KeywordToken) to nextTs }
             } else {
-                Failure(ParserError(token.span, "Se esperaba keyword $kw"))
+                Failure(LabeledError.of(token.span, "Se esperaba keyword $kw"))
             }
         }
 
@@ -45,7 +45,7 @@ object ParserUtils {
             if (token is TypeToken) {
                 ts.next().map { (t, nextTs) -> (t as TypeToken) to nextTs }
             } else {
-                Failure(ParserError(token.span, "Se esperaba tipo"))
+                Failure(LabeledError.of(token.span, "Se esperaba tipo"))
             }
         }
 

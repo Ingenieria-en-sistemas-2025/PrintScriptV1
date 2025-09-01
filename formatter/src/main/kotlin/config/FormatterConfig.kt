@@ -1,8 +1,8 @@
 package config
 
 data class FormatterConfig(
-    val spaceBeforeColonInDecl: Boolean = false,
-    val spaceAfterColonInDecl: Boolean = true,
-    val spaceAroundAssignment: Boolean = true,
-    val blankLinesBeforePrintln: Int = 0,
-)
+    override val spaceBeforeColonInDecl: Boolean = false,
+    override val spaceAfterColonInDecl: Boolean = true,
+    override val spaceAroundAssignment: Boolean = true,
+    override val blankLinesBeforePrintln: Int = 0,
+) : FormatterOptions

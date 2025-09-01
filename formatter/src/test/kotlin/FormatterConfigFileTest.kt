@@ -1,6 +1,7 @@
 import config.ConfigLoader
-import config.FormatterConfig
+import config.FormatterOptions
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Files
@@ -18,8 +19,20 @@ class FormatterConfigFileTest {
         return path
     }
 
-    private fun formatWith(config: FormatterConfig, tokens: List<Token>): String =
-        Formatter(config).format(tokens)
+    private fun streamOf(tokens: List<Token>): TokenStream =
+        ListTokenStream.of(tokens)
+
+    private fun unwrap(res: Result<String, LabeledError>): String =
+        res.fold(
+            onSuccess = { it },
+            onFailure = { err -> fail("Formatting failed at ${err.humanReadable()}") },
+        )
+
+    private fun formatWith(config: FormatterOptions, tokens: List<Token>): String {
+        val formatter: Formatter = FirstFormatter(config)
+        val ts = streamOf(tokens)
+        return unwrap(formatter.format(ts))
+    }
 
     @Test
     fun testFormatterYaml() {
@@ -30,7 +43,7 @@ class FormatterConfigFileTest {
             blankLinesBeforePrintln: 1
         """
         val configPath = write(tmp.resolve("formatter.yaml"), yaml)
-        val config: FormatterConfig = ConfigLoader.load(configPath)
+        val config: FormatterOptions = ConfigLoader.load(configPath)
 
         val tokens = listOf(
             KeywordToken(Keyword.LET, dummySpan()),
@@ -67,7 +80,7 @@ class FormatterConfigFileTest {
         }
         """
         val configPath = write(tmp.resolve("formatter.json"), json)
-        val config: FormatterConfig = ConfigLoader.load(configPath)
+        val config: FormatterOptions = ConfigLoader.load(configPath)
 
         val tokens = listOf(
             KeywordToken(Keyword.LET, dummySpan()),
@@ -87,9 +100,38 @@ class FormatterConfigFileTest {
         val out = formatWith(config, tokens)
         val expected = buildString {
             append("let a :number=1;\n")
-            append("\n\n") // 2 lineas en blanco
+            append("\n\n")
             append("println(a);\n")
         }
+        assertEquals(expected, out)
+    }
+
+    @Test
+    fun testFormatterNoExtensionAlsoFallsBackToJson() {
+        val jsonLike = """
+        {
+          "spaceBeforeColonInDecl": false,
+          "spaceAfterColonInDecl":  false,
+          "spaceAroundAssignment":  true,
+          "blankLinesBeforePrintln": 0
+        }
+        """
+        val configPath = write(tmp.resolve("formatter"), jsonLike)
+        val config: FormatterOptions = ConfigLoader.load(configPath)
+
+        val tokens = listOf(
+            KeywordToken(Keyword.LET, dummySpan()),
+            IdentifierToken("n", dummySpan()),
+            SeparatorToken(Separator.COLON, dummySpan()),
+            TypeToken(Type.NUMBER, dummySpan()),
+            OperatorToken(Operator.ASSIGN, dummySpan()),
+            NumberLiteralToken("7", dummySpan()),
+            SeparatorToken(Separator.SEMICOLON, dummySpan()),
+            EofToken(dummySpan()),
+        )
+
+        val out = formatWith(config, tokens)
+        val expected = "let n:number = 7;\n"
         assertEquals(expected, out)
     }
 }

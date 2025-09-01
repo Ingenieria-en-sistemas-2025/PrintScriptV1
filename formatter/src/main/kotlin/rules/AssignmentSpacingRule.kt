@@ -1,19 +1,21 @@
 package rules
 
+import Operator
 import OperatorToken
 import Token
-import config.FormatterConfig
+import config.FormatterOptions
 
-class AssignmentSpacingRule(private val formatterConfig: FormatterConfig) : FormattingRule {
+class AssignmentSpacingRule(private val cfg: FormatterOptions) : FormattingRule {
     override fun apply(prev: Token?, current: Token, next: Token?): String? {
+        val around = cfg.spaceAroundAssignment
+        // ANTES del = (prefijo del =)
         if (current is OperatorToken && current.operator == Operator.ASSIGN) {
-            return if (formatterConfig.spaceAroundAssignment) " ${current.operator.symbol} " else current.operator.symbol
+            return if (around) " " else ""
+        }
+        // DESPUES del = (prefijo del token de la derecha)
+        if (prev is OperatorToken && prev.operator == Operator.ASSIGN) {
+            return if (around) " " else ""
         }
         return null
     }
 }
-// Mira el token actual
-// Si el token es un operador y es =
-// Si formatterConfig.spaceAroundAssignment == true, devuelve " = "
-// Si es false, devuelve "=" (sin espacios)
-// Si no es = , devuelve null para que otras reglas (o el default) decidan.

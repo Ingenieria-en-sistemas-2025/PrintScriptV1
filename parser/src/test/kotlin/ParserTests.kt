@@ -2,6 +2,7 @@ import expr.RecursiveExpressionParser
 import head.FirstHeadDetector
 import head.HeadDetector
 import head.Kw
+import head.Unknown
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import stmt.AssignmentStmtParser
@@ -157,11 +158,19 @@ class ParserTests {
             is Success -> error("Esperaba Failure, obtuve Success")
             is Failure -> {
                 val error = result.error
-                assertTrue(error is ParserError)
                 assertTrue(error.message.contains("Se esperaba separador SEMICOLON"))
                 assertEquals(Position(1, 5), error.span.start)
             }
         }
+    }
+
+    @Test
+    fun testHeadDetectorUnknown() {
+        val ts = tsOf(
+            NumberLiteralToken("123", Span(Position(1, 3), Position(1, 3))),
+        )
+        val head = assertSuccess(detector.detect(ts))
+        assertEquals(Unknown, head)
     }
 
     // Agrega un EOF (obligatorio) y construye el stream inmutable

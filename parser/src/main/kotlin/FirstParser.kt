@@ -43,7 +43,7 @@ class FirstParser(
             if (parser != null) {
                 parser.parse(ts, expr)
             } else {
-                Failure(ParserError(peekSpan(ts), "Inicio de sentencia no reconocido"))
+                Failure(LabeledError.of(peekSpan(ts), "Inicio de sentencia no reconocido"))
             }
         }
 

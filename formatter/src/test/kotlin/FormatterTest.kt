@@ -1,11 +1,24 @@
 import config.FormatterConfig
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 
 class FormatterTest {
 
-    private fun format(config: FormatterConfig, tokens: List<Token>): String =
-        Formatter(config).format(tokens)
+    private fun unwrapOrFail(res: Result<String, LabeledError>): String =
+        res.fold(
+            onSuccess = { it },
+            onFailure = { err -> fail("Formatting failed at ${err.humanReadable()}") },
+        )
+
+    private fun streamOf(tokens: List<Token>): TokenStream =
+        ListTokenStream.of(tokens)
+
+    private fun format(config: FormatterConfig, tokens: List<Token>): String {
+        val formatter: Formatter = FirstFormatter(config)
+        val stream: TokenStream = streamOf(tokens)
+        return unwrapOrFail(formatter.format(stream))
+    }
 
     private fun dummySpan(): Span = Span(Position(1, 1), Position(1, 1))
 
@@ -28,7 +41,6 @@ class FormatterTest {
             EofToken(dummySpan()),
         )
         val out = format(config, tokens)
-        // let name: string = "Milagros";\n
         assertEquals("let name: string = \"Milagros\";\n", out)
     }
 
@@ -87,9 +99,8 @@ class FormatterTest {
 
     @Test
     fun testPrintlnInsertsNlines() {
-        val config = FormatterConfig(blankLinesBeforePrintln = 1) // 1 linea en blanco
+        val config = FormatterConfig(blankLinesBeforePrintln = 1)
         val tokens = listOf(
-            // let a: number = 1;
             KeywordToken(Keyword.LET, dummySpan()),
             IdentifierToken("a", dummySpan()),
             SeparatorToken(Separator.COLON, dummySpan()),
@@ -97,7 +108,6 @@ class FormatterTest {
             OperatorToken(Operator.ASSIGN, dummySpan()),
             NumberLiteralToken("1", dummySpan()),
             SeparatorToken(Separator.SEMICOLON, dummySpan()),
-            // println(a);
             KeywordToken(Keyword.PRINTLN, dummySpan()),
             SeparatorToken(Separator.LPAREN, dummySpan()),
             IdentifierToken("a", dummySpan()),
@@ -108,7 +118,7 @@ class FormatterTest {
         val out = format(config, tokens)
         val expected = buildString {
             append("let a: number = 1;\n")
-            append("\n") // blank line extra
+            append("\n")
             append("println(a);\n")
         }
         assertEquals(expected, out)
@@ -124,6 +134,6 @@ class FormatterTest {
             EofToken(dummySpan()),
         )
         val out = format(config, tokens)
-        assertEquals("let x;\n", out) // espacio entre let y x
+        assertEquals("let x;\n", out)
     }
 }
