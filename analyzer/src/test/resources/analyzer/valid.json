@@ -1,0 +1,4 @@
+{
+  "identifiers": { "style": "CAMEL_CASE", "checkReferences": false },
+  "printlnRule": { "enabled": true }
+}

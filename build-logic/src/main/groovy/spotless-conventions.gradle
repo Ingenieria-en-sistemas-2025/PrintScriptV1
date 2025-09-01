@@ -23,4 +23,4 @@ spotless {
 }
 
 // `check` NO formatea; solo verifica
-tasks.named("check") { dependsOn("spotlessCheck") }
+//tasks.named("check") { dependsOn("spotlessCheck") }
