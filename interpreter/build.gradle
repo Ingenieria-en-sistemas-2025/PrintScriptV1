@@ -1,12 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '2.2.0'
-    id 'spotless-conventions'
-    id 'detekt-conventions'
-    id 'jacoco-conventions'
-}
-
-repositories {
-    mavenCentral()
+    id 'buildlogic.kotlin-library-conventions'
 }
 
 dependencies {
@@ -15,9 +8,3 @@ dependencies {
     implementation project(':ast')
 }
 
-test {
-    useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(18)
-}
