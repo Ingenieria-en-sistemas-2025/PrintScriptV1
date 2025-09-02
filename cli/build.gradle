@@ -1,10 +1,15 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '2.2.0'
     id 'buildlogic.kotlin-library-conventions'
 }
 
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     implementation project(':common')
+    implementation project(':lexer')
+    implementation project(':interpreter')
+    implementation project(':ast')
+    implementation project(':token')
+    implementation project(':formatter')
+    implementation project(':analyzer')
 }
 
