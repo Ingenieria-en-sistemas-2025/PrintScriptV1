@@ -3,4 +3,6 @@ enum class Separator(val value: String) {
     RPAREN(")"),
     SEMICOLON(";"),
     COLON(":"),
+    LBRACE("{"),
+    RBRACE("}"),
 }

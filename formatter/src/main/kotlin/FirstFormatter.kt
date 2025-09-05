@@ -2,7 +2,7 @@ import config.FormatterOptions
 
 class FirstFormatter(
     private val config: FormatterOptions,
-    private val registry: RuleRegistry = DefaultRuleRegistry(config),
+    private val registry: RuleRegistry = EnhancedRuleRegistry(config),
 ) : Formatter {
 
     override fun format(ts: TokenStream): Result<String, LabeledError> {

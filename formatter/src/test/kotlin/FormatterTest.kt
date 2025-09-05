@@ -15,7 +15,7 @@ class FormatterTest {
         ListTokenStream.of(tokens)
 
     private fun format(config: FormatterConfig, tokens: List<Token>): String {
-        val formatter: Formatter = FirstFormatter(config)
+        val formatter: Formatter = EnhancedFormatter(config)
         val stream: TokenStream = streamOf(tokens)
         return unwrapOrFail(formatter.format(stream))
     }

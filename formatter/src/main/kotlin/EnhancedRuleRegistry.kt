@@ -2,13 +2,34 @@ import config.FormatterOptions
 import rules.AssignmentSpacingRule
 import rules.BinaryOperatorSpacingRule
 import rules.BlankLinesBeforePrintlnRule
+import rules.BlockFormattingRule
 import rules.ColonSpacingRule
 import rules.FormattingRule
-import rules.NewlineAfterSemicolonRule
+import rules.IfKeywordSpacingRule
 import rules.WordSpacingRule
 
-class DefaultRuleRegistry(config: FormatterOptions) : RuleRegistry {
+class EnhancedRuleRegistry(config: FormatterOptions) : RuleRegistry {
     private val rules: List<FormattingRule> = listOf(
+        ColonSpacingRule(config),
+        AssignmentSpacingRule(config),
+        BinaryOperatorSpacingRule(),
+        IfKeywordSpacingRule(),
+        BlankLinesBeforePrintlnRule(config),
+        BlockFormattingRule(config),
+        WordSpacingRule(),
+    )
+
+    override fun findApplicableRule(prev: Token?, current: Token, next: Token?): String? {
+        for (rule in rules) {
+            val result = rule.apply(prev, current, next)
+            if (result != null) return result
+        }
+        return null
+    }
+}
+
+/*
+listOf(
         ColonSpacingRule(config),
         AssignmentSpacingRule(config),
         BinaryOperatorSpacingRule(),
@@ -16,12 +37,4 @@ class DefaultRuleRegistry(config: FormatterOptions) : RuleRegistry {
         NewlineAfterSemicolonRule(),
         WordSpacingRule(),
     )
-
-    override fun findApplicableRule(prev: Token?, current: Token, next: Token?): String? {
-        for (rule in rules) {
-            val string = rule.apply(prev, current, next)
-            if (string != null) return string
-        }
-        return null
-    }
-}
+ */

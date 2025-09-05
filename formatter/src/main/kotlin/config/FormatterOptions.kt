@@ -5,4 +5,5 @@ interface FormatterOptions {
     val spaceAfterColonInDecl: Boolean
     val spaceAroundAssignment: Boolean
     val blankLinesBeforePrintln: Int
+    val indentSpaces: Int
 }
