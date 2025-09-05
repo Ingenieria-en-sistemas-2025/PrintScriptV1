@@ -24,6 +24,7 @@ class IdentifierStyleRule(private val conventionProvider: (IdentifiersConfig) ->
                 }
                 is Grouping -> visitExpr(e.expression)
                 is LiteralNumber, is LiteralString -> {}
+                else -> {}
             }
         }
 
