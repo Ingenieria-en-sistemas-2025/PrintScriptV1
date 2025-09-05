@@ -1,1 +1,1 @@
-sealed interface LexerError : LabeledError
+typealias LexerError = LabeledError
