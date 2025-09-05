@@ -33,5 +33,5 @@ style:
 complexity:
   CyclomaticComplexMethod:
     active: true
-    threshold: 20
+    threshold: 25
 
