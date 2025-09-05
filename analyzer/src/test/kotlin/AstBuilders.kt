@@ -33,3 +33,6 @@ fun assignment(name: String, value: Expression, l1: Int, c1: Int, l2: Int, c2: I
     Assignment(name, value, span(l1, c1, l2, c2))
 
 fun program(vararg s: Statement) = ProgramNode(s.toList())
+
+fun readInputExpr(prompt: Expression, l1: Int, c1: Int, l2: Int, c2: Int) =
+    ReadInput(prompt, span(l1, c1, l2, c2))
