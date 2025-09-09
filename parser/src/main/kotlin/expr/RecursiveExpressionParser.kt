@@ -5,14 +5,18 @@ import Expression
 import Failure
 import Grouping
 import IdentifierToken
+import KeywordToken
 import LabeledError
 import LiteralNumber
 import LiteralString
 import NumberLiteralToken
 import Operator
 import OperatorToken
+import ParserUtils.expectKeyword
 import ParserUtils.expectOperator
 import ParserUtils.expectSeparator
+import ReadEnv
+import ReadInput
 import Result
 import Separator
 import SeparatorToken
@@ -96,6 +100,12 @@ class RecursiveExpressionParser : ExpressionParser {
                         Pair(Variable(token.identifier, token.span), nextStream)
                     }
 
+                is KeywordToken -> when (token.kind) {
+                    Keyword.READ_INPUT -> parseReadInput(ts)
+                    Keyword.READ_ENV -> parseReadEnv(ts)
+                    else -> Failure(LabeledError.of(token.span, "Expresión inesperada: $token"))
+                }
+
                 is SeparatorToken ->
                     if (token.separator == Separator.LPAREN) {
                         parseParenExpr(ts)
@@ -112,6 +122,27 @@ class RecursiveExpressionParser : ExpressionParser {
             parseExpression(t1).flatMap { (inner, t2) ->
                 expectSeparator(t2, Separator.RPAREN).map { (rpar, t3) ->
                     Grouping(inner, Span(lpar.span.start, rpar.span.end)) to t3
+                }
+            }
+        }
+    private fun parseReadInput(ts: TokenStream): Result<Pair<Expression, TokenStream>, LabeledError> =
+        expectKeyword(ts, Keyword.READ_INPUT).flatMap { (kw, t1) ->
+            expectSeparator(t1, Separator.LPAREN).flatMap { (_, t2) ->
+                parseExpression(t2).flatMap { (arg, t3) ->
+                    expectSeparator(t3, Separator.RPAREN).map { (rp, t4) ->
+                        ReadInput(arg, Span(kw.span.start, rp.span.end)) to t4
+                    }
+                }
+            }
+        }
+
+    private fun parseReadEnv(ts: TokenStream): Result<Pair<Expression, TokenStream>, LabeledError> =
+        expectKeyword(ts, Keyword.READ_ENV).flatMap { (kw, t1) ->
+            expectSeparator(t1, Separator.LPAREN).flatMap { (_, t2) ->
+                parseExpression(t2).flatMap { (arg, t3) ->
+                    expectSeparator(t3, Separator.RPAREN).map { (rp, t4) ->
+                        ReadEnv(arg, Span(kw.span.start, rp.span.end)) to t4
+                    }
                 }
             }
         }
