@@ -3,10 +3,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-class LexerTest {
+class Lexerv0Test {
 
     private fun createTokenizer(src: String): Tokenizer {
-        val cfg = PrintScriptMapConfig()
+        val cfg = PrintScriptv0MapConfig()
         return Tokenizer(src, cfg.rules(), cfg.triviaRules())
     }
 
