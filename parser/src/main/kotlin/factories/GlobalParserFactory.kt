@@ -7,7 +7,7 @@ object GlobalParserFactory {
         return when (version) {
             "1.0" -> ParserFactoryV10.create()
             "1.1" -> ParserFactoryV11.create()
-            else -> null // o lanzar excepción si prefieres
+            else -> null
         }
     }
 }
