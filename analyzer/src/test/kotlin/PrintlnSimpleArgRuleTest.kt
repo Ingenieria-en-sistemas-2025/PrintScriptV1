@@ -1,3 +1,10 @@
+import org.printscript.analyzer.AnalyzerConfig
+import org.printscript.analyzer.AnalyzerContext
+import org.printscript.analyzer.PrintlnRuleConfig
+import org.printscript.analyzer.PrintlnSimpleArgRule
+import org.printscript.analyzer.Severity
+import org.printscript.common.Operator
+import org.printscript.common.Type
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

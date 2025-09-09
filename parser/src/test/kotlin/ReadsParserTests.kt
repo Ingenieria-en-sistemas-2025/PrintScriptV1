@@ -1,10 +1,18 @@
-import dsl.kw
-import dsl.op
-import dsl.sep
-import dsl.ty
-import factories.GlobalParserFactory
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.printscript.ast.Binary
+import org.printscript.ast.LiteralString
+import org.printscript.ast.Println
+import org.printscript.ast.ReadEnv
+import org.printscript.ast.ReadInput
+import org.printscript.ast.VarDeclaration
+import org.printscript.common.Type
+import org.printscript.parser.factories.GlobalParserFactory
+import org.printscript.token.TestUtils
+import org.printscript.token.dsl.kw
+import org.printscript.token.dsl.op
+import org.printscript.token.dsl.sep
+import org.printscript.token.dsl.ty
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 

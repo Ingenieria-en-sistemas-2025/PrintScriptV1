@@ -1,15 +1,18 @@
-import config.ConfigLoader
-import config.FormatterConfig
-import config.FormatterOptions
-import dsl.TokenBuilder
-import dsl.kw
-import dsl.op
-import dsl.sep
-import dsl.ty
-import factories.GlobalFormatterFactory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import org.printscript.formatter.Formatter
+import org.printscript.formatter.config.ConfigLoader
+import org.printscript.formatter.config.FormatterConfig
+import org.printscript.formatter.config.FormatterOptions
+import org.printscript.formatter.factories.GlobalFormatterFactory
+import org.printscript.token.TestUtils
+import org.printscript.token.TokenStream
+import org.printscript.token.dsl.TokenBuilder
+import org.printscript.token.dsl.kw
+import org.printscript.token.dsl.op
+import org.printscript.token.dsl.sep
+import org.printscript.token.dsl.ty
 import java.nio.file.Files
 import java.nio.file.Path
 

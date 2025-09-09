@@ -1,3 +1,8 @@
+import org.printscript.common.Failure
+import org.printscript.common.Success
+import org.printscript.lexer.PrintScriptv0MapConfig
+import org.printscript.lexer.Tokenizer
+import org.printscript.lexer.UnexpectedChar
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -18,7 +23,7 @@ class Lexerv0Test {
         }
     }
 
-    private fun lexError(src: String): LexerError {
+    private fun lexError(src: String): org.printscript.lexer.LexerError {
         val tz = createTokenizer(src)
         return when (val r = tz.tokenize()) {
             is Success -> fail("Se esperaba Failure, pero se obtuvo Success con ${r.value.size} tokens")

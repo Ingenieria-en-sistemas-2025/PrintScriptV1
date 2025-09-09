@@ -1,3 +1,9 @@
+import org.printscript.analyzer.AnalyzerConfig
+import org.printscript.analyzer.AnalyzerContext
+import org.printscript.analyzer.ReadInputSimpleArgRule
+import org.printscript.analyzer.Severity
+import org.printscript.ast.IfStmt
+import org.printscript.common.Operator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

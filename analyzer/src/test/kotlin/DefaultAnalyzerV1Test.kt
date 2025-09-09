@@ -1,3 +1,16 @@
+import org.printscript.analyzer.AnalyzerConfig
+import org.printscript.analyzer.DefaultAnalyzer
+import org.printscript.analyzer.IdentifierStyle
+import org.printscript.analyzer.IdentifierStyleRule
+import org.printscript.analyzer.IdentifiersConfig
+import org.printscript.analyzer.PrintlnRuleConfig
+import org.printscript.analyzer.PrintlnSimpleArgRule
+import org.printscript.analyzer.ReadInputRuleConfig
+import org.printscript.analyzer.ReadInputSimpleArgRule
+import org.printscript.common.Failure
+import org.printscript.common.Operator
+import org.printscript.common.Success
+import org.printscript.common.Type
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail

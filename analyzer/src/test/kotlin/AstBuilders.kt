@@ -1,5 +1,21 @@
 @file:Suppress("LongParameterList")
 
+import org.printscript.ast.Assignment
+import org.printscript.ast.Binary
+import org.printscript.ast.Expression
+import org.printscript.ast.LiteralNumber
+import org.printscript.ast.LiteralString
+import org.printscript.ast.Println
+import org.printscript.ast.ProgramNode
+import org.printscript.ast.ReadInput
+import org.printscript.ast.Statement
+import org.printscript.ast.VarDeclaration
+import org.printscript.ast.Variable
+import org.printscript.common.Operator
+import org.printscript.common.Position
+import org.printscript.common.Span
+import org.printscript.common.Type
+
 fun pos(l: Int, c: Int) = Position(l, c)
 fun span(l1: Int, c1: Int, l2: Int, c2: Int) = Span(pos(l1, c1), pos(l2, c2))
 

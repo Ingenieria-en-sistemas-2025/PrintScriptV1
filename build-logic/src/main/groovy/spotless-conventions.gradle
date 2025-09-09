@@ -2,7 +2,6 @@ plugins {
     id 'com.diffplug.spotless'
 }
 
-// 2+ custom rules de formatter acá (ver comentarios)
 spotless {
     kotlin {
         target("**/*.kt")

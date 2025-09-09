@@ -1,3 +1,10 @@
+import org.printscript.analyzer.AnalyzerConfig
+import org.printscript.analyzer.AnalyzerContext
+import org.printscript.analyzer.ReadInputRuleConfig
+import org.printscript.analyzer.ReadInputSimpleArgRule
+import org.printscript.analyzer.Severity
+import org.printscript.common.Operator
+import org.printscript.common.Type
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -16,7 +23,8 @@ class ReadInputSimpleArgRuleTest {
                 31,
             ),
         )
-        val cfg = AnalyzerConfig( // por defecto enabled=true, strict=false
+        val cfg = AnalyzerConfig(
+            // por defecto enabled=true, strict=false
             readInputRule = ReadInputRuleConfig(enabled = true, onlyStringLiteralOrIdentifier = false),
         )
         val diags = rule.check(p, AnalyzerContext(cfg))
