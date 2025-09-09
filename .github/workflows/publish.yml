@@ -1,0 +1,36 @@
+name: Publish (GitHub Packages)
+
+on:
+  push:
+    branches: [ "main" ]   # snapshots
+    tags:     [ "v*" ]     # releases por tag
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Publish to GitHub Packages
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            V="${GITHUB_REF_NAME#v}"     # v1.0.0 -> 1.0.0
+            ./gradlew --no-daemon publish -Pversion="$V"
+          else
+            ./gradlew --no-daemon publish
+          fi

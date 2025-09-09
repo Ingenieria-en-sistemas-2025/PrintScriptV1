@@ -1,4 +1,6 @@
-
+plugins {
+    id 'maven-publish'
+}
 
 tasks.register('installGitHooks', Copy) {
     from(layout.projectDirectory.dir('gradle/hooks'))
@@ -16,5 +18,38 @@ tasks.register('printGitHooksStatus') {
     doLast {
         println "pre-commit: " + (preCommit.asFile.exists() ? 'OK' : 'MISSING')
         println "pre-push  : " + (prePush.asFile.exists() ? 'OK' : 'MISSING')
+    }
+}
+
+def publishable = [
+        ':common', ':token', ':ast', ':lexer', ':parser',
+        ':interpreter', ':analyzer', ':formatter', ':cli'
+].collect { project(it) }
+
+configure(publishable) {
+    plugins.withId('java') {
+        if (!plugins.hasPlugin('maven-publish')) {
+            apply plugin: 'maven-publish'
+        }
+
+        publishing {
+            publications {
+                if (findByName("mavenJava") == null) {
+                    register("mavenJava", MavenPublication) {
+                        from components.java
+                    }
+                }
+            }
+            repositories {
+                maven {
+                    name = "GitHubPackages"
+                    url = uri("https://maven.pkg.github.com/Ingenieria-en-sistemas-2025/PrintScriptV1")
+                    credentials {
+                        username = System.getenv("GITHUB_ACTOR") ?: ""
+                        password =  System.getenv("GITHUB_TOKEN") ?: ""
+                    }
+                }
+            }
+        }
     }
 }
