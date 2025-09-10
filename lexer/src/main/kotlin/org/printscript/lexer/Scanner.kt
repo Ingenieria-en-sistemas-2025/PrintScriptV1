@@ -1,17 +1,22 @@
 package org.printscript.lexer
 
 import org.printscript.common.Position
-import org.printscript.common.Span
 
-class Scanner private constructor(private val input: String, private val index: Int, private val line: Int, private val column: Int) {
-    constructor(scr: String) : this(scr, 0, 1, 1)
+class Scanner private constructor(
+    private val input: String,
+    private val index: Int,
+    private val line: Int,
+    private val column: Int,
+) {
+    constructor(text: String) : this(text, 0, 1, 1)
 
-    fun eof(): Boolean = index >= input.length
+    val isEof: Boolean get() = index >= input.length
 
-    fun peek(): Char {
-        if (eof()) error("EOF")
-        return input[index]
-    }
+    fun peek(): Char = input.getOrNull(index) ?: error("EOF")
+
+    fun remainingFrom(offset: Int = 0): CharSequence = input.substring(index + offset, input.length)
+
+    fun position(): Position = Position(line, column)
 
     fun advance(n: Int): Scanner {
         require(n >= 0) { "n must be non-negative" }
@@ -29,7 +34,6 @@ class Scanner private constructor(private val input: String, private val index: 
         return Scanner(input, i, l, c)
     }
 
-    fun pos(): Position = Position(line, column)
-    fun remaining(): String = if (eof()) "" else input.substring(index)
-    fun spanFrom(start: Position): Span = Span(start, pos())
+    fun slice(len: Int): CharSequence =
+        input.subSequence(index, (index + len).coerceAtMost(input.length))
 }

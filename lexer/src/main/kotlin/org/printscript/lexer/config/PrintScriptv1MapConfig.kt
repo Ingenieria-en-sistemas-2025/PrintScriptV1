@@ -1,9 +1,20 @@
-package org.printscript.lexer
+package org.printscript.lexer.config
 
 import org.printscript.common.Keyword
 import org.printscript.common.Operator
 import org.printscript.common.Separator
 import org.printscript.common.Type
+import org.printscript.lexer.lexingrules.BooleanLiteralRule
+import org.printscript.lexer.lexingrules.IdentifierOrKeywordRule
+import org.printscript.lexer.lexingrules.LexingRule
+import org.printscript.lexer.lexingrules.NumberRule
+import org.printscript.lexer.lexingrules.OperatorRule
+import org.printscript.lexer.lexingrules.SeparatorRule
+import org.printscript.lexer.lexingrules.StringRule
+import org.printscript.lexer.triviarules.BlockCommentRule
+import org.printscript.lexer.triviarules.LineCommentRule
+import org.printscript.lexer.triviarules.TriviaRule
+import org.printscript.lexer.triviarules.WhiteSpaceRule
 
 class PrintScriptv1MapConfig {
 

@@ -1,4 +1,4 @@
-package org.printscript.lexer
+package org.printscript.lexer.lexingrules
 
 import org.printscript.common.Keyword
 import org.printscript.common.Span
@@ -15,10 +15,8 @@ class IdentifierOrKeywordRule(kw: Map<String, Keyword>, tp: Map<String, Type>) :
     private val keywords: Map<String, Keyword> = kw.toMap()
     private val types: Map<String, Type> = tp.toMap()
 
-    override fun matchLength(string: String): Int {
-        val match = IDENT_REGEX.matchAt(string, 0) ?: return 0
-        return match.value.length
-    }
+    override fun matchLength(input: CharSequence): Int =
+        IDENT_REGEX.matchAt(input, 0)?.value?.length ?: 0
 
     override fun build(lexeme: String, span: Span): Token {
         types[lexeme]?.let { return TypeToken(it, span) }

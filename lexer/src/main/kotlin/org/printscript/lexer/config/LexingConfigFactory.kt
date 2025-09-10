@@ -1,4 +1,4 @@
-package org.printscript.lexer
+package org.printscript.lexer.config
 
 import org.printscript.common.Version
 

@@ -1,9 +1,12 @@
 import org.printscript.common.Failure
-import org.printscript.common.LabeledError
 import org.printscript.common.Success
-import org.printscript.lexer.PrintScriptv0MapConfig
+import org.printscript.lexer.LongestMatchTokenMatcher
+import org.printscript.lexer.TokenCollector
 import org.printscript.lexer.Tokenizer
-import org.printscript.lexer.UnexpectedChar
+import org.printscript.lexer.config.PrintScriptv0MapConfig
+import org.printscript.lexer.error.LexerError
+import org.printscript.lexer.error.UnexpectedChar
+import org.printscript.lexer.triviarules.CompositeTriviaSkipper
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -11,21 +14,23 @@ import kotlin.test.fail
 
 class Lexerv0DiffFromV1Test {
     private fun createTokenizer(src: String): Tokenizer {
-        val cfg = PrintScriptv0MapConfig()
-        return Tokenizer(src, cfg.rules(), cfg.triviaRules())
+        val cfg = PrintScriptv0MapConfig() // o v1 en el otro test
+        val matcher = LongestMatchTokenMatcher(cfg.rules())
+        val skipper = CompositeTriviaSkipper(cfg.triviaRules())
+        return Tokenizer.of(src, matcher, skipper)
     }
 
     private fun lexAllToStrings(src: String): List<String> {
         val tokenizer = createTokenizer(src)
-        return when (val r = tokenizer.tokenize()) {
-            is Success -> r.value.map { it.toString() } // incluye EOF
+        return when (val r = TokenCollector.collectAll(tokenizer)) {
+            is Success -> r.value.map { it.toString() } // incluye EOF al final
             is Failure -> fail("Lexing failure: ${r.error.message} @ ${r.error.span}")
         }
     }
 
-    private fun lexError(src: String): LabeledError {
+    private fun lexError(src: String): LexerError {
         val tz = createTokenizer(src)
-        return when (val r = tz.tokenize()) {
+        return when (val r = TokenCollector.collectAll(tz)) {
             is Success -> fail("Se esperaba Failure, pero se obtuvo Success con ${r.value.size} tokens")
             is Failure -> r.error
         }
