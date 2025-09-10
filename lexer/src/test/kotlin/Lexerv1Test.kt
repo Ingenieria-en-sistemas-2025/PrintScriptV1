@@ -1,3 +1,9 @@
+import org.printscript.common.Failure
+import org.printscript.common.LabeledError
+import org.printscript.common.Success
+import org.printscript.lexer.PrintScriptv1MapConfig
+import org.printscript.lexer.Tokenizer
+import org.printscript.lexer.UnexpectedChar
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

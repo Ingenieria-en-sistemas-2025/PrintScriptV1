@@ -1,3 +1,27 @@
+import org.printscript.ast.Assignment
+import org.printscript.ast.Binary
+import org.printscript.ast.LiteralNumber
+import org.printscript.ast.LiteralString
+import org.printscript.ast.Println
+import org.printscript.ast.ProgramNode
+import org.printscript.ast.Statement
+import org.printscript.ast.VarDeclaration
+import org.printscript.ast.Variable
+import org.printscript.common.Failure
+import org.printscript.common.Operator
+import org.printscript.common.Position
+import org.printscript.common.Result
+import org.printscript.common.Span
+import org.printscript.common.Success
+import org.printscript.common.Type
+import org.printscript.interpreter.AssignmentAction
+import org.printscript.interpreter.DefaultExprEvaluator
+import org.printscript.interpreter.InterpreterError
+import org.printscript.interpreter.PrintlnAction
+import org.printscript.interpreter.ProgramInterpreter
+import org.printscript.interpreter.RunResult
+import org.printscript.interpreter.StmtActionExecutor
+import org.printscript.interpreter.VarDeclarationAction
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -19,7 +43,8 @@ class InterpreterPrintTests {
     @Test
     fun `println number 42`() {
         val stmts: List<Statement> = listOf(
-            Println( // aca usa la println action
+            Println(
+                // aca usa la println action
                 value = LiteralNumber(raw = "42", span = s()),
                 span = s(),
             ),
@@ -37,13 +62,15 @@ class InterpreterPrintTests {
     @Test
     fun `declare variable x = 42 and print it`() {
         val stmts: List<Statement> = listOf(
-            VarDeclaration( // aca usa la VarDeclaration action
+            VarDeclaration(
+                // aca usa la VarDeclaration action
                 name = "x",
                 type = Type.NUMBER,
                 initializer = LiteralNumber(raw = "42", span = s()),
                 span = s(),
             ),
-            Println( // aca usa la println action
+            Println(
+                // aca usa la println action
                 value = Variable(name = "x", span = s()),
                 span = s(),
             ),
@@ -61,18 +88,21 @@ class InterpreterPrintTests {
     @Test
     fun `declare variable x = 42, assign x = 100 and print it`() {
         val stmts: List<Statement> = listOf(
-            VarDeclaration( // aca usa la VarDeclaration action
+            VarDeclaration(
+                // aca usa la VarDeclaration action
                 name = "x",
                 type = Type.NUMBER,
                 initializer = LiteralNumber(raw = "42", span = s()),
                 span = s(),
             ),
-            Assignment( // aca usa la Assignment action
+            Assignment(
+                // aca usa la Assignment action
                 name = "x",
                 value = LiteralNumber(raw = "100", span = s()),
                 span = s(),
             ),
-            Println( // aca usa la println action
+            Println(
+                // aca usa la println action
                 value = Variable(name = "x", span = s()),
                 span = s(),
             ),
@@ -93,18 +123,21 @@ class InterpreterPrintTests {
     @Test
     fun `declare variable x = 42, assign x = 100 and print x + 1`() {
         val stmts: List<Statement> = listOf(
-            VarDeclaration( // aca usa la VarDeclaration action
+            VarDeclaration(
+                // aca usa la VarDeclaration action
                 name = "x",
                 type = Type.NUMBER,
                 initializer = LiteralNumber(raw = "42", span = s()),
                 span = s(),
             ),
-            Assignment( // aca usa la Assignment action
+            Assignment(
+                // aca usa la Assignment action
                 name = "x",
                 value = LiteralNumber(raw = "100", span = s()),
                 span = s(),
             ),
-            Println( // aca usa la println action
+            Println(
+                // aca usa la println action
                 value = Binary(
                     left = Variable(name = "x", span = s()),
                     operator = Operator.PLUS,
@@ -129,7 +162,8 @@ class InterpreterPrintTests {
     @Test
     fun `print string "hello world"`() {
         val stmts: List<Statement> = listOf(
-            Println( // aca usa la println action
+            Println(
+                // aca usa la println action
                 value = LiteralString(value = "hello world", span = s()),
                 span = s(),
             ),

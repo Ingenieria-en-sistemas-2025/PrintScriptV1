@@ -1,3 +1,7 @@
+import org.printscript.analyzer.AnalyzerConfigLoader
+import org.printscript.analyzer.IdentifierStyle
+import org.printscript.common.Failure
+import org.printscript.common.Success
 import java.io.File
 import kotlin.io.path.createTempFile
 import kotlin.test.Test

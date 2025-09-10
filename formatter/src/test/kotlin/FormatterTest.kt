@@ -1,12 +1,15 @@
-import config.FormatterConfig
-import dsl.TokenBuilder
-import dsl.kw
-import dsl.op
-import dsl.sep
-import dsl.ty
-import factories.GlobalFormatterFactory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.printscript.formatter.Formatter
+import org.printscript.formatter.config.FormatterConfig
+import org.printscript.formatter.factories.GlobalFormatterFactory
+import org.printscript.token.TestUtils
+import org.printscript.token.TokenStream
+import org.printscript.token.dsl.TokenBuilder
+import org.printscript.token.dsl.kw
+import org.printscript.token.dsl.op
+import org.printscript.token.dsl.sep
+import org.printscript.token.dsl.ty
 
 class FormatterTest {
 
