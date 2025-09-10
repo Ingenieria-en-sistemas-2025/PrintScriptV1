@@ -29,16 +29,14 @@ class ExprPratt(
 
     // Primero: se elije el prefijo y se parsea, despues se sigue con los infix
     private fun startExpression(ts0: TokenStream, minPrec: Prec): Result<Pair<Expression, TokenStream>, LabeledError> {
-        val result0 = peekNext(ts0)
-        return when (result0) {
+        return when (val result0 = peekNext(ts0)) {
             is Failure -> result0
             is Success -> {
                 val token0 = result0.value
                 val prefix = pickPrefixFor(token0)
                     ?: return startError(token0)
 
-                val rPrefix = parsePrefix(prefix, ts0)
-                when (rPrefix) {
+                when (val rPrefix = parsePrefix(prefix, ts0)) {
                     is Failure -> rPrefix
                     is Success -> {
                         val (left, afterPrefix) = rPrefix.value
@@ -49,25 +47,22 @@ class ExprPratt(
         }
     }
 
-    /** Continue: while the next infix beats minPrec, apply it. */
     private fun chainInfix(
         left: Expression,
         ts: TokenStream,
         minPrec: Prec,
     ): Result<Pair<Expression, TokenStream>, LabeledError> {
-        val rPeek = peekNext(ts)
-        return when (rPeek) {
-            is Failure -> rPeek
+        return when (val resultPeek = peekNext(ts)) {
+            is Failure -> resultPeek
             is Success -> {
-                val nextToken = rPeek.value
+                val nextToken = resultPeek.value
                 val infix = pickInfixFor(nextToken) ?: return done(left, ts)
                 if (shouldStopDueToPrecedence(infix, minPrec)) return done(left, ts)
 
-                val rStep = applyInfixOnce(infix, left, ts)
-                when (rStep) {
-                    is Failure -> rStep
+                when (val resultStep = applyInfixOnce(infix, left, ts)) {
+                    is Failure -> resultStep
                     is Success -> {
-                        val (newLeft, afterInfix) = rStep.value
+                        val (newLeft, afterInfix) = resultStep.value
                         chainInfix(newLeft, afterInfix, minPrec)
                     }
                 }
@@ -75,42 +70,34 @@ class ExprPratt(
         }
     }
 
-    /** Look at the next token without consuming it. */
     private fun peekNext(ts: TokenStream) = ts.peek()
 
-    /** Pick how the expression starts: by keyword, separator or token kind. */
     private fun pickPrefixFor(t0: Token): PrefixParselet? = when (t0) {
         is KeywordToken -> prefixByKeyword[t0.kind]
-        is SeparatorToken -> prefixBySeparator[t0.separator] // e.g., '(' → GroupingPrefix
+        is SeparatorToken -> prefixBySeparator[t0.separator]
         else -> classifyKind(t0)?.let(prefixByTokenKind::get)
     }
 
-    /** Pick the infix operator that continues (operators only). */
     private fun pickInfixFor(t: Token): InfixParselet? = when (t) {
-        is OperatorToken -> infixByOperator[t.operator] // e.g., +, -, *, /
+        is OperatorToken -> infixByOperator[t.operator]
         else -> null
     }
 
-    /** Stop if the infix is too weak for the current context. */
     private fun shouldStopDueToPrecedence(infix: InfixParselet, minPrec: Prec): Boolean =
         infix.prec.priority <= minPrec.priority
 
-    /** Apply a single infix: combine left with its right-hand side. */
     private fun applyInfixOnce(
         infix: InfixParselet,
         left: Expression,
         ts: TokenStream,
     ) = infix.parse(this, left, ts)
 
-    /** Parse the chosen prefix at the start point. */
     private fun parsePrefix(prefix: PrefixParselet, ts: TokenStream) =
         prefix.parse(this, ts)
 
-    /** Final result: no more infix wins. */
     private fun done(left: Expression, ts: TokenStream): Result<Pair<Expression, TokenStream>, LabeledError> =
         Success(left to ts)
 
-    /** Clear error when we don't know how to start with that token. */
     private fun startError(t0: Token): Result<Pair<Expression, TokenStream>, LabeledError> =
         Failure(LabeledError.of(t0.span, "Inicio de expresión no reconocido: $t0"))
 }
