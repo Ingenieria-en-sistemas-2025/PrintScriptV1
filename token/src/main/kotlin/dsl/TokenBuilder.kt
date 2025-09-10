@@ -1,5 +1,6 @@
 package dsl
 
+import BooleanLiteralToken
 import EofToken
 import IdentifierToken
 import Keyword
@@ -53,6 +54,11 @@ class TokenBuilder {
 
     fun type(type: Type): TokenBuilder {
         tokens.add(TypeToken(type, dummySpan))
+        return this
+    }
+
+    fun boolean(value: Boolean): TokenBuilder {
+        tokens.add(BooleanLiteralToken(value, dummySpan))
         return this
     }
 

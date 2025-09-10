@@ -5,5 +5,5 @@ import Result
 import TokenStream
 
 interface PrefixParselet {
-    fun parse(p: ExprPratt, ts: TokenStream): Result<Pair<Expression, TokenStream>, LabeledError>
+    fun parse(p: ExpressionParser, ts: TokenStream): Result<Pair<Expression, TokenStream>, LabeledError>
 }

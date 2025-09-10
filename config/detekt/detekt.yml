@@ -34,4 +34,7 @@ complexity:
   CyclomaticComplexMethod:
     active: true
     threshold: 25
-
+  TooManyFunctions:
+    active: true
+    thresholdInClasses: 15
+    thresholdInInterfaces: 15

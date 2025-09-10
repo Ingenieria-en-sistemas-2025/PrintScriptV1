@@ -1,13 +1,11 @@
 import expr.ExpressionParser
-import expr.RecursiveExpressionParser
-import head.FirstHeadDetector
 import head.Head
 import head.HeadDetector
 import stmt.StmtParser
 
 class FirstParser(
-    private val headDetector: HeadDetector = FirstHeadDetector(),
-    private val expr: ExpressionParser = RecursiveExpressionParser(),
+    private val headDetector: HeadDetector,
+    private val expr: ExpressionParser,
     private val stmtParsers: Map<Head, StmtParser>,
 ) : Parser {
 

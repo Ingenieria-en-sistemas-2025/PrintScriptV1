@@ -1,5 +1,6 @@
 package stmt
 
+import Expression
 import IfStmt
 import Keyword
 import KeywordToken
@@ -23,56 +24,76 @@ class IfStmtParser(
     private val stmtParsers: Map<Head, StmtParser>,
 ) : StmtParser {
 
-    override fun parse(ts: TokenStream, expressionParser: ExpressionParser): Result<Pair<Statement, TokenStream>, LabeledError> =
-        expectKeyword(ts, Keyword.IF).flatMap { (ifKw, t1) ->
-            lparen(t1).flatMap { t2 ->
-                expressionParser.parseExpression(t2).flatMap { (cond, t3) ->
-                    rparen(t3).flatMap { t4 ->
-                        lbrace(t4).flatMap { t5 ->
-                            // THEN { ... }
-                            Statements.parseUntil(
-                                t5,
-                                headDetector,
-                                stmtParsers,
-                                expressionParser,
-                                isTerminator = { it is SeparatorToken && it.separator == Separator.RBRACE },
-                            ).flatMap { (thenStmts, t6) ->
-                                rbrace(t6).flatMap { (rThen, t7) ->
-                                    // else opcional
-                                    maybeElse(t7).flatMap { (hasElse, t8) ->
-                                        if (!hasElse) {
-                                            Success(IfStmt(cond, thenStmts, null, Span(ifKw.span.start, rThen.span.end)) to t8)
-                                        } else {
-                                            lbrace(t8).flatMap { t9 ->
-                                                // ELSE { ... }
-                                                Statements.parseUntil(
-                                                    t9,
-                                                    headDetector,
-                                                    stmtParsers,
-                                                    expressionParser,
-                                                    isTerminator = { it is SeparatorToken && it.separator == Separator.RBRACE },
-                                                ).flatMap { (elseStmts, ta) ->
-                                                    rbrace(ta).map { (rElse, tb) ->
-                                                        IfStmt(cond, thenStmts, elseStmts, Span(ifKw.span.start, rElse.span.end)) to tb
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+    private data class Block(val stmts: List<Statement>, val rBrace: SeparatorToken)
+    // rBrace sirve para tener el } consumido y su span
+
+    override fun parse(
+        ts: TokenStream,
+        expressionParser: ExpressionParser,
+    ): Result<Pair<Statement, TokenStream>, LabeledError> =
+        expectIf(ts).flatMap { (ifKw, t1) ->
+            parseCondition(t1, expressionParser).flatMap { (cond, t2) ->
+                parseBlock(t2, expressionParser).flatMap { (thenB, t3) ->
+                    maybeElse(t3).flatMap { (hasElse, t4) ->
+                        if (!hasElse) {
+                            finishNoElse(ifKw, cond, thenB, t4)
+                        } else {
+                            finishWithElse(ifKw, cond, thenB, t4, expressionParser)
                         }
                     }
                 }
             }
         }
+    private fun expectIf(ts: TokenStream) = expectKeyword(ts, Keyword.IF)
+
+    private fun parseCondition(
+        ts: TokenStream,
+        p: ExpressionParser,
+    ) = lparen(ts).flatMap { t2 ->
+        p.parseExpression(t2).flatMap { (cond, t3) ->
+            rparen(t3).map { (_, t4) -> cond to t4 }
+        }
+    }
+
+    private fun parseBlock(
+        ts: TokenStream,
+        p: ExpressionParser,
+    ) = lbrace(ts).flatMap { t1 ->
+        Statements.parseUntil(
+            t1,
+            headDetector,
+            stmtParsers,
+            p,
+            isTerminator = { it is SeparatorToken && it.separator == Separator.RBRACE },
+        ).flatMap { (stmts, t2) ->
+            rbrace(t2).map { (r, t3) -> Block(stmts, r) to t3 }
+        }
+    }
+
+    private fun finishNoElse(
+        ifKw: KeywordToken,
+        cond: Expression,
+        thenB: Block,
+        next: TokenStream,
+    ): Result<Pair<Statement, TokenStream>, LabeledError> =
+        Success(IfStmt(cond, thenB.stmts, null, Span(ifKw.span.start, thenB.rBrace.span.end)) to next)
+
+    private fun finishWithElse(
+        ifKw: KeywordToken,
+        cond: Expression,
+        thenB: Block,
+        afterElseKw: TokenStream,
+        p: ExpressionParser,
+    ) = parseBlock(afterElseKw, p).map { (elseB, endTs) ->
+        IfStmt(cond, thenB.stmts, elseB.stmts, Span(ifKw.span.start, elseB.rBrace.span.end)) to endTs
+    }
 
     private fun lparen(ts: TokenStream) = expectSeparator(ts, Separator.LPAREN).map { (_, n) -> n }
-    private fun rparen(ts: TokenStream) = expectSeparator(ts, Separator.RPAREN).map { (_, n) -> n }
+    private fun rparen(ts: TokenStream) = expectSeparator(ts, Separator.RPAREN).map { it }
     private fun lbrace(ts: TokenStream) = expectSeparator(ts, Separator.LBRACE).map { (_, n) -> n }
     private fun rbrace(ts: TokenStream) = expectSeparator(ts, Separator.RBRACE)
 
-    private fun maybeElse(ts: TokenStream): Result<Pair<Boolean, TokenStream>, LabeledError> =
+    private fun maybeElse(ts: TokenStream) =
         ts.peek().flatMap { t ->
             if (t is KeywordToken && t.kind == Keyword.ELSE) {
                 ts.next().map { (_, n) -> true to n }

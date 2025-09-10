@@ -1,12 +1,10 @@
 package factories
 
-import Expression
-import Failure
 import FirstParser
-import OperatorToken
+import Keyword
+import Operator
 import Parser
-import Token
-import TokenStream
+import Separator
 import expr.BinaryInfix
 import expr.ExprPratt
 import expr.ExpressionParser
@@ -17,6 +15,7 @@ import expr.NumberPrefix
 import expr.Prec
 import expr.PrefixParselet
 import expr.StringPrefix
+import expr.TokenKind
 import head.Assign
 import head.FirstHeadDetector
 import head.Kw
@@ -41,38 +40,31 @@ object ParserFactoryV10 {
     }
 
     private fun createExpressionParser(): ExpressionParser {
-        val prefix = buildMap {
-            put(NumberLiteralToken::class.java, NumberPrefix)
-            put(StringLiteralToken::class.java, StringPrefix)
-            put(IdentifierToken::class.java, IdentifierPrefix)
-            put(
-                SeparatorToken::class.java,
-                object : PrefixParselet {
-                    override fun parse(p: ExprPratt, ts: TokenStream) = GroupingPrefix.parse(p, ts)
-                },
-            )
-        }
+        // En V10 no hay keywords prefix (como readEnv/readInput)
+        val prefixByKeyword: Map<Keyword, PrefixParselet> = emptyMap()
 
-        val infix = buildMap<Class<out Token>, InfixParselet> {
-            put(
-                OperatorToken::class.java,
-                object : InfixParselet {
-                    override val prec: Prec get() = Prec.MUL
+        val prefixByTokenKind: Map<TokenKind, PrefixParselet> = mapOf(
+            TokenKind.NUMBER to NumberPrefix,
+            TokenKind.STRING to StringPrefix,
+            TokenKind.IDENT to IdentifierPrefix,
+        )
 
-                    override fun parse(p: ExprPratt, left: Expression, ts: TokenStream) =
-                        ts.peek().flatMap { token ->
-                            when ((token as OperatorToken).operator) {
-                                Operator.PLUS -> BinaryInfix(Operator.PLUS, Prec.ADD).parse(p, left, ts)
-                                Operator.MINUS -> BinaryInfix(Operator.MINUS, Prec.ADD).parse(p, left, ts)
-                                Operator.MULTIPLY -> BinaryInfix(Operator.MULTIPLY, Prec.MUL).parse(p, left, ts)
-                                Operator.DIVIDE -> BinaryInfix(Operator.DIVIDE, Prec.MUL).parse(p, left, ts)
-                                else -> Failure(LabeledError.of(token.span, "Operador no soportado: ${token.operator}"))
-                            }
-                        }
-                },
-            )
-        }
+        val prefixBySeparator: Map<Separator, PrefixParselet> = mapOf(
+            Separator.LPAREN to GroupingPrefix, // "(" expr ")"
+        )
 
-        return ExprPratt(prefix, infix)
+        val infixByOperator: Map<Operator, InfixParselet> = mapOf(
+            Operator.PLUS to BinaryInfix(Operator.PLUS, Prec.ADD),
+            Operator.MINUS to BinaryInfix(Operator.MINUS, Prec.ADD),
+            Operator.MULTIPLY to BinaryInfix(Operator.MULTIPLY, Prec.MUL),
+            Operator.DIVIDE to BinaryInfix(Operator.DIVIDE, Prec.MUL),
+        )
+
+        return ExprPratt(
+            prefixByKeyword = prefixByKeyword,
+            prefixByTokenKind = prefixByTokenKind,
+            prefixBySeparator = prefixBySeparator,
+            infixByOperator = infixByOperator,
+        )
     }
 }

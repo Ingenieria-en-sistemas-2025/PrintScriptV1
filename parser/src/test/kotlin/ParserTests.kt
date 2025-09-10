@@ -3,6 +3,8 @@ import dsl.op
 import dsl.sep
 import dsl.ty
 import factories.GlobalParserFactory
+import head.FirstHeadDetector
+import head.Unknown
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -125,5 +127,15 @@ class ParserTests {
         val ifStmt = program.statements.single() as IfStmt
         assertTrue(ifStmt.condition is Variable)
         assertEquals("c", (ifStmt.condition as Variable).name)
+    }
+
+    @Test
+    fun testUnknownHead() {
+        val detector = FirstHeadDetector()
+        val ts: TokenStream = TestUtils.tokens {
+            number("42").sep().semicolon()
+        }
+        val head = TestUtils.assertSuccess(detector.detect(ts))
+        assertEquals(Unknown, head)
     }
 }

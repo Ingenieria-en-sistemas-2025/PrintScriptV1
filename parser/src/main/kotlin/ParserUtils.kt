@@ -2,7 +2,7 @@ object ParserUtils {
 
     // Helpers para “exigir” un token:
     // Si el token coincide, consumen y devuelven (tokenTipado, streamAvanzado)
-    // Sino, Failure(ParserError(...))
+    // Sino, Failure(LabeledError(...))
 
     fun expectIdentifier(ts: TokenStream): Result<Pair<IdentifierToken, TokenStream>, LabeledError> =
         ts.peek().flatMap { token ->

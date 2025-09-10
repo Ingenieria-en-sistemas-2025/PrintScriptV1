@@ -6,5 +6,6 @@ import Result
 import TokenStream
 
 interface ExpressionParser {
-    fun parseExpression(tokenStream: TokenStream): Result<Pair<Expression, TokenStream>, LabeledError>
+    fun parseExpression(ts: TokenStream): Result<Pair<Expression, TokenStream>, LabeledError>
+    fun parseWith(ts: TokenStream, minPrec: Prec): Result<Pair<Expression, TokenStream>, LabeledError>
 }
