@@ -1,4 +1,4 @@
-package org.printscript.lexer
+package org.printscript.lexer.error
 
 import org.printscript.common.LabeledError
 
