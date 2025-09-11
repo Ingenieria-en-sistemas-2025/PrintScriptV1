@@ -14,14 +14,11 @@ import org.printscript.common.Result
 import org.printscript.common.Span
 import org.printscript.common.Success
 import org.printscript.common.Type
-import org.printscript.interpreter.AssignmentAction
 import org.printscript.interpreter.DefaultExprEvaluator
 import org.printscript.interpreter.InterpreterError
-import org.printscript.interpreter.PrintlnAction
 import org.printscript.interpreter.ProgramInterpreter
 import org.printscript.interpreter.RunResult
 import org.printscript.interpreter.StmtActionExecutor
-import org.printscript.interpreter.VarDeclarationAction
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -31,12 +28,7 @@ class InterpreterPrintTests {
 
     private fun makeInterpreter(): ProgramInterpreter {
         val eval = DefaultExprEvaluator()
-        val actions = mapOf(
-            VarDeclaration::class to VarDeclarationAction(),
-            Assignment::class to AssignmentAction(),
-            Println::class to PrintlnAction(),
-        )
-        val exec = StmtActionExecutor(eval, actions) // busca action en el map
+        val exec = StmtActionExecutor(eval) // busca action en el map
         return ProgramInterpreter(exec)
     }
 

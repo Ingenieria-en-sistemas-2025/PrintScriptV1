@@ -8,8 +8,9 @@ import org.printscript.common.Type
 
 data class Env private constructor(
     private val bindings: Map<String, Binding>, // para no romper reglas
+    private val input: InputProvider,
 ) {
-    companion object { fun empty() = Env(emptyMap()) }
+    companion object { fun empty(input: InputProvider = NoInputProvider): Env = Env(emptyMap(), input) }
 
     fun lookup(name: String): Binding? = bindings[name] // si var existe devuelvo su binding, sino null
 
@@ -20,7 +21,7 @@ data class Env private constructor(
         if (!typeMatches(type, v)) {
             return Failure(IncompatibleType(span, type, runtimeName(v)))
         }
-        return Success(Env(bindings + (name to Binding(type, v))))
+        return Success(Env(bindings + (name to Binding(type, v)), input))
     }
 
     // var ya debe estar declarada y deben coincidir los tipos
@@ -29,8 +30,10 @@ data class Env private constructor(
         if (!typeMatches(old.type, value)) {
             return Failure(IncompatibleType(span, old.type, runtimeName(value)))
         }
-        return Success(Env(bindings + (name to old.copy(value = value)))) // actualizo el binding
+        return Success(Env(bindings + (name to old.copy(value = value)), input)) // actualizo el binding
     }
+
+    fun readInput(prompt: String): String = input.read(prompt)
 
     private fun typeMatches(expected: Type, v: Value): Boolean =
         (expected == Type.NUMBER && v is Value.Num) || (expected == Type.STRING && v is Value.Str)

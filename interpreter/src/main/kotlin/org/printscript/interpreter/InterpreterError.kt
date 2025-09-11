@@ -5,7 +5,7 @@ import org.printscript.common.Operator
 import org.printscript.common.Span
 import org.printscript.common.Type
 
-sealed interface InterpreterError : LabeledError
+typealias InterpreterError = LabeledError
 
 data class DivisionByZero(override val span: Span) : InterpreterError {
     override val message: String = "Error: division by zero"

@@ -3,8 +3,11 @@ package org.printscript.interpreter
 import org.printscript.ast.Binary
 import org.printscript.ast.Expression
 import org.printscript.ast.Grouping
+import org.printscript.ast.LiteralBoolean
 import org.printscript.ast.LiteralNumber
 import org.printscript.ast.LiteralString
+import org.printscript.ast.ReadEnv
+import org.printscript.ast.ReadInput
 import org.printscript.ast.Variable
 import org.printscript.common.Failure
 import org.printscript.common.Operator
@@ -41,6 +44,42 @@ class DefaultExprEvaluator(
                 }
             }
 
-            else -> Failure(InternalRuntimeError(expr.span, "Not supported expr: $expr"))
+            is LiteralBoolean -> Success(Value.Bool(expr.value))
+
+            is ReadEnv -> {
+                val varNameResult: Result<Value, InterpreterError> = evaluate(expr.variableName, env)
+
+                varNameResult.flatMap { evaluatedName: Value ->
+                    when (evaluatedName) {
+                        is Value.Str -> {
+                            val name: String = evaluatedName.s
+                            val binding = env.lookup(name)
+                                ?: return@flatMap Failure(UndeclaredVariable(expr.span, name))
+                            Success(binding.value)
+                        }
+                        else -> Failure(
+                            ExpectedStringForEnvName(expr.span, ExprHelpers.typeName(evaluatedName)),
+                        )
+                    }
+                }
+            }
+
+            is ReadInput -> {
+                val promptResult: Result<Value, InterpreterError> = evaluate(expr.prompt, env)
+
+                promptResult.flatMap { evaluatedPrompt: Value ->
+                    when (evaluatedPrompt) {
+                        is Value.Str -> {
+                            val raw: String = env.readInput(evaluatedPrompt.s)
+                            Success(Value.Str(raw))
+                        }
+                        else -> Failure(
+                            ExpectedStringForPrompt(expr.span, ExprHelpers.typeName(evaluatedPrompt)),
+                        )
+                    }
+                }
+            }
+
+            // else -> Failure(InternalRuntimeError(expr.span, "Not supported expr: $expr"))
         }
 }
