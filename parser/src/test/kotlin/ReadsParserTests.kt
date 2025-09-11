@@ -7,7 +7,6 @@ import org.printscript.ast.ReadEnv
 import org.printscript.ast.ReadInput
 import org.printscript.ast.VarDeclaration
 import org.printscript.common.Type
-import org.printscript.common.Version
 import org.printscript.parser.factories.GlobalParserFactory
 import org.printscript.token.TestUtils
 import org.printscript.token.dsl.kw
@@ -21,7 +20,7 @@ class ReadsParserTests {
     // let name: string = readInput("Nombre: ");
     @Test
     fun testLetWithReadInputInitializer() {
-        val parser = GlobalParserFactory.forVersion(Version.V1)!!
+        val parser = GlobalParserFactory.forVersion("1.1")!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -46,7 +45,7 @@ class ReadsParserTests {
     // println(readEnv("HOME"));
     @Test
     fun testPrintlnWithReadEnv() {
-        val parser = GlobalParserFactory.forVersion(Version.V1)!!
+        val parser = GlobalParserFactory.forVersion("1.1")!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -67,7 +66,7 @@ class ReadsParserTests {
     // println("Hola " + readInput("nombre:"));
     @Test
     fun testConcatWithReadInputInsideExpression() {
-        val parser = GlobalParserFactory.forVersion(Version.V1)!!
+        val parser = GlobalParserFactory.forVersion("1.1")!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -91,7 +90,7 @@ class ReadsParserTests {
 
     @Test
     fun testReadInputMissingRParen() {
-        val parser = GlobalParserFactory.forVersion(Version.V1)!!
+        val parser = GlobalParserFactory.forVersion("1.1")!!
         val result = parser.parse(
             TestUtils.tokens {
                 kw().println().sep().lparen()

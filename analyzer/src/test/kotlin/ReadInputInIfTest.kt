@@ -1,6 +1,6 @@
 import org.printscript.analyzer.AnalyzerConfig
 import org.printscript.analyzer.AnalyzerContext
-import org.printscript.analyzer.ReadInputSimpleArgRule
+import org.printscript.analyzer.ReadInputSimpleArgRuleOld
 import org.printscript.analyzer.Severity
 import org.printscript.ast.IfStmt
 import org.printscript.common.Operator
@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ReadInputInIfTest {
-    private val rule = ReadInputSimpleArgRule()
+    private val rule = ReadInputSimpleArgRuleOld()
 
     @Test
     fun readInputInThenBranch_compuesto_reporta() {

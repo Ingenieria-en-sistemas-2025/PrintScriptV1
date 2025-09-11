@@ -1,13 +1,13 @@
 package org.printscript.parser.factories
 
-import org.printscript.common.Version
 import org.printscript.parser.Parser
 
 object GlobalParserFactory {
-    fun forVersion(version: Version): Parser? {
+    fun forVersion(version: String): Parser? {
         return when (version) {
-            Version.V0 -> ParserFactoryV10.create()
-            Version.V1 -> ParserFactoryV11.create()
+            "1.0" -> ParserFactoryV10.create()
+            "1.1" -> ParserFactoryV11.create()
+            else -> null
         }
     }
 }

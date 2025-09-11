@@ -1,14 +1,19 @@
 package org.printscript.interpreter
 import org.printscript.ast.Assignment
-import org.printscript.ast.ConstDeclaration
-import org.printscript.ast.IfStmt
 import org.printscript.ast.Println
 import org.printscript.ast.Statement
 import org.printscript.ast.VarDeclaration
+import org.printscript.common.Failure
 import org.printscript.common.Result
+import kotlin.reflect.KClass
 
 class StmtActionExecutor(
     private val eval: ExprEvaluator,
+    private val actions: Map<KClass<out Statement>, StatementAction<out Statement>> = mapOf( // sabe q accion ejecutar en ese tipo de sentencia
+        VarDeclaration::class to VarDeclarationAction(),
+        Assignment::class to AssignmentAction(),
+        Println::class to PrintlnAction(),
+    ),
 ) : StmtExecutor {
 
     @Suppress("UNCHECKED_CAST")
@@ -17,17 +22,11 @@ class StmtActionExecutor(
         env: Env,
         out: Output,
     ): Result<ExecResult, InterpreterError> {
-        val action = eval(stmt)
+        val action = actions[stmt::class]
+            ?: return Failure(InternalRuntimeError(stmt.span, "Sentencia no soportada: $stmt"))
         // casteo seguro por clave del mapa
-        return (action as StatementAction<Statement>).run(stmt, env, out, eval)
-    }
-
-    private fun eval(statement: Statement): StatementAction<out Statement> = when (statement) {
-        is VarDeclaration -> VarDeclarationAction()
-        is Assignment -> AssignmentAction()
-        is Println -> PrintlnAction()
-        is ConstDeclaration -> ConstDeclarationAction()
-        is IfStmt -> IfStmtAction(this)
+        val act = action as StatementAction<Statement>
+        return act.run(stmt, env, out, eval)
     }
 }
 

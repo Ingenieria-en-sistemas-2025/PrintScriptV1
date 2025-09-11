@@ -5,7 +5,6 @@ import org.printscript.ast.LiteralBoolean
 import org.printscript.ast.LiteralString
 import org.printscript.ast.Println
 import org.printscript.common.Type
-import org.printscript.common.Version
 import org.printscript.parser.factories.GlobalParserFactory
 import org.printscript.token.TestUtils
 import org.printscript.token.TokenStream
@@ -23,7 +22,7 @@ class BooleanParserTests {
     @Test
     fun testPrintlnTrue() {
         // println(true);
-        val parser = GlobalParserFactory.forVersion(Version.V1)!!
+        val parser = GlobalParserFactory.forVersion("1.1")!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -43,7 +42,7 @@ class BooleanParserTests {
     @Test
     fun testPrintlnFalse() {
         // println(false);
-        val parser = GlobalParserFactory.forVersion(Version.V1)!!
+        val parser = GlobalParserFactory.forVersion("1.1")!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -63,7 +62,7 @@ class BooleanParserTests {
     @Test
     fun testAssignmentBooleanTrue() {
         // x = true;
-        val parser = GlobalParserFactory.forVersion(Version.V1)!!
+        val parser = GlobalParserFactory.forVersion("1.1")!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -83,7 +82,7 @@ class BooleanParserTests {
     @Test
     fun testIfWithBooleanLiteralTrue() {
         // if (true) { println("ok"); }
-        val parser = GlobalParserFactory.forVersion(Version.V1)!!
+        val parser = GlobalParserFactory.forVersion("1.1")!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -103,7 +102,7 @@ class BooleanParserTests {
     @Test
     fun testIfFalseElseBranch() {
         // if (false) { println("a"); } else { println("b"); }
-        val parser = GlobalParserFactory.forVersion(Version.V1)!!
+        val parser = GlobalParserFactory.forVersion("1.1")!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {

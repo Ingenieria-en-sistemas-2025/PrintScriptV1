@@ -5,18 +5,32 @@ import org.printscript.common.Result
 import org.printscript.common.Span
 import org.printscript.common.Success
 import org.printscript.lexer.error.LexerError
+import org.printscript.lexer.memory.CharFeed
 import org.printscript.lexer.triviarules.TriviaSkipper
 import org.printscript.token.EofToken
 import org.printscript.token.Token
+import java.io.Reader
 
 class Tokenizer private constructor(
     private val scanner: Scanner,
     private val matcher: TokenMatcher,
     private val triviaSkipper: TriviaSkipper,
+    private val tokenFactory: TokenFactory,
 ) {
     companion object {
-        fun of(src: String, matcher: TokenMatcher, skipper: TriviaSkipper): Tokenizer =
-            Tokenizer(Scanner(src), matcher, skipper)
+        // Para archivos grandes (streaming real):
+        fun of(reader: Reader, matcher: TokenMatcher, skipper: TriviaSkipper, factory: TokenFactory): Tokenizer =
+            Tokenizer(Scanner(reader), matcher, skipper, factory)
+
+        fun of(lines: Iterator<String>, matcher: TokenMatcher, skipper: TriviaSkipper, factory: TokenFactory): Tokenizer =
+            Tokenizer(Scanner(lines), matcher, skipper, factory)
+
+        fun of(feed: CharFeed, matcher: TokenMatcher, skipper: TriviaSkipper, factory: TokenFactory): Tokenizer =
+            Tokenizer(Scanner(feed), matcher, skipper, factory)
+
+        // Para tests chicos:
+        fun of(src: String, matcher: TokenMatcher, skipper: TriviaSkipper, factory: TokenFactory): Tokenizer =
+            Tokenizer(Scanner(src), matcher, skipper, factory)
     }
 
     fun next(): Result<Pair<Token, Tokenizer>, LexerError> {
@@ -24,11 +38,13 @@ class Tokenizer private constructor(
             is Failure -> triviaResult
             is Success -> {
                 val scannerAfterTrivia = triviaResult.value
-                if (scannerAfterTrivia.isEof) {
-                    return Success(buildEof(scannerAfterTrivia))
-                }
+                if (scannerAfterTrivia.isEof) return Success(buildEof(scannerAfterTrivia))
 
-                return when (val matchResult = matcher.matchNext(scannerAfterTrivia)) {
+                scannerAfterTrivia.pinHere()
+                val matchResult = matcher.matchNext(scannerAfterTrivia)
+                scannerAfterTrivia.unpinHere()
+
+                return when (matchResult) {
                     is Match.Success -> Success(buildMatchedToken(scannerAfterTrivia, matchResult))
                     is Match.Failure -> Failure(matchResult.reason)
                 }
@@ -36,22 +52,17 @@ class Tokenizer private constructor(
         }
     }
 
-    private fun buildEof(scannerAtEnd: Scanner): Pair<Token, Tokenizer> {
-        val eofPosition = scannerAtEnd.position()
-        val eofToken = EofToken(Span(eofPosition, eofPosition))
-        val nextTokenizer = Tokenizer(scannerAtEnd, matcher, triviaSkipper)
-        return eofToken to nextTokenizer
+    private fun buildEof(sEnd: Scanner): Pair<Token, Tokenizer> {
+        val position = sEnd.position()
+        val tok = EofToken(Span(position, position))
+        return tok to Tokenizer(sEnd, matcher, triviaSkipper, tokenFactory)
     }
 
-    private fun buildMatchedToken(
-        scannerBeforeMatch: Scanner,
-        match: Match.Success,
-    ): Pair<Token, Tokenizer> {
-        val scannerAfterMatch = scannerBeforeMatch.advance(match.length)
-        val lexeme = scannerBeforeMatch.slice(match.length).toString()
-        val span = Span(match.start, scannerAfterMatch.position())
-        val token = match.rule.build(lexeme, span)
-        val nextTokenizer = Tokenizer(scannerAfterMatch, matcher, triviaSkipper)
-        return token to nextTokenizer
+    private fun buildMatchedToken(sBefore: Scanner, m: Match.Success): Pair<Token, Tokenizer> {
+        val sAfter = sBefore.advance(m.length)
+        val text = sBefore.slice(m.length).toString()
+        val span = Span(m.start, sAfter.position())
+        val token = tokenFactory.create(m.key, Lexeme(text, span))
+        return token to Tokenizer(sAfter, matcher, triviaSkipper, tokenFactory)
     }
 }

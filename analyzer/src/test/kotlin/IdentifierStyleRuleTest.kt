@@ -2,7 +2,7 @@
 import org.printscript.analyzer.AnalyzerConfig
 import org.printscript.analyzer.AnalyzerContext
 import org.printscript.analyzer.IdentifierStyle
-import org.printscript.analyzer.IdentifierStyleRule
+import org.printscript.analyzer.IdentifierStyleRuleOld
 import org.printscript.analyzer.IdentifiersConfig
 import org.printscript.analyzer.Severity
 import org.printscript.common.Type
@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 
 class IdentifierStyleRuleTest {
 
-    private val rule = IdentifierStyleRule()
+    private val rule = IdentifierStyleRuleOld()
 
     @Test
     fun camelCaseTestFails() {

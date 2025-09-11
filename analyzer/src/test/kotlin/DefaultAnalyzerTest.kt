@@ -1,10 +1,10 @@
 import org.printscript.analyzer.AnalyzerConfig
 import org.printscript.analyzer.DefaultAnalyzer
 import org.printscript.analyzer.IdentifierStyle
-import org.printscript.analyzer.IdentifierStyleRule
+import org.printscript.analyzer.IdentifierStyleRuleOld
 import org.printscript.analyzer.IdentifiersConfig
 import org.printscript.analyzer.PrintlnRuleConfig
-import org.printscript.analyzer.PrintlnSimpleArgRule
+import org.printscript.analyzer.PrintlnSimpleArgRuleOld
 import org.printscript.common.Failure
 import org.printscript.common.Operator
 import org.printscript.common.Success
@@ -41,8 +41,8 @@ class DefaultAnalyzerTest {
             identifiers = IdentifiersConfig(style = IdentifierStyle.CAMEL_CASE),
             printlnRule = PrintlnRuleConfig(enabled = true),
         )
-        val engine = DefaultAnalyzer(listOf(IdentifierStyleRule(), PrintlnSimpleArgRule()))
-        val res = engine.analize(p, cfg)
+        val engine = DefaultAnalyzer(listOf(IdentifierStyleRuleOld(), PrintlnSimpleArgRuleOld()))
+        val res = engine.analyze(p, cfg)
         when (res) {
             is Success -> {
                 val diags = res.value.diagnostics

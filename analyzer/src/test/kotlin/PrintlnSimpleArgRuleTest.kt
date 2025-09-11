@@ -1,7 +1,7 @@
 import org.printscript.analyzer.AnalyzerConfig
 import org.printscript.analyzer.AnalyzerContext
 import org.printscript.analyzer.PrintlnRuleConfig
-import org.printscript.analyzer.PrintlnSimpleArgRule
+import org.printscript.analyzer.PrintlnSimpleArgRuleOld
 import org.printscript.analyzer.Severity
 import org.printscript.common.Operator
 import org.printscript.common.Type
@@ -11,7 +11,7 @@ import kotlin.test.assertTrue
 
 class PrintlnSimpleArgRuleTest {
 
-    private val rule = PrintlnSimpleArgRule()
+    private val rule = PrintlnSimpleArgRuleOld()
 
     @Test
     fun printLnWithVariableOk() {

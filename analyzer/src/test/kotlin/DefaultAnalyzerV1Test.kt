@@ -1,12 +1,12 @@
 import org.printscript.analyzer.AnalyzerConfig
 import org.printscript.analyzer.DefaultAnalyzer
 import org.printscript.analyzer.IdentifierStyle
-import org.printscript.analyzer.IdentifierStyleRule
+import org.printscript.analyzer.IdentifierStyleRuleOld
 import org.printscript.analyzer.IdentifiersConfig
 import org.printscript.analyzer.PrintlnRuleConfig
-import org.printscript.analyzer.PrintlnSimpleArgRule
+import org.printscript.analyzer.PrintlnSimpleArgRuleOld
 import org.printscript.analyzer.ReadInputRuleConfig
-import org.printscript.analyzer.ReadInputSimpleArgRule
+import org.printscript.analyzer.ReadInputSimpleArgRuleOld
 import org.printscript.common.Failure
 import org.printscript.common.Operator
 import org.printscript.common.Success
@@ -40,9 +40,9 @@ class DefaultAnalyzerV1Test {
 
         val engine = DefaultAnalyzer(
             listOf(
-                IdentifierStyleRule(),
-                PrintlnSimpleArgRule(),
-                ReadInputSimpleArgRule(),
+                IdentifierStyleRuleOld(),
+                PrintlnSimpleArgRuleOld(),
+                ReadInputSimpleArgRuleOld(),
             ),
         )
 
@@ -52,7 +52,7 @@ class DefaultAnalyzerV1Test {
             readInputRule = ReadInputRuleConfig(enabled = true, onlyStringLiteralOrIdentifier = false),
         )
 
-        when (val r = engine.analize(p, cfg)) {
+        when (val r = engine.analyze(p, cfg)) {
             is Success -> {
                 val diags = r.value.diagnostics
                 assertEquals(1, diags.size)

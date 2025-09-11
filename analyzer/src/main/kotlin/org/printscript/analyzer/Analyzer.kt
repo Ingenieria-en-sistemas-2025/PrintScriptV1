@@ -5,5 +5,5 @@ import org.printscript.common.LabeledError
 import org.printscript.common.Result
 
 interface Analyzer {
-    fun analize(program: ProgramNode, config: AnalyzerConfig): Result<DiagnosticReport, LabeledError>
+    fun analyze(program: ProgramNode, config: AnalyzerConfig): Result<DiagnosticReport, LabeledError>
 }
