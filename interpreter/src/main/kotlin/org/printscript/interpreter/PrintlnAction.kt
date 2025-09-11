@@ -9,6 +9,7 @@ class PrintlnAction : StatementAction<Println> {
             val line = when (v) { // convierto el org.printscript.interpreter.Value a String para imprimir
                 is Value.Str -> v.s
                 is Value.Num -> ExprHelpers.formatNumber(v.n)
+                is Value.Bool -> v.b.toString()
             }
             ExecResult(env, out.append(line)) // mismo env nuevo output
         }

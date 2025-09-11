@@ -8,6 +8,7 @@ import org.printscript.ast.VarDeclaration
 import org.printscript.ast.Variable
 import org.printscript.common.Operator
 import org.printscript.common.Type
+import org.printscript.common.Version
 import org.printscript.parser.factories.GlobalParserFactory
 import org.printscript.parser.head.FirstHeadDetector
 import org.printscript.parser.head.Unknown
@@ -25,7 +26,7 @@ class ParserTests {
 
     @Test
     fun testParseAssignation() {
-        val parser = GlobalParserFactory.forVersion("1.0")!!
+        val parser = GlobalParserFactory.forVersion(Version.V0)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -45,7 +46,7 @@ class ParserTests {
 
     @Test
     fun testLetWithNoInitializer() {
-        val parser = GlobalParserFactory.forVersion("1.0")!!
+        val parser = GlobalParserFactory.forVersion(Version.V0)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -64,7 +65,7 @@ class ParserTests {
 
     @Test
     fun testParseLetWithInitialization() {
-        val parser = GlobalParserFactory.forVersion("1.0")!!
+        val parser = GlobalParserFactory.forVersion(Version.V0)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -89,7 +90,7 @@ class ParserTests {
 
     @Test
     fun testErrorCausedByMissingSemicolon() {
-        val parser = GlobalParserFactory.forVersion("1.0")!!
+        val parser = GlobalParserFactory.forVersion(Version.V0)!!
 
         val result = parser.parse(
             TestUtils.tokens {
@@ -104,7 +105,7 @@ class ParserTests {
 
     @Test
     fun testV10DoesNotSupportIf() {
-        val parser = GlobalParserFactory.forVersion("1.0")!!
+        val parser = GlobalParserFactory.forVersion(Version.V0)!!
 
         val result = parser.parse(
             TestUtils.tokens {
@@ -120,7 +121,7 @@ class ParserTests {
 
     @Test
     fun testV11SupportsIf() {
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
 
         val program = TestUtils.assertSuccess(
             parser.parse(

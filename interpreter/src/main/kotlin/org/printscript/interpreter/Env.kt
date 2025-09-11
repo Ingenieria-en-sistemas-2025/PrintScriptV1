@@ -38,7 +38,8 @@ data class Env private constructor(
     // devuelve "number" o "string"
     private fun runtimeName(v: Value): String =
         when (v) { is Value.Num -> "number"
-            is Value.Str -> "string" }
+            is Value.Str -> "string"
+            is Value.Bool -> "boolean" }
 
     private fun defaultFor(type: Type): Value =
         if (type == Type.NUMBER) Value.Num(0.0) else Value.Str("")

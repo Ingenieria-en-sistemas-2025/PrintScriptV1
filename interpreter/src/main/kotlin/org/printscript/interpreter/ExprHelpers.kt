@@ -14,6 +14,7 @@ class ExprHelpers private constructor() {
         fun typeName(v: Value): String = when (v) {
             is Value.Num -> "number"
             is Value.Str -> "string"
+            is Value.Bool -> "boolean"
         }
 
         fun addOrConcat(span: Span, left: Value, right: Value): Result<Value, InterpreterError> = when {

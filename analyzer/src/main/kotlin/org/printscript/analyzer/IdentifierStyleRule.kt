@@ -55,6 +55,8 @@ class IdentifierStyleRule(private val conventionProvider: (IdentifiersConfig) ->
                 is Println -> {
                     if (config.checkReferences) visitExpr(st.value)
                 }
+
+                else -> {}
             }
         }
         return diags
