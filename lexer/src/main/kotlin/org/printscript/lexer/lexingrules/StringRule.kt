@@ -1,10 +1,8 @@
 package org.printscript.lexer.lexingrules
 
-import org.printscript.common.Span
-import org.printscript.token.StringLiteralToken
-import org.printscript.token.Token
-
 object StringRule : LexingRule {
+
+    override val key: RuleKey = RuleKey("STRING")
 
     private const val ESCAPE = '\\'
     private const val QUOTE_DOUBLE = '"'
@@ -18,11 +16,6 @@ object StringRule : LexingRule {
 
         val end = findClosingQuoteIndex(input, opening)
         return if (end == -1) 0 else end + 1 // +1 para incluir la comilla de cierre
-    }
-
-    override fun build(lexeme: String, span: Span): Token {
-        val content = extractInnerContent(lexeme)
-        return StringLiteralToken(content, span)
     }
 
     private fun isQuote(c: Char): Boolean =
@@ -47,7 +40,4 @@ object StringRule : LexingRule {
         val next = backslashIndex + 1
         return if (next < src.length) next + 1 else next
     }
-
-    private fun extractInnerContent(lexeme: String): String =
-        lexeme.substring(1, lexeme.length - 1)
 }

@@ -4,6 +4,8 @@ import org.printscript.ast.IfStmt
 import org.printscript.common.Failure
 import org.printscript.common.Result
 import org.printscript.common.Success
+import org.printscript.interpreter.errors.InternalRuntimeError
+import org.printscript.interpreter.errors.InterpreterError
 
 class IfStmtAction(private val executor: StmtExecutor) : StatementAction<IfStmt> {
     override fun run(stmt: IfStmt, env: Env, out: Output, eval: ExprEvaluator): Result<ExecResult, InterpreterError> {

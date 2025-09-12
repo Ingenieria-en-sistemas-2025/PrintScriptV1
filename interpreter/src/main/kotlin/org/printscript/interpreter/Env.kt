@@ -5,6 +5,10 @@ import org.printscript.common.Result
 import org.printscript.common.Span
 import org.printscript.common.Success
 import org.printscript.common.Type
+import org.printscript.interpreter.errors.IncompatibleType
+import org.printscript.interpreter.errors.InterpreterError
+import org.printscript.interpreter.errors.Redeclaration
+import org.printscript.interpreter.errors.UndeclaredVariable
 
 data class Env private constructor(
     private val bindings: Map<String, Binding>, // para no romper reglas

@@ -1,11 +1,8 @@
 package org.printscript.lexer.lexingrules
 
 import org.printscript.common.Operator
-import org.printscript.common.Span
-import org.printscript.token.OperatorToken
-import org.printscript.token.Token
 
-class OperatorRule(map: Map<String, Operator>) : LexingRule {
+class OperatorRule(override val key: RuleKey, map: Map<String, Operator>) : LexingRule {
 
     private val operators = map.toMap()
     private val keys = operators.keys
@@ -17,9 +14,6 @@ class OperatorRule(map: Map<String, Operator>) : LexingRule {
         }
         return best
     }
-
-    override fun build(lexeme: String, span: Span): Token =
-        OperatorToken(requireNotNull(operators[lexeme]) { "Operador desconocido: $lexeme" }, span)
 
     private fun startsWith(cs: CharSequence, s: String): Boolean {
         if (s.length > cs.length) return false

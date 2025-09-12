@@ -92,7 +92,7 @@ class ParserTests {
 
     @Test
     fun testErrorCausedByMissingSemicolon() {
-        val parser = GlobalParserFactory.forVersion(Version.V0)!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
 
         val result = parser.parse(
             TestUtils.tokens {

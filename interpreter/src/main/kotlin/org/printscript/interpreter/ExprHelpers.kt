@@ -5,7 +5,11 @@ import org.printscript.common.Operator
 import org.printscript.common.Result
 import org.printscript.common.Span
 import org.printscript.common.Success
+import org.printscript.interpreter.errors.DivisionByZero
+import org.printscript.interpreter.errors.InterpreterError
+import org.printscript.interpreter.errors.UnsupportedBinaryOp
 
+// matching rules
 class ExprHelpers private constructor() {
     companion object {
         fun formatNumber(x: Double): String =

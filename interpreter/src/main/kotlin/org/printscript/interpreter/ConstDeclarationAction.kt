@@ -2,6 +2,7 @@ package org.printscript.interpreter
 
 import org.printscript.ast.ConstDeclaration
 import org.printscript.common.Result
+import org.printscript.interpreter.errors.InterpreterError
 
 class ConstDeclarationAction : StatementAction<ConstDeclaration> {
     override fun run(

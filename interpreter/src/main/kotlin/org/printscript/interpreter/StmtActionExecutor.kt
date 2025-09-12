@@ -6,6 +6,7 @@ import org.printscript.ast.Println
 import org.printscript.ast.Statement
 import org.printscript.ast.VarDeclaration
 import org.printscript.common.Result
+import org.printscript.interpreter.errors.InterpreterError
 
 class StmtActionExecutor(
     private val eval: ExprEvaluator,

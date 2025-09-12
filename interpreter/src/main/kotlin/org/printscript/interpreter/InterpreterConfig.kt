@@ -12,9 +12,3 @@ object InterpreterConfigFactory {
         Version.V1 -> StdInProvider
     }
 }
-
-// en el runner:
-// val interpreter = ProgramInterpreter(
-//    executor = StmtActionExecutor(DefaultExprEvaluator()),
-//    initialEnv = config.initialEnv
-// )

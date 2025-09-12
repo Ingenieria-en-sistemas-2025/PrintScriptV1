@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.printscript.common.Version
 import org.printscript.formatter.Formatter
 import org.printscript.formatter.config.FormatterConfig
 import org.printscript.formatter.factories.GlobalFormatterFactory
@@ -15,7 +16,7 @@ import org.printscript.token.dsl.ty
 class FormatterTest {
 
     private fun format(config: FormatterConfig, init: TokenBuilder.() -> TokenBuilder): String {
-        val formatter: Formatter = GlobalFormatterFactory.forVersion("1.0", config)!!
+        val formatter: Formatter = GlobalFormatterFactory.forVersion(Version.V0, config)!!
         val stream: TokenStream = TestUtils.tokens(init)
         return TestUtils.assertSuccess(formatter.formatToString(stream))
     }

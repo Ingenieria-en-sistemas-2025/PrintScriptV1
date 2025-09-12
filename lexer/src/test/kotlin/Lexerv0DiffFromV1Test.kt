@@ -2,6 +2,7 @@ import org.printscript.common.Failure
 import org.printscript.common.Success
 import org.printscript.lexer.LongestMatchTokenMatcher
 import org.printscript.lexer.TokenCollector
+import org.printscript.lexer.TokenFactory
 import org.printscript.lexer.Tokenizer
 import org.printscript.lexer.config.PrintScriptv0MapConfig
 import org.printscript.lexer.error.LexerError
@@ -17,7 +18,8 @@ class Lexerv0DiffFromV1Test {
         val cfg = PrintScriptv0MapConfig() // o v1 en el otro test
         val matcher = LongestMatchTokenMatcher(cfg.rules())
         val skipper = CompositeTriviaSkipper(cfg.triviaRules())
-        return Tokenizer.of(src, matcher, skipper)
+        val factory = TokenFactory(cfg.creators())
+        return Tokenizer.of(src, matcher, skipper, factory)
     }
 
     private fun lexAllToStrings(src: String): List<String> {
