@@ -5,7 +5,11 @@ import org.printscript.common.Operator
 import org.printscript.common.Result
 import org.printscript.common.Span
 import org.printscript.common.Success
+import org.printscript.interpreter.errors.DivisionByZero
+import org.printscript.interpreter.errors.InterpreterError
+import org.printscript.interpreter.errors.UnsupportedBinaryOp
 
+// matching rules
 class ExprHelpers private constructor() {
     companion object {
         fun formatNumber(x: Double): String =
@@ -14,6 +18,7 @@ class ExprHelpers private constructor() {
         fun typeName(v: Value): String = when (v) {
             is Value.Num -> "number"
             is Value.Str -> "string"
+            is Value.Bool -> "boolean"
         }
 
         fun addOrConcat(span: Span, left: Value, right: Value): Result<Value, InterpreterError> = when {

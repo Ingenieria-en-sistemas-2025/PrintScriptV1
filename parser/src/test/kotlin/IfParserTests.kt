@@ -9,6 +9,7 @@ import org.printscript.ast.Println
 import org.printscript.ast.VarDeclaration
 import org.printscript.ast.Variable
 import org.printscript.common.Operator
+import org.printscript.common.Version
 import org.printscript.parser.factories.GlobalParserFactory
 import org.printscript.token.TestUtils
 import org.printscript.token.dsl.kw
@@ -24,7 +25,7 @@ class IfParserTests {
     @Test
     fun testIfThen_NoElse() {
         // if (c) { println("a"); }
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -51,7 +52,7 @@ class IfParserTests {
     @Test
     fun testIfThenElse() {
         // if (c) { println("a"); } else { println("b"); }
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -81,7 +82,7 @@ class IfParserTests {
     @Test
     fun testIfEmptyBlocks() {
         // if (x) { } else { }
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -102,7 +103,7 @@ class IfParserTests {
     @Test
     fun testIfWithComplexCondition() {
         // if (x + y) { println("sum"); }
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -127,7 +128,7 @@ class IfParserTests {
     @Test
     fun testIfWithMultipleStatements() {
         // if (flag) { let x: number; println("hello"); }
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -157,7 +158,7 @@ class IfParserTests {
     @Test
     fun testIfWithAssignment() {
         // if (condition) { x = 42; } else { x = 0; }
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -189,7 +190,7 @@ class IfParserTests {
     @Test
     fun testNestedIf() {
         // if (outer) { if (inner) { println("hello"); } }
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -219,7 +220,7 @@ class IfParserTests {
     @Test
     fun testIfMissingCondition_Fails() {
         // if () { println("test"); }
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val result = parser.parse(
             TestUtils.tokens {
                 kw().ifkey().sep().lparen().sep().rparen()
@@ -236,7 +237,7 @@ class IfParserTests {
     @Test
     fun testIfMissingBraces_Fails() {
         // if (x) println("test"); faltan llaves
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val result = parser.parse(
             TestUtils.tokens {
                 kw().ifkey().sep().lparen().identifier("x").sep().rparen()
@@ -250,8 +251,8 @@ class IfParserTests {
 
     @Test
     fun testV10DoesNotSupportIf_ComparisonTest() {
-        val v10Parser = GlobalParserFactory.forVersion("1.0")!!
-        val v11Parser = GlobalParserFactory.forVersion("1.1")!!
+        val v10Parser = GlobalParserFactory.forVersion(Version.V0)!!
+        val v11Parser = GlobalParserFactory.forVersion(Version.V1)!!
 
         val tokens = TestUtils.tokens {
             kw().ifkey().sep().lparen().identifier("c").sep().rparen()

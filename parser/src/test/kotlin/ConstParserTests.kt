@@ -7,6 +7,7 @@ import org.printscript.ast.Println
 import org.printscript.ast.Variable
 import org.printscript.common.Operator
 import org.printscript.common.Type
+import org.printscript.common.Version
 import org.printscript.parser.factories.GlobalParserFactory
 import org.printscript.token.TestUtils
 import org.printscript.token.dsl.kw
@@ -21,7 +22,7 @@ class ConstParserTests {
     @Test
     fun testConstWithInitializer_Number() {
         // const c: number = 10;
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -43,7 +44,7 @@ class ConstParserTests {
     @Test
     fun testConstWithInitializer_String() {
         // const name: string = "Hello";
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -65,7 +66,7 @@ class ConstParserTests {
     @Test
     fun testConstWithExpression() {
         // const result: number = 5 + 3;
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -93,7 +94,7 @@ class ConstParserTests {
     @Test
     fun testConstMissingInitializer_Fails() {
         // const x: string;  (falta '=' expr)
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val result = parser.parse(
             TestUtils.tokens {
                 kw().const().identifier("x").sep().colon().ty().stringType().sep().semicolon()
@@ -110,7 +111,7 @@ class ConstParserTests {
     @Test
     fun testConstMissingType_Fails() {
         // const x = "value";  (falta tipo)
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val result = parser.parse(
             TestUtils.tokens {
                 kw().const().identifier("x").op().assign().string("value").sep().semicolon()
@@ -127,7 +128,7 @@ class ConstParserTests {
     @Test
     fun testProgramWithConst_AndPrintln() {
         // const name: string = "Milagros"; println(name);
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {
@@ -157,7 +158,7 @@ class ConstParserTests {
     @Test
     fun testMultipleConstDeclarations() {
         // const x: number = 42; const y: string = "test";
-        val parser = GlobalParserFactory.forVersion("1.1")!!
+        val parser = GlobalParserFactory.forVersion(Version.V1)!!
         val program = TestUtils.assertSuccess(
             parser.parse(
                 TestUtils.tokens {

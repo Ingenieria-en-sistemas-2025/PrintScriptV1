@@ -11,7 +11,12 @@ import org.printscript.common.Operator
 import org.printscript.common.Result
 import org.printscript.common.Span
 import org.printscript.common.Success
+import org.printscript.interpreter.errors.InternalRuntimeError
+import org.printscript.interpreter.errors.InterpreterError
+import org.printscript.interpreter.errors.InvalidNumericLiteral
+import org.printscript.interpreter.errors.UndeclaredVariable
 
+// factories
 class DefaultExprEvaluator(
     private val ops: Map<Operator, (Span, Value, Value) -> Result<Value, InterpreterError>> = ExprHelpers.defaultBinaryOps,
 ) : ExprEvaluator {
