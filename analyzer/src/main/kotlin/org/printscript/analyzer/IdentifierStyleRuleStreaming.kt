@@ -12,6 +12,7 @@ class IdentifierStyleRuleStreaming(
     private val conventionProvider: (IdentifiersConfig) -> NameConvention = { IdentifierNaming.from(it) },
 ) : StreamingRule {
     override val id = "PS-ID-STYLE"
+
     override fun onStatement(statement: Statement, context: AnalyzerContext, out: DiagnosticEmitter) {
         val conv = conventionProvider(context.config.identifiers)
         val sev = if (context.config.identifiers.failOnViolation) Severity.ERROR else Severity.WARNING

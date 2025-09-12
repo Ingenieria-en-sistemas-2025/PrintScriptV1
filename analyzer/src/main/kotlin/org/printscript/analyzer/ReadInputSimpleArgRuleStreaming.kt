@@ -8,12 +8,13 @@ import org.printscript.ast.ReadInput
 import org.printscript.ast.Statement
 import org.printscript.ast.Variable
 
-class ReadInputSimpleArgRule : StreamingRule {
+class ReadInputSimpleArgRuleStreaming : StreamingRule {
 
     override val id = "PS-READINPUT-SIMPLE"
 
     private fun isIdOrLiteral(e: Expression) =
         e is Variable || e is LiteralString || e is LiteralNumber || e is LiteralBoolean
+
     private fun isIdOrStringOnly(e: Expression) =
         e is Variable || e is LiteralString
 
