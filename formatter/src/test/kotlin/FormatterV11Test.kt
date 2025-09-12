@@ -6,6 +6,7 @@ import org.printscript.common.Result
 import org.printscript.formatter.Formatter
 import org.printscript.formatter.config.FormatterConfig
 import org.printscript.formatter.factories.FormatterFactoryV11
+import org.printscript.formatter.formatToString
 import org.printscript.token.TokenStream
 import org.printscript.token.dsl.TokenBuilder
 import org.printscript.token.dsl.kw
@@ -23,7 +24,7 @@ class FormatterV11Test {
 
     private fun format(config: FormatterConfig, tokenStream: TokenStream): String {
         val formatter: Formatter = FormatterFactoryV11.create(config)
-        return unwrapOrFail(formatter.format(tokenStream))
+        return unwrapOrFail(formatter.formatToString(tokenStream))
     }
 
     private fun tokens(block: TokenBuilder.() -> TokenBuilder): TokenStream {

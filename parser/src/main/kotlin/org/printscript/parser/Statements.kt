@@ -9,6 +9,7 @@ import org.printscript.parser.expr.ExpressionParser
 import org.printscript.parser.head.Head
 import org.printscript.parser.head.HeadDetector
 import org.printscript.parser.stmt.StmtParser
+import org.printscript.token.Token
 import org.printscript.token.TokenStream
 
 object Statements {
@@ -18,7 +19,7 @@ object Statements {
         headDetector: HeadDetector,
         stmtParsers: Map<Head, StmtParser>,
         expr: ExpressionParser,
-        isTerminator: (Any) -> Boolean,
+        isTerminator: (Token) -> Boolean,
         stopAtEof: Boolean = true,
     ): Result<Pair<List<Statement>, TokenStream>, LabeledError> {
         fun loop(

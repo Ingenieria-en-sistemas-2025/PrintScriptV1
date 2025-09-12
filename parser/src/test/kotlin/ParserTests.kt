@@ -1,7 +1,9 @@
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.printscript.ast.Assignment
 import org.printscript.ast.Binary
+import org.printscript.ast.Grouping
 import org.printscript.ast.IfStmt
 import org.printscript.ast.LiteralNumber
 import org.printscript.ast.VarDeclaration
@@ -148,5 +150,93 @@ class ParserTests {
         }
         val head = TestUtils.assertSuccess(detector.detect(ts))
         assertEquals(Unknown, head)
+    }
+
+    @Test
+    fun testMultiplyAndDivideLeftAssociativity() {
+        val parser = GlobalParserFactory.forVersion(Version.V0)!!
+        val program = TestUtils.assertSuccess(
+            parser.parse(
+                TestUtils.tokens {
+                    kw().let().identifier("m").sep().colon().ty().numberType()
+                        .op().assign()
+                        .number("6").op().divide().number("3").op().minus().number("2")
+                        .sep().semicolon()
+                },
+            ),
+        )
+
+        val stmt = program.statements[0]
+        assertTrue(stmt is VarDeclaration)
+        val varDecl = stmt as VarDeclaration
+        assertEquals("m", varDecl.name)
+        assertNotNull(varDecl.initializer)
+
+        // (6 / 3) - 2
+        val min = varDecl.initializer as Binary
+        assertEquals(Operator.MINUS, min.operator)
+        assertTrue(min.right is LiteralNumber)
+        assertEquals("2", (min.right as LiteralNumber).raw)
+
+        val div = min.left as Binary
+        assertEquals(Operator.DIVIDE, div.operator)
+        assertTrue(div.left is LiteralNumber)
+        assertEquals("6", (div.left as LiteralNumber).raw)
+        assertTrue(div.right is LiteralNumber)
+        assertEquals("3", (div.right as LiteralNumber).raw)
+    }
+
+    @Test
+    fun testGroupingParsesToGroupingNode() {
+        val parser = GlobalParserFactory.forVersion(Version.V0)!!
+        val program = TestUtils.assertSuccess(
+            parser.parse(
+                TestUtils.tokens {
+                    kw().let().identifier("g").sep().colon().ty().numberType()
+                        .op().assign()
+                        .sep().lparen()
+                        .number("2").op().plus().number("3")
+                        .sep().rparen()
+                        .op().multiply().number("4")
+                        .sep().semicolon()
+                },
+            ),
+        )
+
+        val stmt = program.statements[0]
+        assertTrue(stmt is VarDeclaration)
+        val varDecl = stmt as VarDeclaration
+        assertEquals("g", varDecl.name)
+        val mul = varDecl.initializer as Binary
+        assertEquals(Operator.MULTIPLY, mul.operator)
+
+        assertTrue(mul.left is Grouping)
+        val grouping = mul.left as Grouping
+
+        assertTrue(grouping.expression is Binary)
+        val plus = grouping.expression as Binary
+        assertEquals(Operator.PLUS, plus.operator)
+        assertTrue(plus.left is LiteralNumber)
+        assertEquals("2", (plus.left as LiteralNumber).raw)
+        assertTrue(plus.right is LiteralNumber)
+        assertEquals("3", (plus.right as LiteralNumber).raw)
+        assertTrue(mul.right is LiteralNumber)
+        assertEquals("4", (mul.right as LiteralNumber).raw)
+    }
+
+    @Test
+    fun testAssertSuccessThrowsOnParseFailure() {
+        val parser = GlobalParserFactory.forVersion(Version.V0)!!
+        val result = parser.parse(
+            TestUtils.tokens {
+                identifier("x").op().assign().number("42")
+            },
+        )
+
+        val ex = assertThrows<IllegalStateException> {
+            TestUtils.assertSuccess(result)
+        }
+        val msg = ex.message ?: ""
+        assertTrue(msg.contains("Se esperaba separador SEMICOLON"))
     }
 }

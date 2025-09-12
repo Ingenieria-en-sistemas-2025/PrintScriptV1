@@ -11,6 +11,5 @@ val Token.codeText: String
         is OperatorToken -> operator.symbol
         is SeparatorToken -> separator.value
 
-        is EofToken -> "" // no se imprime
         else -> ""
     }

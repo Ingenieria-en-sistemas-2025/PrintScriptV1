@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test
 import org.printscript.formatter.Formatter
 import org.printscript.formatter.config.FormatterConfig
 import org.printscript.formatter.factories.GlobalFormatterFactory
+import org.printscript.formatter.formatToString
 import org.printscript.token.TestUtils
 import org.printscript.token.TokenStream
 import org.printscript.token.dsl.TokenBuilder
@@ -16,7 +17,7 @@ class FormatterTest {
     private fun format(config: FormatterConfig, init: TokenBuilder.() -> TokenBuilder): String {
         val formatter: Formatter = GlobalFormatterFactory.forVersion("1.0", config)!!
         val stream: TokenStream = TestUtils.tokens(init)
-        return TestUtils.assertSuccess(formatter.format(stream))
+        return TestUtils.assertSuccess(formatter.formatToString(stream))
     }
 
     @Test

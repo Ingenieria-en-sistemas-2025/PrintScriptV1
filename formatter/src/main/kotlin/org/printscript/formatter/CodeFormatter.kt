@@ -17,71 +17,80 @@ class CodeFormatter(
     private val layout: LayoutApplier = IndentationApplier(config.indentSpaces),
 ) : Formatter {
 
-    private data class IndentLevelState(val indent: LayoutApplier.State = LayoutApplier.State())
-    private data class Accumulator(val chunks: List<String> = emptyList())
+    private data class IndentState(val state: LayoutApplier.State = LayoutApplier.State())
 
-    override fun format(ts: TokenStream): Result<String, LabeledError> =
-        step(ts, prev = null, indentLevel = IndentLevelState(), acc = Accumulator())
+    override fun format(ts: TokenStream, out: Appendable): Result<Unit, LabeledError> =
+        step(ts, prev = null, indent = IndentState(), out = out, lastChar = null)
 
-    private fun step(stream: TokenStream, prev: Token?, indentLevel: IndentLevelState, acc: Accumulator): Result<String, LabeledError> =
-        stream.peek().flatMap { current -> continueWithPeeked(stream, prev, indentLevel, acc, current) }
-
-    private fun continueWithPeeked(
+    private fun step(
         stream: TokenStream,
-        previousToken: Token?,
-        indentLevelState: IndentLevelState,
-        accumulator: Accumulator,
-        currentToken: Token,
-    ): Result<String, LabeledError> =
-        if (currentToken is EofToken) {
-            finish(previousToken, accumulator, currentToken)
-        } else {
-            stream.peek(1).flatMap { lookaheadToken ->
-                val nextToken = lookaheadToken.takeUnless { it is EofToken }
-                val (updatedAcc, updatedIndentLevel) =
-                    processToken(previousToken, currentToken, nextToken, indentLevelState, accumulator)
-                stream.next().flatMap { (_, nextStream) ->
-                    step(nextStream, currentToken, updatedIndentLevel, updatedAcc)
+        prev: Token?,
+        indent: IndentState,
+        out: Appendable,
+        lastChar: Char?,
+    ): Result<Unit, LabeledError> =
+        stream.peek().flatMap { cur ->
+            if (cur is EofToken) {
+                finish(prev, indent, out, lastChar, cur)
+            } else {
+                stream.peek(1).flatMap { la ->
+                    val next = la.takeUnless { it is EofToken }
+                    val (indent2, lastChar2) = process(prev, cur, next, indent, out, lastChar)
+                    stream.next().flatMap { (_, ns) -> step(ns, cur, indent2, out, lastChar2) }
                 }
             }
         }
 
-    private fun processToken(
+    @Suppress("LongParameterList")
+    private fun process(
         prev: Token?,
         current: Token,
         next: Token?,
-        indentLevel: IndentLevelState,
-        acc: Accumulator,
-    ): Pair<Accumulator, IndentLevelState> {
-        // aplico prefijo, emito el token, ajusto indentacion
-        val (chunks, identLevel1) = layout.applyPrefix(registry.findApplicableRule(prev, current, next), prev, current, next, indentLevel.indent)
-        val acc1 = appendChunks(acc, chunks)
-        val acc2 = emitText(acc1, current.codeText)
-        val indentLevel2 = indentLevel.copy(indent = layout.updateAfter(prev, current, identLevel1))
-        return acc2 to indentLevel2
+        indent: IndentState,
+        out: Appendable,
+        lastChar: Char?,
+    ): Pair<IndentState, Char?> {
+        val (chunks, st1) = layout.applyPrefix(
+            registry.findApplicableRule(prev, current, next),
+            prev,
+            current,
+            next,
+            indent.state,
+        )
+        var lastChar = lastChar
+        chunks.forEach { part -> lastChar = emitText(out, part, lastChar) }
+        lastChar = emitText(out, current.codeText, lastChar)
+        val st2 = layout.updateAfter(prev, current, st1)
+        return IndentState(st2) to lastChar
     }
 
-    // ultima chance para prefijos (ej: \n)
-    private fun finish(prev: Token?, acc: Accumulator, eof: EofToken): Result<String, LabeledError> {
-        val (chunks, _) = layout.applyPrefix(registry.findApplicableRule(prev, eof, null), prev, eof, null, IndentLevelState().indent)
-        val acc1 = appendChunks(acc, chunks)
-        val acc2 = if (prev.isRbrace()) emitText(acc1, "\n") else acc1
-        return Success(acc2.chunks.joinToString(""))
+    private fun finish(
+        prev: Token?,
+        indent: IndentState,
+        out: Appendable,
+        lastChar: Char?,
+        eof: EofToken,
+    ): Result<Unit, LabeledError> {
+        val (chunks, _) = layout.applyPrefix(
+            registry.findApplicableRule(prev, eof, null),
+            prev,
+            eof,
+            null,
+            indent.state,
+        )
+        var lastChar = lastChar
+        chunks.forEach { part -> lastChar = emitText(out, part, lastChar) }
+        if (prev.isRbrace()) lastChar = emitText(out, "\n", lastChar)
+        return Success(Unit)
     }
 
-    // si es un espacio llama a safeSpace, sino agrega CodeText
-    private fun emitText(acc: Accumulator, text: String): Accumulator =
-        if (text == " ") safeSpace(acc) else acc.copy(chunks = acc.chunks + text)
-
-    // repite emitText por cada pedacito del prefijo
-    private fun appendChunks(accumulator: Accumulator, parts: List<String>): Accumulator =
-        parts.fold(accumulator) { acc, part -> emitText(acc, part) }
-
-    // evitar doble espacio
-    private fun safeSpace(acc: Accumulator): Accumulator =
-        if (lastChar(acc) == ' ' || lastChar(acc) == '\n') acc else acc.copy(chunks = acc.chunks + " ")
-
-    private fun lastChar(acc: Accumulator): Char? = acc.chunks.lastOrNull()?.lastOrNull()
+    private fun emitText(out: Appendable, text: String, lastChar: Char?): Char? {
+        if (text == " ") {
+            if (lastChar == ' ' || lastChar == '\n') return lastChar
+        }
+        out.append(text)
+        return text.lastOrNull() ?: lastChar
+    }
 }
 
 private fun Token?.isSeparator(kind: Separator) =
