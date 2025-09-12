@@ -7,16 +7,12 @@ import org.printscript.ast.Expression
 import org.printscript.ast.Grouping
 import org.printscript.ast.IfStmt
 import org.printscript.ast.Println
-import org.printscript.ast.ProgramNode
 import org.printscript.ast.ReadEnv
 import org.printscript.ast.ReadInput
 import org.printscript.ast.Statement
 import org.printscript.ast.VarDeclaration
 
 object AstWalk {
-
-    fun statements(program: ProgramNode): Sequence<Statement> =
-        program.statements.asSequence()
 
     fun expressionsOf(stmt: Statement): Sequence<Expression> = sequence {
         fun walkExpr(e: Expression): Sequence<Expression> = sequence {
@@ -46,10 +42,4 @@ object AstWalk {
             else -> Unit
         }
     }
-
-    fun expressions(program: ProgramNode): Sequence<Expression> =
-        statements(program).flatMap { expressionsOf(it) }
-
-    inline fun <reified T : Expression> ofType(program: ProgramNode): Sequence<T> =
-        expressions(program).filterIsInstance<T>()
 }

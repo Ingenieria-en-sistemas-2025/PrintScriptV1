@@ -7,7 +7,6 @@ import kotlin.io.path.createTempFile
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -82,7 +81,6 @@ class AnalyzerConfigLoaderTest {
                 assertEquals(IdentifierStyle.CAMEL_CASE, cfg.identifiers.style)
                 assertFalse(cfg.identifiers.checkReferences)
                 assertFalse(cfg.identifiers.failOnViolation)
-                assertNull(cfg.identifiers.customRegex)
                 assertTrue(cfg.printlnRule.enabled)
             }
             is Failure -> fail("No debería fallar: ${r.error.message}")
