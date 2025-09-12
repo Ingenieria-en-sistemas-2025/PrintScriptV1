@@ -13,14 +13,14 @@ import kotlin.test.Test
 class AstWalkTest {
 
     @Test
-    fun expressionsOf_VarDeclWithNullInit_isEmpty() {
+    fun expressionsOfVarDeclWithNullInit_isEmpty() {
         val s = VarDeclaration("x", Type.NUMBER, null, span(1, 1, 1, 10))
         val seq = AstWalk.expressionsOf(s).toList()
         assertTrue(seq.isEmpty())
     }
 
     @Test
-    fun expressionsOf_VarDeclWithBinary_containsRootAndChildren() {
+    fun expressionsOfVarDeclWithBinary_containsRootAndChildren() {
         val init = binary(litNum("1", 1, 20), Operator.PLUS, litNum("2", 1, 24), 1, 20, 1, 25)
         val s = VarDeclaration("x", Type.NUMBER, init, span(1, 1, 1, 26))
 
@@ -32,7 +32,7 @@ class AstWalkTest {
     }
 
     @Test
-    fun expressionsOf_Println_containsInnerExpression() {
+    fun expressionsOfPrintlnContainsInnerExpression() {
         val s = printlnNode(litStr("hi", 1, 10), 1, 1, 1, 14)
         val xs = AstWalk.expressionsOf(s).toList()
         assertEquals(1, xs.size)
@@ -40,7 +40,7 @@ class AstWalkTest {
     }
 
     @Test
-    fun expressionsOf_If_traversesConditionThenElse() {
+    fun expressionsOfIfTraversesConditionThenElse() {
         val cond = binary(litNum("1", 1, 5), Operator.PLUS, litNum("2", 1, 9), 1, 5, 1, 10)
         val thenStmt = printlnNode(litStr("A", 2, 10), 2, 1, 2, 13)
         val elseStmt = printlnNode(litStr("B", 3, 10), 3, 1, 3, 13)

@@ -44,8 +44,8 @@ class Tokenizer private constructor(
                 val matchResult = matcher.matchNext(scannerAfterTrivia)
                 scannerAfterTrivia.unpinHere()
 
-                return when (matchResult) {
-                    is Match.Success -> Success(buildMatchedToken(scannerAfterTrivia, matchResult))
+                when (matchResult) {
+                    is Match.Success -> buildMatchedToken(scannerAfterTrivia, matchResult)
                     is Match.Failure -> Failure(matchResult.reason)
                 }
             }
@@ -58,11 +58,14 @@ class Tokenizer private constructor(
         return tok to Tokenizer(sEnd, matcher, triviaSkipper, tokenFactory)
     }
 
-    private fun buildMatchedToken(sBefore: Scanner, m: Match.Success): Pair<Token, Tokenizer> {
+    private fun buildMatchedToken(sBefore: Scanner, m: Match.Success): Result<Pair<Token, Tokenizer>, LexerError> {
         val sAfter = sBefore.advance(m.length)
         val text = sBefore.slice(m.length).toString()
         val span = Span(m.start, sAfter.position())
-        val token = tokenFactory.create(m.key, Lexeme(text, span))
-        return token to Tokenizer(sAfter, matcher, triviaSkipper, tokenFactory)
+        val lexeme = Lexeme(text, span)
+        return when (val r = tokenFactory.create(m.key, lexeme)) {
+            is Success -> Success(r.value to Tokenizer(sAfter, matcher, triviaSkipper, tokenFactory))
+            is Failure -> Failure(r.error)
+        }
     }
 }
