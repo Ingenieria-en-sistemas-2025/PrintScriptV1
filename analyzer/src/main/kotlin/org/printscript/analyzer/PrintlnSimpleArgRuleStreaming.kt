@@ -14,10 +14,10 @@ class PrintlnSimpleArgRuleStreaming : StreamingRule {
     private fun isSimple(v: Expression) =
         v is Variable || v is LiteralString || v is LiteralNumber || v is LiteralBoolean
 
-    override fun onStatement(stmt: Statement, context: AnalyzerContext, out: DiagnosticEmitter) {
+    override fun onStatement(statement: Statement, context: AnalyzerContext, out: DiagnosticEmitter) {
         if (!context.config.printlnRule.enabled) return
-        if (stmt is Println) {
-            val v = stmt.value
+        if (statement is Println) {
+            val v = statement.value
             if (!isSimple(v)) {
                 out.report(
                     Diagnostic(id, "println solo admite identificador o literal (no expresiones compuestas)", v.span, Severity.ERROR),
