@@ -1,5 +1,8 @@
 package org.printscript.analyzer
 
+import org.printscript.analyzer.rules.IdentifierStyleRuleStreaming
+import org.printscript.analyzer.rules.PrintlnSimpleArgRuleStreaming
+import org.printscript.analyzer.rules.ReadInputSimpleArgRuleStreaming
 import org.printscript.common.Version
 
 object AnalyzerFactory {

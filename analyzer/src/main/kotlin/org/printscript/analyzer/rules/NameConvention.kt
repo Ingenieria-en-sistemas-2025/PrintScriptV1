@@ -1,4 +1,4 @@
-package org.printscript.analyzer
+package org.printscript.analyzer.rules
 
 interface NameConvention {
     val id: String

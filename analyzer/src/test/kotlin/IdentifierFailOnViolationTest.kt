@@ -1,9 +1,9 @@
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.printscript.analyzer.AnalyzerConfig
 import org.printscript.analyzer.DefaultStreamingAnalyzer
-import org.printscript.analyzer.IdentifierStyleRuleStreaming
-import org.printscript.analyzer.IdentifiersConfig
 import org.printscript.analyzer.Severity
+import org.printscript.analyzer.config.AnalyzerConfig
+import org.printscript.analyzer.config.IdentifiersConfig
+import org.printscript.analyzer.rules.IdentifierStyleRuleStreaming
 import org.printscript.common.Success
 import org.printscript.common.Type
 import kotlin.test.Test

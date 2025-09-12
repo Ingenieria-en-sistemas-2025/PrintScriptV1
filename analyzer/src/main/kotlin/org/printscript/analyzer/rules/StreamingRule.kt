@@ -1,5 +1,7 @@
-package org.printscript.analyzer
+package org.printscript.analyzer.rules
 
+import org.printscript.analyzer.DiagnosticEmitter
+import org.printscript.analyzer.config.AnalyzerContext
 import org.printscript.ast.Statement
 
 interface StreamingRule {

@@ -1,4 +1,6 @@
-package org.printscript.analyzer
+package org.printscript.analyzer.rules
+
+import org.printscript.analyzer.config.IdentifiersConfig
 
 object IdentifierNaming {
     fun from(config: IdentifiersConfig): NameConvention =

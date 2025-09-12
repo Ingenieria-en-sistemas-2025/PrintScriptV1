@@ -1,9 +1,9 @@
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.printscript.analyzer.AnalyzerConfig
 import org.printscript.analyzer.DefaultStreamingAnalyzer
-import org.printscript.analyzer.PrintlnRuleConfig
-import org.printscript.analyzer.PrintlnSimpleArgRuleStreaming
+import org.printscript.analyzer.config.AnalyzerConfig
+import org.printscript.analyzer.config.PrintlnRuleConfig
+import org.printscript.analyzer.rules.PrintlnSimpleArgRuleStreaming
 import org.printscript.common.LabeledError
 import org.printscript.common.Operator
 import org.printscript.common.Position

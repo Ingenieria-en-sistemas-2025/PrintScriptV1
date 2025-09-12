@@ -1,9 +1,9 @@
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.printscript.analyzer.AnalyzerConfig
 import org.printscript.analyzer.AnalyzerFactory
-import org.printscript.analyzer.IdentifierStyle
-import org.printscript.analyzer.IdentifiersConfig
-import org.printscript.analyzer.PrintlnRuleConfig
+import org.printscript.analyzer.config.AnalyzerConfig
+import org.printscript.analyzer.config.IdentifiersConfig
+import org.printscript.analyzer.config.PrintlnRuleConfig
+import org.printscript.analyzer.rules.IdentifierStyle
 import org.printscript.common.Operator
 import org.printscript.common.Success
 import org.printscript.common.Type

@@ -1,6 +1,6 @@
 package org.printscript.analyzer.loader
 
-import org.printscript.analyzer.AnalyzerConfig
+import org.printscript.analyzer.config.AnalyzerConfig
 import org.printscript.common.Failure
 import org.printscript.common.LabeledError
 import org.printscript.common.Position

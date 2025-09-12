@@ -1,6 +1,6 @@
 
-import org.printscript.analyzer.IdentifierStyle
 import org.printscript.analyzer.loader.AnalyzerConfigLoader
+import org.printscript.analyzer.rules.IdentifierStyle
 import org.printscript.common.Failure
 import org.printscript.common.Success
 import java.io.File

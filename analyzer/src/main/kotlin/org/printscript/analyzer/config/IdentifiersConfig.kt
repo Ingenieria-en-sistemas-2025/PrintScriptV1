@@ -1,4 +1,6 @@
-package org.printscript.analyzer
+package org.printscript.analyzer.config
+
+import org.printscript.analyzer.rules.IdentifierStyle
 
 data class IdentifiersConfig(
     val style: IdentifierStyle = IdentifierStyle.CAMEL_CASE,

@@ -1,5 +1,11 @@
-package org.printscript.analyzer
+package org.printscript.analyzer.rules
 
+import org.printscript.analyzer.AstWalk
+import org.printscript.analyzer.Diagnostic
+import org.printscript.analyzer.DiagnosticEmitter
+import org.printscript.analyzer.Severity
+import org.printscript.analyzer.config.AnalyzerContext
+import org.printscript.analyzer.config.IdentifiersConfig
 import org.printscript.ast.Assignment
 import org.printscript.ast.ConstDeclaration
 import org.printscript.ast.IfStmt

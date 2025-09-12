@@ -1,5 +1,10 @@
-package org.printscript.analyzer
+package org.printscript.analyzer.rules
 
+import org.printscript.analyzer.AstWalk
+import org.printscript.analyzer.Diagnostic
+import org.printscript.analyzer.DiagnosticEmitter
+import org.printscript.analyzer.Severity
+import org.printscript.analyzer.config.AnalyzerContext
 import org.printscript.ast.Expression
 import org.printscript.ast.LiteralBoolean
 import org.printscript.ast.LiteralNumber
@@ -30,7 +35,12 @@ class ReadInputSimpleArgRuleStreaming : StreamingRule {
             val ok = if (cfg.onlyStringLiteralOrIdentifier) isIdOrStringOnly(call.prompt) else isIdOrLiteral(call.prompt)
             if (!ok) {
                 out.report(
-                    Diagnostic(id, "readInput solo admite identificador o literal como argumento (no expresiones compuestas)", call.prompt.span, Severity.ERROR),
+                    Diagnostic(
+                        id,
+                        "readInput solo admite identificador o literal como argumento (no expresiones compuestas)",
+                        call.prompt.span,
+                        Severity.ERROR,
+                    ),
                 )
             }
         }

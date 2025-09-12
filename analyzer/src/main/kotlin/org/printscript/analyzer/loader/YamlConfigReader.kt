@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.printscript.analyzer.AnalyzerConfig
+import org.printscript.analyzer.config.AnalyzerConfig
 import org.printscript.analyzer.toLabeledError
 import org.printscript.common.Failure
 import org.printscript.common.LabeledError
