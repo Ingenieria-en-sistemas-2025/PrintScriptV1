@@ -15,10 +15,10 @@ import org.printscript.common.Span
 import org.printscript.common.Success
 import org.printscript.common.Type
 import org.printscript.interpreter.DefaultExprEvaluator
-import org.printscript.interpreter.InterpreterError
 import org.printscript.interpreter.ProgramInterpreter
 import org.printscript.interpreter.RunResult
 import org.printscript.interpreter.StmtActionExecutor
+import org.printscript.interpreter.errors.InterpreterError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail

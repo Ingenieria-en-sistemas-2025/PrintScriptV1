@@ -1,8 +1,6 @@
 package org.printscript.lexer
 
-import org.printscript.common.Failure
 import org.printscript.common.Span
-import org.printscript.common.Success
 import org.printscript.lexer.error.UnexpectedChar
 import org.printscript.lexer.lexingrules.LexingRule
 
