@@ -32,6 +32,4 @@ class StmtActionExecutor(
     }
 }
 
-// KClass<out Statement> -> out Statement permite claves que sean subtipos de Statement org.printscript.interpreter.StatementAction<out Statement>
 // @Suppress("UNCHECKED_CAST") ->garantizo que el mapa está bien construido, le doy confianza al compilador y suprimo el warning
-// el cast es seguro porque la clave del mapa es stmt::class. Eso asegura que la action recuperada corresponde al mismo subtipo que stmt

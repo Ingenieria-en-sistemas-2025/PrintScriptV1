@@ -3,11 +3,10 @@ import org.printscript.ast.Binary
 import org.printscript.ast.LiteralNumber
 import org.printscript.ast.LiteralString
 import org.printscript.ast.Println
-import org.printscript.ast.ProgramNode
-import org.printscript.ast.Statement
 import org.printscript.ast.VarDeclaration
 import org.printscript.ast.Variable
 import org.printscript.common.Failure
+import org.printscript.common.LabeledError
 import org.printscript.common.Operator
 import org.printscript.common.Position
 import org.printscript.common.Result
@@ -15,6 +14,7 @@ import org.printscript.common.Span
 import org.printscript.common.Success
 import org.printscript.common.Type
 import org.printscript.interpreter.DefaultExprEvaluator
+import org.printscript.interpreter.Interpreter
 import org.printscript.interpreter.ProgramInterpreter
 import org.printscript.interpreter.RunResult
 import org.printscript.interpreter.StmtActionExecutor
@@ -24,26 +24,22 @@ import kotlin.test.assertEquals
 import kotlin.test.fail
 
 class InterpreterPrintTests {
+
     private fun s() = Span(Position(1, 1), Position(1, 1))
 
-    private fun makeInterpreter(): ProgramInterpreter {
+    private fun makeInterpreter(): Interpreter {
         val eval = DefaultExprEvaluator()
-        val exec = StmtActionExecutor(eval) // busca action en el map
+        val exec = StmtActionExecutor(eval)
         return ProgramInterpreter(exec)
     }
 
     @Test
-    fun `println number 42`() {
-        val stmts: List<Statement> = listOf(
-            Println(
-                // aca usa la println action
-                value = LiteralNumber(raw = "42", span = s()),
-                span = s(),
-            ),
+    fun printlnNumber() {
+        val stream = streamOf(
+            Println(LiteralNumber("42", s()), s()),
         )
-        val program = ProgramNode(statements = stmts)
 
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
+        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(stream)
 
         when (res) {
             is Success -> assertEquals(listOf("42"), res.value.outputs)
@@ -52,25 +48,13 @@ class InterpreterPrintTests {
     }
 
     @Test
-    fun `declare variable x = 42 and print it`() {
-        val stmts: List<Statement> = listOf(
-            VarDeclaration(
-                // aca usa la VarDeclaration action
-                name = "x",
-                type = Type.NUMBER,
-                initializer = LiteralNumber(raw = "42", span = s()),
-                span = s(),
-            ),
-            Println(
-                // aca usa la println action
-                value = Variable(name = "x", span = s()),
-                span = s(),
-            ),
+    fun declareVarAndPrintIt() {
+        val stream = streamOf(
+            VarDeclaration("x", Type.NUMBER, LiteralNumber("42", s()), s()),
+            Println(Variable("x", s()), s()),
         )
-        val program = ProgramNode(statements = stmts)
 
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
-
+        val res = makeInterpreter().run(stream)
         when (res) {
             is Success -> assertEquals(listOf("42"), res.value.outputs)
             is Failure -> fail("Interpreter failed: ${res.error}")
@@ -78,92 +62,50 @@ class InterpreterPrintTests {
     }
 
     @Test
-    fun `declare variable x = 42, assign x = 100 and print it`() {
-        val stmts: List<Statement> = listOf(
-            VarDeclaration(
-                // aca usa la VarDeclaration action
-                name = "x",
-                type = Type.NUMBER,
-                initializer = LiteralNumber(raw = "42", span = s()),
-                span = s(),
-            ),
-            Assignment(
-                // aca usa la Assignment action
-                name = "x",
-                value = LiteralNumber(raw = "100", span = s()),
-                span = s(),
-            ),
-            Println(
-                // aca usa la println action
-                value = Variable(name = "x", span = s()),
-                span = s(),
-            ),
+    fun declareAssignAndPrint() {
+        val stream = streamOf(
+            VarDeclaration("x", Type.NUMBER, LiteralNumber("42", s()), s()),
+            Assignment("x", LiteralNumber("100", s()), s()),
+            Println(Variable("x", s()), s()),
         )
-        val program = ProgramNode(statements = stmts)
 
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
-
+        val res = makeInterpreter().run(stream)
         when (res) {
-            is Success -> {
-                println("OUTPUTSSSS: ${res.value.outputs}")
-                assertEquals(listOf("100"), res.value.outputs)
-            }
+            is Success -> assertEquals(listOf("100"), res.value.outputs)
             is Failure -> fail("Interpreter failed: ${res.error}")
         }
     }
 
     @Test
-    fun `declare variable x = 42, assign x = 100 and print x + 1`() {
-        val stmts: List<Statement> = listOf(
-            VarDeclaration(
-                // aca usa la VarDeclaration action
-                name = "x",
-                type = Type.NUMBER,
-                initializer = LiteralNumber(raw = "42", span = s()),
-                span = s(),
-            ),
-            Assignment(
-                // aca usa la Assignment action
-                name = "x",
-                value = LiteralNumber(raw = "100", span = s()),
-                span = s(),
-            ),
+    fun `declare variable x = 42, assign x = 100 and print x plus 1`() {
+        val stream = streamOf(
+            VarDeclaration("x", Type.NUMBER, LiteralNumber("42", s()), s()),
+            Assignment("x", LiteralNumber("100", s()), s()),
             Println(
-                // aca usa la println action
-                value = Binary(
-                    left = Variable(name = "x", span = s()),
+                Binary(
+                    left = Variable("x", s()),
                     operator = Operator.PLUS,
-                    right = LiteralNumber(raw = "1", span = s()),
+                    right = LiteralNumber("1", s()),
                     span = s(),
                 ),
-                span = s(),
+                s(),
             ),
         )
-        val program = ProgramNode(statements = stmts)
 
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
-
+        val res = makeInterpreter().run(stream)
         when (res) {
-            is Success -> {
-                assertEquals(listOf("101"), res.value.outputs)
-            }
+            is Success -> assertEquals(listOf("101"), res.value.outputs)
             is Failure -> fail("Interpreter failed: ${res.error}")
         }
     }
 
     @Test
-    fun `print string "hello world"`() {
-        val stmts: List<Statement> = listOf(
-            Println(
-                // aca usa la println action
-                value = LiteralString(value = "hello world", span = s()),
-                span = s(),
-            ),
+    fun printString() {
+        val stream = streamOf(
+            Println(LiteralString("hello world", s()), s()),
         )
-        val program = ProgramNode(statements = stmts)
 
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
-
+        val res = makeInterpreter().run(stream)
         when (res) {
             is Success -> assertEquals(listOf("hello world"), res.value.outputs)
             is Failure -> fail("Interpreter failed: ${res.error}")
@@ -172,35 +114,15 @@ class InterpreterPrintTests {
 
     @Test
     fun `declare x=10, y=20, assign x=y, print x and y`() {
-        val stmts: List<Statement> = listOf(
-            VarDeclaration(
-                name = "x",
-                type = Type.NUMBER,
-                initializer = LiteralNumber(raw = "10", span = s()),
-                span = s(),
-            ),
-            VarDeclaration(
-                name = "y",
-                type = Type.NUMBER,
-                initializer = LiteralNumber(raw = "20", span = s()),
-                span = s(),
-            ),
-            Assignment(
-                name = "x",
-                value = Variable(name = "y", span = s()),
-                span = s(),
-            ),
-            Println(
-                value = Variable(name = "x", span = s()),
-                span = s(),
-            ),
-            Println(
-                value = Variable(name = "y", span = s()),
-                span = s(),
-            ),
+        val stream = streamOf(
+            VarDeclaration("x", Type.NUMBER, LiteralNumber("10", s()), s()),
+            VarDeclaration("y", Type.NUMBER, LiteralNumber("20", s()), s()),
+            Assignment("x", Variable("y", s()), s()),
+            Println(Variable("x", s()), s()),
+            Println(Variable("y", s()), s()),
         )
-        val program = ProgramNode(statements = stmts)
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
+
+        val res = makeInterpreter().run(stream)
         when (res) {
             is Success -> assertEquals(listOf("20", "20"), res.value.outputs)
             is Failure -> fail("Interpreter failed: ${res.error}")
@@ -209,113 +131,113 @@ class InterpreterPrintTests {
 
     @Test
     fun `print undeclared variable should fail`() {
-        val stmts: List<Statement> = listOf(
-            Println(
-                value = Variable(name = "z", span = s()),
-                span = s(),
-            ),
+        val stream = streamOf(
+            Println(Variable("z", s()), s()),
         )
-        val program = ProgramNode(statements = stmts)
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
+
+        val res = makeInterpreter().run(stream)
         when (res) {
             is Success -> fail("Interpreter should have failed, but succeeded with outputs: ${res.value.outputs}")
-            is Failure -> println("Correctly failed: ${res.error}")
+            is Failure -> println("Correctly failed: ${res.error.humanReadable()}")
         }
     }
 
     @Test
     fun `redeclare variable should fail`() {
-        val stmts: List<Statement> = listOf(
-            VarDeclaration(
-                name = "x",
-                type = Type.NUMBER,
-                initializer = LiteralNumber(raw = "1", span = s()),
-                span = s(),
-            ),
-            VarDeclaration(
-                name = "x",
-                type = Type.NUMBER,
-                initializer = LiteralNumber(raw = "2", span = s()),
-                span = s(),
-            ),
+        val stream = streamOf(
+            VarDeclaration("x", Type.NUMBER, LiteralNumber("1", s()), s()),
+            VarDeclaration("x", Type.NUMBER, LiteralNumber("2", s()), s()),
         )
-        val program = ProgramNode(statements = stmts)
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
+
+        val res = makeInterpreter().run(stream)
         when (res) {
-            is Success -> fail("Interpreter should have failed, but succeeded with outputs: ${res.value.outputs}")
-            is Failure -> println("Correctly failed: ${res.error}")
+            is Success -> fail("Interpreter should have failed, but succeeded")
+            is Failure -> println("Correctly failed: ${res.error.humanReadable()}")
         }
     }
 
     @Test
     fun `unsupported binary operator should fail`() {
-        val stmts: List<Statement> = listOf(
-            VarDeclaration(
-                name = "x",
-                type = Type.NUMBER,
-                initializer = LiteralNumber(raw = "10", span = s()),
-                span = s(),
-            ),
+        val stream = streamOf(
+            VarDeclaration("x", Type.NUMBER, LiteralNumber("10", s()), s()),
             Println(
-                value = Binary(
-                    left = Variable(name = "x", span = s()),
+                Binary(
+                    left = Variable("x", s()),
                     operator = Operator.UNKNOWN,
-                    right = LiteralNumber(raw = "3", span = s()),
+                    right = LiteralNumber("3", s()),
                     span = s(),
                 ),
-                span = s(),
+                s(),
             ),
         )
-        val program = ProgramNode(statements = stmts)
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
+
+        val res = makeInterpreter().run(stream)
         when (res) {
-            is Success -> fail("Interpreter should have failed, but succeeded with outputs: ${res.value.outputs}")
-            is Failure -> println("Correctly failed: ${res.error}")
+            is Success -> fail("Interpreter should have failed, but succeeded")
+            is Failure -> println("Correctly failed: ${res.error.humanReadable()}")
         }
     }
 
     @Test
     fun `division by zero should fail`() {
-        val stmts: List<Statement> = listOf(
-            VarDeclaration(
-                name = "x",
-                type = Type.NUMBER,
-                initializer = LiteralNumber(raw = "10", span = s()),
-                span = s(),
-            ),
+        val stream = streamOf(
+            VarDeclaration("x", Type.NUMBER, LiteralNumber("10", s()), s()),
             Println(
-                value = Binary(
-                    left = Variable(name = "x", span = s()),
+                Binary(
+                    left = Variable("x", s()),
                     operator = Operator.DIVIDE,
-                    right = LiteralNumber(raw = "0", span = s()),
+                    right = LiteralNumber("0", s()),
                     span = s(),
                 ),
-                span = s(),
+                s(),
             ),
         )
-        val program = ProgramNode(statements = stmts)
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
+
+        val res = makeInterpreter().run(stream)
         when (res) {
-            is Success -> fail("Interpreter should have failed, but succeeded with outputs: ${res.value.outputs}")
-            is Failure -> println("Correctly failed: ${res.error}")
+            is Success -> fail("Interpreter should have failed, but succeeded")
+            is Failure -> println("Correctly failed: ${res.error.humanReadable()}")
         }
     }
 
     @Test
     fun `incompatible type should fail`() {
-        val stmts: List<Statement> = listOf(
+        val stream = streamOf(
             VarDeclaration(
                 name = "x",
                 type = Type.NUMBER,
-                initializer = LiteralString(value = "not a number", span = s()),
+                initializer = LiteralString("not a number", s()),
                 span = s(),
             ),
         )
-        val program = ProgramNode(statements = stmts)
-        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(program)
+
+        val res = makeInterpreter().run(stream)
         when (res) {
-            is Success -> fail("Interpreter should have failed, but succeeded with outputs: ${res.value.outputs}")
-            is Failure -> println("Correctly failed: ${res.error}")
+            is Success -> fail("Interpreter should have failed, but succeeded")
+            is Failure -> println("Correctly failed: ${res.error.humanReadable()}")
+        }
+    }
+
+    @Test
+    fun `parser error in the middle aborts execution`() {
+        // seria antes del error
+        val before = listOf(
+            Println(LiteralString("pre", s()), s()),
+        )
+        // error de parser simulado
+        val parseErr: LabeledError = LabeledError.of(s(), "syntactic boom")
+
+        // desp no deberia ejecutarse pq corte ejec
+        val after = listOf(
+            Println(LiteralString("post", s()), s()),
+        )
+
+        val stream = streamWithError(before = before, error = parseErr, after = after)
+
+        val res = makeInterpreter().run(stream)
+        when (res) {
+            is Success -> fail("Interpreter should have failed due to parser error")
+            is Failure -> println("Aborted on parser error as expected: ${res.error.humanReadable()}")
         }
     }
 }
