@@ -40,7 +40,7 @@ class DefaultStreamingAnalyzer(private val rules: List<StreamingRule>) : Streami
         }
 
     private tailrec fun loop(current: StatementStream, context: AnalyzerContext, out: DiagnosticEmitter): Result<Unit, LabeledError> =
-        when (val step = current.step()) {
+        when (val step = current.nextStep()) {
             is Step.Item -> {
                 rules.forEach { it.onStatement(step.statement, context, out) }
                 loop(step.next, context, out) // tail call

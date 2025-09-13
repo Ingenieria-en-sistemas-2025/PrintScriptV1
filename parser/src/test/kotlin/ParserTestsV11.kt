@@ -33,7 +33,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is ConstDeclaration)
@@ -54,7 +54,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is ConstDeclaration)
@@ -74,7 +74,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Error)
         val error = (step as Step.Error).error
         assertTrue(
@@ -95,7 +95,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is VarDeclaration)
@@ -120,7 +120,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is Println)
@@ -147,7 +147,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is IfStmt)
@@ -171,7 +171,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is IfStmt)
@@ -198,7 +198,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is IfStmt)
@@ -228,7 +228,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is IfStmt)
@@ -256,7 +256,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Error)
     }
 
@@ -270,7 +270,7 @@ class ParserTestsV11 {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Error)
         val error = (step as Step.Error).error
         assertTrue(error.message.contains("LBRACE") || error.message.contains("llave"))
