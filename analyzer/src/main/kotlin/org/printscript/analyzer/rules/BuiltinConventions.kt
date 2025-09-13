@@ -1,4 +1,4 @@
-package org.printscript.analyzer
+package org.printscript.analyzer.rules
 
 object BuiltinConventions {
     val camel = RegexNameConvention("CAMEL_CASE", Regex("[a-z]+([A-Z][a-z0-9]*)*"))

@@ -1,20 +1,23 @@
 package org.printscript.analyzer
 
+import org.printscript.analyzer.rules.IdentifierStyleRuleStreaming
+import org.printscript.analyzer.rules.PrintlnSimpleArgRuleStreaming
+import org.printscript.analyzer.rules.ReadInputSimpleArgRuleStreaming
 import org.printscript.common.Version
 
 object AnalyzerFactory {
-    fun forVersion(v: Version): Analyzer = when (v) {
-        Version.V0 -> DefaultAnalyzer(
+    fun forVersion(v: Version): StreamingAnalyzer = when (v) {
+        Version.V0 -> DefaultStreamingAnalyzer(
             listOf(
-                IdentifierStyleRuleOld(),
-                PrintlnSimpleArgRuleOld(),
+                IdentifierStyleRuleStreaming(),
+                PrintlnSimpleArgRuleStreaming(),
             ),
         )
-        Version.V1 -> DefaultAnalyzer(
+        Version.V1 -> DefaultStreamingAnalyzer(
             listOf(
-                IdentifierStyleRuleOld(),
-                PrintlnSimpleArgRuleOld(),
-                ReadInputSimpleArgRuleOld(),
+                IdentifierStyleRuleStreaming(),
+                PrintlnSimpleArgRuleStreaming(),
+                ReadInputSimpleArgRuleStreaming(),
             ),
         )
     }

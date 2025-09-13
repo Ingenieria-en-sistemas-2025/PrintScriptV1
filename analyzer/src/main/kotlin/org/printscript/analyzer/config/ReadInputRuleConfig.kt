@@ -1,3 +1,3 @@
-package org.printscript.analyzer
+package org.printscript.analyzer.config
 
 data class ReadInputRuleConfig(val enabled: Boolean = true, val onlyStringLiteralOrIdentifier: Boolean = false)

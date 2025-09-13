@@ -1,5 +1,9 @@
-package org.printscript.analyzer
+package org.printscript.analyzer.rules
 
+import org.printscript.analyzer.Diagnostic
+import org.printscript.analyzer.DiagnosticEmitter
+import org.printscript.analyzer.Severity
+import org.printscript.analyzer.config.AnalyzerContext
 import org.printscript.ast.Expression
 import org.printscript.ast.LiteralBoolean
 import org.printscript.ast.LiteralNumber
@@ -20,7 +24,12 @@ class PrintlnSimpleArgRuleStreaming : StreamingRule {
             val v = statement.value
             if (!isSimple(v)) {
                 out.report(
-                    Diagnostic(id, "println solo admite identificador o literal (no expresiones compuestas)", v.span, Severity.ERROR),
+                    Diagnostic(
+                        id,
+                        "println solo admite identificador o literal (no expresiones compuestas)",
+                        v.span,
+                        Severity.ERROR,
+                    ),
                 )
             }
         }

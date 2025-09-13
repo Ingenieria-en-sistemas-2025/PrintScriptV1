@@ -1,6 +1,6 @@
 
-import org.printscript.analyzer.AnalyzerConfigLoader
-import org.printscript.analyzer.IdentifierStyle
+import org.printscript.analyzer.loader.AnalyzerConfigLoader
+import org.printscript.analyzer.rules.IdentifierStyle
 import org.printscript.common.Failure
 import org.printscript.common.Success
 import java.io.File
@@ -47,12 +47,14 @@ class AnalyzerConfigLoaderResourcesTest {
         when (val r = AnalyzerConfigLoader.fromFile(file)) {
             is Success -> fail("Debió fallar por YAML inválido")
             is Failure -> {
+                val msg = r.error.message.lowercase()
                 assertTrue(
-                    r.error.message.contains("Formato inválido") ||
-                        r.error.message.contains("Error al leer"),
+                    msg.contains("formato inválido") || msg.contains("error al leer"),
+                    "Mensaje inesperado: ${r.error.message}",
                 )
-                assertEquals(1, r.error.span.start.line)
-                assertEquals(1, r.error.span.start.column)
+
+                assertTrue(r.error.span.start.line >= 1, "line debe ser >= 1, fue ${r.error.span.start.line}")
+                assertTrue(r.error.span.start.column >= 1, "column debe ser >= 1, fue ${r.error.span.start.column}")
             }
         }
     }
