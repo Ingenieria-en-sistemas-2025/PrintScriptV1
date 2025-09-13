@@ -24,7 +24,7 @@ class StreamingStatementStream private constructor(
         ): StatementStream = StreamingStatementStream(ts, parseOne, headDetector)
     }
 
-    override fun step(): Step {
+    override fun nextStep(): Step {
         if (ts.isEof()) return Step.Eof
         return when (val result = parseOne(ts)) {
             is Success -> {
