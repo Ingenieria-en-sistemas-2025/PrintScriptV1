@@ -53,8 +53,8 @@ class Scanner private constructor(
         return Scanner(source, idx, l, c)
     }
 
-    fun pinHere() { (source as? FeedSource)?.pin(absIndex) }
-    fun unpinHere() { (source as? FeedSource)?.unpin(absIndex) }
+    fun pinHere() { source.pin(absIndex) }
+    fun unpinHere() { source.unpin(absIndex) }
 
     private interface Source {
         fun isEof(absIndex: Int): Boolean

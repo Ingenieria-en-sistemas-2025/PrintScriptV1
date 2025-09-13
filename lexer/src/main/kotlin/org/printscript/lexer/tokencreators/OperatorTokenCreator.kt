@@ -8,9 +8,9 @@ import org.printscript.token.Token
 class OperatorTokenCreator(
     private val ops: Map<String, Operator>,
 ) : TokenCreator {
-    override fun create(lexeme: Lexeme): Token =
-        OperatorToken(
-            ops[lexeme.text] ?: error("Operador desconocido: '${lexeme.text}'"),
-            lexeme.span,
-        )
+    override fun create(lexeme: Lexeme): Token {
+        val op = ops[lexeme.text]
+        checkNotNull(op) { "internal: OperatorRule produced unknown lexeme '${lexeme.text}'" }
+        return OperatorToken(op, lexeme.span)
+    }
 }

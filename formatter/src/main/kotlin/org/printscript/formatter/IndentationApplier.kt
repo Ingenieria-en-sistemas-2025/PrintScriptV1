@@ -18,9 +18,11 @@ class IndentationApplier(private val indentSize: Int) : LayoutApplier {
 
         val nl = prefix.count { it == '\n' }
         val level = computeLevel(prev, current, next, state)
-        val chunks = MutableList(nl) { "\n" }.toMutableList()
-        if (level > 0) chunks.add(" ".repeat(level * indentSize))
-        return chunks to state
+        val chunk = buildString {
+            repeat(nl) { append('\n') }
+            if (level > 0) repeat(level * indentSize) { append(' ') }
+        }
+        return listOf(chunk) to state
     }
 
     override fun updateAfter(prev: Token?, current: Token, state: LayoutApplier.State): LayoutApplier.State = when {

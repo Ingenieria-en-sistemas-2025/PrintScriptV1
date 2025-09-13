@@ -1,9 +1,7 @@
 package org.printscript.token
 
-import org.printscript.common.Failure
 import org.printscript.common.LabeledError
 import org.printscript.common.Result
-import org.printscript.common.Success
 import org.printscript.token.dsl.TokenBuilder
 
 object TestUtils {
@@ -13,7 +11,7 @@ object TestUtils {
         return TokenBuilder().let {
             // ejecutar la lambda DSL sobre el builder (devuelve otro builder)
             init(it)
-                // construir el org.printscript.token.TokenStream final a partir del builder
+                // construir el TokenStream final a partir del builder
                 .build()
         }
     }
@@ -23,10 +21,4 @@ object TestUtils {
             onSuccess = { it },
             onFailure = { error("Expected Success, got Failure: ${it.humanReadable()}") },
         )
-
-    fun <T> assertFailure(result: Result<T, LabeledError>): LabeledError =
-        when (result) {
-            is Success -> error("Expected Failure, got Success: ${result.value}")
-            is Failure -> result.error
-        }
 }

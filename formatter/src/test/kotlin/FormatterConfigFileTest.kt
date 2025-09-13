@@ -7,6 +7,7 @@ import org.printscript.formatter.config.ConfigLoader
 import org.printscript.formatter.config.FormatterConfig
 import org.printscript.formatter.config.FormatterOptions
 import org.printscript.formatter.factories.GlobalFormatterFactory
+import org.printscript.formatter.formatToString
 import org.printscript.token.TestUtils
 import org.printscript.token.TokenStream
 import org.printscript.token.dsl.TokenBuilder
@@ -27,10 +28,10 @@ class FormatterConfigFileTest {
         return path
     }
 
-    private fun formatWith(config: FormatterConfig, init: TokenBuilder.() -> TokenBuilder): String {
+    private fun formatWith(config: FormatterOptions, init: TokenBuilder.() -> TokenBuilder): String {
         val formatter: Formatter = GlobalFormatterFactory.forVersion(Version.V0, config)!!
         val stream: TokenStream = TestUtils.tokens(init)
-        return TestUtils.assertSuccess(formatter.format(stream))
+        return TestUtils.assertSuccess(formatter.formatToString(stream))
     }
 
     @Test

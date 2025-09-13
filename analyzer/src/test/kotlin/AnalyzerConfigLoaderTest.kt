@@ -1,5 +1,5 @@
-import org.printscript.analyzer.AnalyzerConfigLoader
-import org.printscript.analyzer.IdentifierStyle
+import org.printscript.analyzer.loader.AnalyzerConfigLoader
+import org.printscript.analyzer.rules.IdentifierStyle
 import org.printscript.common.Failure
 import org.printscript.common.Success
 import java.io.File
@@ -7,7 +7,6 @@ import kotlin.io.path.createTempFile
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -82,7 +81,6 @@ class AnalyzerConfigLoaderTest {
                 assertEquals(IdentifierStyle.CAMEL_CASE, cfg.identifiers.style)
                 assertFalse(cfg.identifiers.checkReferences)
                 assertFalse(cfg.identifiers.failOnViolation)
-                assertNull(cfg.identifiers.customRegex)
                 assertTrue(cfg.printlnRule.enabled)
             }
             is Failure -> fail("No debería fallar: ${r.error.message}")
@@ -109,8 +107,8 @@ class AnalyzerConfigLoaderTest {
         val tmp: File = createTempFile(suffix = ".yml").toFile()
         tmp.writeText(
             """
-            identifiers:
-              style: [ not, valid, here
+        identifiers:
+          style: [ not, valid, here
             """.trimIndent(),
         )
 
@@ -121,9 +119,9 @@ class AnalyzerConfigLoaderTest {
                     r.error.message.contains("Formato inválido") ||
                         r.error.message.contains("Error al leer"),
                 )
-                // span default
-                assertEquals(1, r.error.span.start.line)
-                assertEquals(1, r.error.span.start.column)
+                // Ahora aceptamos la posición real reportada por Jackson:
+                assertTrue(r.error.span.start.line >= 1)
+                assertTrue(r.error.span.start.column >= 1)
             }
         }
 

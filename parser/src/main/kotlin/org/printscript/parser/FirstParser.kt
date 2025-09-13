@@ -1,8 +1,6 @@
 package org.printscript.parser
 
-import org.printscript.ast.ProgramNode
-import org.printscript.common.LabeledError
-import org.printscript.common.Result
+import org.printscript.ast.StatementStream
 import org.printscript.parser.expr.ExpressionParser
 import org.printscript.parser.head.Head
 import org.printscript.parser.head.HeadDetector
@@ -15,13 +13,12 @@ class FirstParser(
     private val stmtParsers: Map<Head, StmtParser>,
 ) : Parser {
 
-    override fun parse(ts0: TokenStream): Result<ProgramNode, LabeledError> =
-        Statements.parseUntil(
-            ts0,
-            headDetector,
-            stmtParsers,
-            expr,
-            isTerminator = { false }, // nunca cortamos por token
-            stopAtEof = true, // cortamos por EOF
-        ).map { (stmts, _) -> ProgramNode(stmts) }
+    override fun parse(tokenStream: TokenStream): StatementStream {
+        val parseOne = ParseOne.make(headDetector, stmtParsers, expr)
+        return StreamingStatementStream.of(
+            ts = tokenStream,
+            parseOne = parseOne,
+            headDetector = headDetector,
+        )
+    }
 }
