@@ -25,7 +25,7 @@ import kotlin.test.assertEquals
 class IfParserTests {
 
     private fun assertItem(s: org.printscript.ast.StatementStream): Pair<org.printscript.ast.Statement, org.printscript.ast.StatementStream> =
-        when (val st = s.step()) {
+        when (val st = s.nextStep()) {
             is Step.Item -> st.statement to st.next
             is Step.Error -> error("Esperaba Item, vino Error: ${st.error.message}")
             Step.Eof -> error("Esperaba Item, vino EOF")
@@ -46,7 +46,7 @@ class IfParserTests {
         val (stmtZ, afterZ) = assertItem(stream)
         assertTrue(stmtZ is VarDeclaration)
         assertEquals("z", (stmtZ as VarDeclaration).name)
-        assertTrue(afterZ.step() is Step.Eof)
+        assertTrue(afterZ.nextStep() is Step.Eof)
     }
 
     @Test
@@ -67,7 +67,7 @@ class IfParserTests {
         val (stmtX, afterX) = assertItem(stream)
         assertTrue(stmtX is VarDeclaration)
         assertEquals("x", (stmtX as VarDeclaration).name)
-        assertTrue(afterX.step() is Step.Eof)
+        assertTrue(afterX.nextStep() is Step.Eof)
     }
 
     @Test
@@ -87,7 +87,7 @@ class IfParserTests {
         val (stmtOk, afterOk) = assertItem(stream)
         assertTrue(stmtOk is VarDeclaration)
         assertEquals("ok", (stmtOk as VarDeclaration).name)
-        assertTrue(afterOk.step() is Step.Eof)
+        assertTrue(afterOk.nextStep() is Step.Eof)
     }
 
     @Test

@@ -5,7 +5,7 @@ import org.printscript.common.LabeledError
 
 fun streamOf(vararg stmts: Statement): StatementStream {
     data class S(val rest: List<Statement>) : StatementStream {
-        override fun step(): Step = when {
+        override fun nextStep(): Step = when {
             rest.isEmpty() -> Step.Eof
             else -> Step.Item(rest.first(), S(rest.drop(1)))
         }
@@ -16,7 +16,7 @@ fun streamOf(vararg stmts: Statement): StatementStream {
 fun streamWithError(err: LabeledError, after: List<Statement>): StatementStream =
     object : StatementStream {
         private var fired = false
-        override fun step(): Step =
+        override fun nextStep(): Step =
             if (!fired) {
                 fired = true
                 Step.Error(err, streamOf(*after.toTypedArray()))

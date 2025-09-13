@@ -74,8 +74,8 @@ object Recovery {
         depth: Int,
     ): Boolean {
         if (depth != 0) return false
-        return when (val r = headDetector.detect(ts)) {
-            is Success -> r.value !is Unknown
+        return when (val result = headDetector.detect(ts)) {
+            is Success -> result.value !is Unknown
             is Failure -> false
         }
     }

@@ -7,7 +7,7 @@ import org.printscript.token.Token
 class IndentationApplier(private val indentSize: Int) : LayoutApplier {
 
     override fun applyPrefix(
-        prefix: String?,
+        prefix: String?, // " ", "\n"
         prev: Token?,
         current: Token,
         next: Token?,

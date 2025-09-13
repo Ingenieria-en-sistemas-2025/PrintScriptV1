@@ -33,8 +33,8 @@ class CodeFormatter(
             if (cur is EofToken) {
                 finish(prev, indent, out, lastChar, cur)
             } else {
-                stream.peek(1).flatMap { la ->
-                    val next = la.takeUnless { it is EofToken }
+                stream.peek(1).flatMap { lookahead ->
+                    val next = lookahead.takeUnless { it is EofToken }
                     val (indent2, lastChar2) = process(prev, cur, next, indent, out, lastChar)
                     stream.next().flatMap { (_, ns) -> step(ns, cur, indent2, out, lastChar2) }
                 }
@@ -79,7 +79,7 @@ class CodeFormatter(
         )
         var lastChar = lastChar
         chunks.forEach { part -> lastChar = emitText(out, part, lastChar) }
-        if (prev.isRbrace()) lastChar = emitText(out, "\n", lastChar)
+        if (prev.isRbrace()) emitText(out, "\n", lastChar)
         return Success(Unit)
     }
 

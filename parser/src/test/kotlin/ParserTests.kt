@@ -41,7 +41,7 @@ class ParserTests {
                 identifier("x").op().assign().number("42").sep().semicolon()
             },
         )
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is Assignment)
@@ -60,7 +60,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is VarDeclaration)
@@ -79,7 +79,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is VarDeclaration)
@@ -104,7 +104,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is ConstDeclaration)
@@ -124,7 +124,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is Println)
@@ -143,7 +143,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Error)
         val error = (step as Step.Error).error
         assertTrue(error.message.contains("Se esperaba separador SEMICOLON"))
@@ -161,7 +161,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Error)
     }
 
@@ -177,7 +177,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is IfStmt)
@@ -202,7 +202,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is IfStmt)
@@ -219,7 +219,7 @@ class ParserTests {
                 identifier("name").op().assign().kw().readInput().sep().lparen().string("Enter name: ").sep().rparen().sep().semicolon()
             },
         )
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is Assignment)
@@ -236,7 +236,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is Assignment)
@@ -267,7 +267,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is VarDeclaration)
@@ -304,7 +304,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is VarDeclaration)
@@ -336,7 +336,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is Assignment)
@@ -354,7 +354,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is VarDeclaration)
@@ -374,7 +374,7 @@ class ParserTests {
             },
         )
 
-        val step = statementStream.step()
+        val step = statementStream.nextStep()
         assertTrue(step is Step.Item)
         val stmt = (step as Step.Item).statement
         assertTrue(stmt is VarDeclaration)
@@ -395,15 +395,15 @@ class ParserTests {
             },
         )
         // 1er statement
-        val step1 = statementStream.step()
+        val step1 = statementStream.nextStep()
         assertTrue(step1 is Step.Item)
         assertTrue((step1 as Step.Item).statement is VarDeclaration)
         // 2 statement
-        val step2 = step1.next.step()
+        val step2 = step1.next.nextStep()
         assertTrue(step2 is Step.Item)
         assertTrue((step2 as Step.Item).statement is Println)
         // EOF
-        val step3 = step2.next.step()
+        val step3 = step2.next.nextStep()
         assertTrue(step3 is Step.Eof)
     }
 
@@ -417,10 +417,10 @@ class ParserTests {
             },
         )
         // Primer step tiene que ser error
-        val step1 = statementStream.step()
+        val step1 = statementStream.nextStep()
         assertTrue(step1 is Step.Error)
         // Se tiene que recuperar
-        val step2 = (step1 as Step.Error).next.step()
+        val step2 = (step1 as Step.Error).next.nextStep()
         assertTrue(step2 is Step.Item)
         assertTrue((step2 as Step.Item).statement is Println)
     }

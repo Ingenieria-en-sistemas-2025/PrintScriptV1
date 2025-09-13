@@ -26,7 +26,7 @@ object ParserUtils {
                 ts.next().map { (t, nextTs) -> (t as IdentifierToken) to nextTs } // consumo y devuelvo (token tipado, stream avanzado)
             } else {
                 Failure(
-                    LabeledError.Companion.of(
+                    LabeledError.of(
                         token.span,
                         "Se esperaba identificador",
                     ),
