@@ -41,7 +41,6 @@ class CodeFormatter(
             }
         }
 
-    @Suppress("LongParameterList")
     private fun process(
         prev: Token?,
         current: Token,

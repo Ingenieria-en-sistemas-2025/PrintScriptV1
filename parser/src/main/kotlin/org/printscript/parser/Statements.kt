@@ -13,7 +13,6 @@ import org.printscript.token.Token
 import org.printscript.token.TokenStream
 
 object Statements {
-    @Suppress("LongParameterList")
     fun parseUntil(
         ts0: TokenStream,
         headDetector: HeadDetector,
@@ -38,7 +37,7 @@ object Statements {
                             headDetector.detect(ts).flatMap { head ->
                                 val parser = stmtParsers[head]
                                 if (parser == null) {
-                                    Failure(LabeledError.Companion.of(tok.span, "Inicio de sentencia no reconocido"))
+                                    Failure(LabeledError.of(tok.span, "Inicio de sentencia no reconocido"))
                                 } else {
                                     parser.parse(ts, expr).flatMap { (st, rest) ->
                                         loop(rest, acc + st)
