@@ -87,9 +87,13 @@ class BufferedStreamingTokenStream private constructor( // modularizar, expresiv
         when (ensure(0)) {
             is Failure -> true
             is Success -> {
-                val idx = bufferIndexFor(logicalIndex)
-                val cur = shared.buffer.getOrNull(idx)
-                cur is EofToken
+                val last = shared.buffer.lastOrNull()
+                if (last is EofToken) {
+                    val eofAbsIndex = shared.baseOffset + shared.buffer.lastIndex
+                    logicalIndex >= eofAbsIndex
+                } else {
+                    false
+                }
             }
         }
 }

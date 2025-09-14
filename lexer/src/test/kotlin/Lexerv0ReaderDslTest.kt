@@ -90,7 +90,6 @@ class Lexerv0ReaderDslTest {
 
     @Test
     fun tokenCruzaBorde_chunk_boundary_ID_largo() {
-        // “identifierLong” forzará a cruzar bordes de chunk/ventana con los tamaños chicos
         val toks = lexAllTokens("let identifierLong: number = 1;").map { it.toString() }
         assertTrue(toks.contains("ID(identifierLong)"))
         assertTrue(toks.contains("TYPE(NUMBER)"))
@@ -100,7 +99,6 @@ class Lexerv0ReaderDslTest {
     fun comentarioCruzaBorde_ySeSaltea() {
         val src = "let a: number = 1; // comentario muy largo que cruza chunk\nprintln(a);"
         val toks = lexAllTokens(src).map { it.toString() }
-        // No debería haber tokens de comentario; sólo los esperados
         assertTrue(toks.first() == "KW(LET)")
         assertTrue(toks.contains("KW(PRINTLN)"))
     }

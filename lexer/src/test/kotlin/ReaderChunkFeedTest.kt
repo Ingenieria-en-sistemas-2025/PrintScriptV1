@@ -23,14 +23,12 @@ class ReaderChunkFeedTest {
             keepTail = 2, // conservar 2 sin pin
         )
 
-        // Fuerzo a cargar los primeros 6: indices 0..5
         assertTrue(feed.ensureAvailable(5))
-        // Avanzo la ventana pidiendo más allá de la capacidad para forzar compact
+
         assertTrue(feed.ensureAvailable(8))
 
-        // Ya no debería estar el índice 0: fue compactado
         assertFalse(feed.ensureAvailable(0))
-        // Sí debería poder leerse 8
+
         assertEquals('i', feed.charAt(8))
     }
 
@@ -44,22 +42,16 @@ class ReaderChunkFeedTest {
             keepTail = 2,
         )
 
-        // Cargar primeros 10 (0..9)
         assertTrue(feed.ensureAvailable(9))
 
-        // Pineo el índice 3 (protejo desde 3)
         feed.pin(3)
 
-        // Pedimos cubrir 12 (FACTIBLE con capacidad 10 y pin=3)
         assertTrue(feed.ensureAvailable(12))
 
-        // El 3 sigue accesible por el pin
         assertEquals('3', feed.charAt(3))
 
-        // Libero pin
         feed.unpin(3)
 
-        // Ahora podemos empujar hasta el final y dejar que 3 quede fuera
         assertTrue(feed.ensureAvailable(19))
         assertNull(feed.charAt(3))
     }
@@ -80,10 +72,9 @@ class ReaderChunkFeedTest {
         val feed = ReaderChunkFeed(StringReader(text), maxWindowCapacity = 4, chunkSize = 2, keepTail = 1)
 
         val rs = feed.rollingSlice(0)
-        assertTrue(rs.length in 0..4) // crece a medida que entra data
-        assertTrue(feed.ensureAvailable(5)) // obliga a compactar cabeza (cap=4)
+        assertTrue(rs.length in 0..4)
+        assertTrue(feed.ensureAvailable(5))
 
-        // Como la cabeza (0..) fue desalojada, toString() puede fallar:
         assertFailsWith<IndexOutOfBoundsException> { rs.toString() }
 
         assertFailsWith<IndexOutOfBoundsException> { rs.get(999) }
@@ -121,7 +112,6 @@ class ReaderChunkFeedTest {
         val text = "ab\ncd\nef" // 8 chars, 2 saltos de línea
         val feed = ReaderChunkFeed(StringReader(text), maxWindowCapacity = 4, chunkSize = 2, keepTail = 1)
         val s0 = org.printscript.lexer.Scanner(feed)
-        // avanza forzando refill/compact entre medias
         val s1 = s0.advance(3) // después de "ab\n"
         assertEquals(org.printscript.common.Position(2, 1), s1.position())
         val s2 = s1.advance(2) // "cd"
@@ -155,17 +145,11 @@ class ReaderChunkFeedTest {
         val feed = ReaderChunkFeed(StringReader("abcdef"), maxWindowCapacity = 4, chunkSize = 2, keepTail = 1)
         val rs = feed.rollingSlice(0)
 
-        // Empujamos hasta 5: con cap=4 esto expulsa 0..1 de la ventana
         assertTrue(feed.ensureAvailable(5))
 
-        // subSequence(2,4) apunta a [2,3] del texto original.
-        // Como 2 ya fue expulsado ANTES de crear el sub, con tu fixedSlice actual
-        // el cálculo da disponible=0 ⇒ sub.toString() == "" (no lanza).
         val sub = rs.subSequence(2, 4)
         assertEquals("", sub.toString())
 
-        // Si querés seguir testeando que una vista viva puede romperse,
-        // testéalo con el RollingSlice “vivo” directamente:
         assertFailsWith<IndexOutOfBoundsException> { rs.get(0) } // 0 fue desalojado
     }
 
