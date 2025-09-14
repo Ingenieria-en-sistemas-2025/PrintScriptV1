@@ -10,10 +10,16 @@ class ConstDeclarationAction : StatementAction<ConstDeclaration> {
         env: Env,
         out: Output,
         eval: ExprEvaluator,
-    ): Result<ExecResult, InterpreterError> =
-        eval.evaluate(stmt.initializer, env).flatMap { value ->
-            env.declare(stmt.name, stmt.type, value, stmt.span).map { newEnv ->
-                ExecResult(newEnv, out)
-            }
+    ): Result<ExecResult, InterpreterError> {
+        var outAcc = out
+
+        val envWithPrompt = env.withInput(
+            PromptingInputProvider(env.inputProvider()) { s -> outAcc = outAcc.append(s) },
+        )
+
+        return eval.evaluate(stmt.initializer, envWithPrompt).flatMap { value ->
+            env.declare(stmt.name, stmt.type, value, stmt.span)
+                .map { newEnv -> ExecResult(newEnv, outAcc) } // devuelvo out acumulado + env base actualizado
         }
+    }
 }

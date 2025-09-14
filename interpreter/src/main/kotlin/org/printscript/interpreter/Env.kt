@@ -29,6 +29,10 @@ data class Env internal constructor(
         return Success(Env(bindings + (name to Binding(type, v)), input))
     }
 
+    fun withInput(newInput: InputProvider): Env = Env(bindings, newInput) // devuelve otro Env con el provider reemplazado
+
+    fun inputProvider(): InputProvider = input // accede al provider actual
+
     // var ya debe estar declarada y deben coincidir los tipos
     fun assign(name: String, value: Value, span: Span): Result<Env, InterpreterError> {
         val old = bindings[name] ?: return Failure(UndeclaredVariable(span, name))
@@ -45,7 +49,6 @@ data class Env internal constructor(
             (expected == Type.STRING && v is Value.Str) ||
             (expected == Type.BOOLEAN && v is Value.Bool)
 
-    // devuelve "number" o "string"
     private fun runtimeName(v: Value): String =
         when (v) { is Value.Num -> "number"
             is Value.Str -> "string"
