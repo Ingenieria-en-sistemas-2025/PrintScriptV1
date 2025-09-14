@@ -20,7 +20,7 @@ import org.printscript.token.TokenStream
 import org.printscript.token.TypeToken
 
 class TokenBuilder private constructor(
-    private val tokens: List<Token>,
+    private val tokens: List<Token>, // inmutable
     private val dummySpan: Span = Span(Position(1, 1), Position(1, 1)),
 ) {
 
