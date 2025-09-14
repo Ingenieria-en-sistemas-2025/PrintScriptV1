@@ -41,7 +41,9 @@ data class Env internal constructor(
     fun readInput(prompt: String): String = input.read(prompt)
 
     private fun typeMatches(expected: Type, v: Value): Boolean =
-        (expected == Type.NUMBER && v is Value.Num) || (expected == Type.STRING && v is Value.Str)
+        (expected == Type.NUMBER && v is Value.Num) ||
+            (expected == Type.STRING && v is Value.Str) ||
+            (expected == Type.BOOLEAN && v is Value.Bool)
 
     // devuelve "number" o "string"
     private fun runtimeName(v: Value): String =
@@ -50,5 +52,9 @@ data class Env internal constructor(
             is Value.Bool -> "boolean" }
 
     private fun defaultFor(type: Type): Value =
-        if (type == Type.NUMBER) Value.Num(0.0) else Value.Str("")
+        when (type) {
+            Type.NUMBER -> Value.Num(0.0)
+            Type.STRING -> Value.Str("")
+            Type.BOOLEAN -> Value.Bool(false)
+        }
 }

@@ -32,6 +32,7 @@ class LexerFactory {
     }
 
     // tokenizer desde reader, archivos, usando line iterator feed
+    @JvmOverloads
     fun tokenizer(
         version: Version,
         reader: Reader,
