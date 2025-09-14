@@ -2,7 +2,7 @@ package org.printscript.lexer
 
 import org.printscript.common.Position
 import org.printscript.lexer.memory.CharFeed
-import org.printscript.lexer.memory.LineIteratorFeed
+import org.printscript.lexer.memory.ReaderChunkFeed
 import java.io.Reader
 
 class Scanner private constructor(
@@ -13,18 +13,7 @@ class Scanner private constructor(
 ) {
 
     constructor(text: String) : this(StringSource(text), 0, 1, 1)
-    constructor(reader: Reader) : this(
-        FeedSource(LineIteratorFeed(reader.buffered().lines().iterator())),
-        0,
-        1,
-        1,
-    )
-    constructor(lines: Iterator<String>) : this(
-        FeedSource(LineIteratorFeed(lines)),
-        0,
-        1,
-        1,
-    )
+    constructor(reader: Reader) : this(FeedSource(ReaderChunkFeed(reader.buffered())), 0, 1, 1)
     constructor(feed: CharFeed) : this(FeedSource(feed), 0, 1, 1)
 
     val isEof: Boolean get() = source.isEof(absIndex)

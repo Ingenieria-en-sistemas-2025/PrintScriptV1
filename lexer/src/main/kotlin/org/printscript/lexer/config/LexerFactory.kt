@@ -5,21 +5,21 @@ import org.printscript.lexer.LongestMatchTokenMatcher
 import org.printscript.lexer.TokenFactory
 import org.printscript.lexer.Tokenizer
 import org.printscript.lexer.memory.BufferedStreamingTokenStream
-import org.printscript.lexer.memory.LineIteratorFeed
+import org.printscript.lexer.memory.ReaderChunkFeed
 import org.printscript.lexer.triviarules.CompositeTriviaSkipper
 import org.printscript.token.TokenStream
 import java.io.Reader
 
-private const val DEFAULT_INSERT_NEWLINE_BETWEEN_LINES = true
-private const val DEFAULT_LINES_PER_CHUNK = 64
 private const val DEFAULT_MAX_WINDOW_CAPACITY = 1 shl 15 // 32 KiB
+private const val DEFAULT_CHUNK_SIZE = 1 shl 13 //  8 KiB
+private const val DEFAULT_KEEP_TAIL = 1 shl 13 //  8 KiB
 
 class LexerFactory {
 
     data class FeedOptions(
-        val insertNewlineBetweenLines: Boolean = DEFAULT_INSERT_NEWLINE_BETWEEN_LINES,
-        val linesPerChunk: Int = DEFAULT_LINES_PER_CHUNK,
         val maxWindowCapacity: Int = DEFAULT_MAX_WINDOW_CAPACITY,
+        val chunkSize: Int = DEFAULT_CHUNK_SIZE,
+        val keepTail: Int = DEFAULT_KEEP_TAIL,
     )
 
     // tokenizer desde string
@@ -32,17 +32,21 @@ class LexerFactory {
     }
 
     // tokenizer desde reader, archivos, usando line iterator feed
-    fun tokenizer(version: Version, reader: Reader, feedOptions: FeedOptions = FeedOptions()): Tokenizer {
+    fun tokenizer(
+        version: Version,
+        reader: Reader,
+        feedOptions: FeedOptions = FeedOptions(),
+    ): Tokenizer {
         val cfg = LexingConfigFactory.forVersion(version)
         val matcher = LongestMatchTokenMatcher(cfg.rules)
         val skipper = CompositeTriviaSkipper(cfg.trivia)
         val factory = TokenFactory(cfg.creators)
 
-        val feed = LineIteratorFeed(
-            lineIterator = reader.buffered().lineSequence().iterator(),
-            insertNewlineBetweenLines = feedOptions.insertNewlineBetweenLines,
-            linesPerChunk = feedOptions.linesPerChunk,
+        val feed = ReaderChunkFeed(
+            reader = reader.buffered(),
             maxWindowCapacity = feedOptions.maxWindowCapacity,
+            chunkSize = feedOptions.chunkSize,
+            keepTail = feedOptions.keepTail,
         )
         return Tokenizer.of(feed, matcher, skipper, factory)
     }
@@ -52,7 +56,11 @@ class LexerFactory {
         return BufferedStreamingTokenStream.of(tz)
     }
 
-    fun tokenStream(version: Version, reader: Reader, feedOptions: FeedOptions = FeedOptions()): TokenStream {
+    fun tokenStream(
+        version: Version,
+        reader: Reader,
+        feedOptions: FeedOptions = FeedOptions(),
+    ): TokenStream {
         val tz = tokenizer(version, reader, feedOptions)
         return BufferedStreamingTokenStream.of(tz)
     }

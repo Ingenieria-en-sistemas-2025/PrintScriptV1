@@ -19,11 +19,9 @@ class Tokenizer private constructor(
 ) {
     companion object {
         // Para archivos grandes (streaming real):
+
         fun of(reader: Reader, matcher: TokenMatcher, skipper: TriviaSkipper, factory: TokenFactory): Tokenizer =
             Tokenizer(Scanner(reader), matcher, skipper, factory)
-
-        fun of(lines: Iterator<String>, matcher: TokenMatcher, skipper: TriviaSkipper, factory: TokenFactory): Tokenizer =
-            Tokenizer(Scanner(lines), matcher, skipper, factory)
 
         fun of(feed: CharFeed, matcher: TokenMatcher, skipper: TriviaSkipper, factory: TokenFactory): Tokenizer =
             Tokenizer(Scanner(feed), matcher, skipper, factory)

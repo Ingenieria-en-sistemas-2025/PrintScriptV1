@@ -6,9 +6,7 @@ import org.printscript.ast.Expression
 import org.printscript.ast.LiteralNumber
 import org.printscript.ast.LiteralString
 import org.printscript.ast.Println
-import org.printscript.ast.ProgramNode
 import org.printscript.ast.ReadInput
-import org.printscript.ast.Statement
 import org.printscript.ast.VarDeclaration
 import org.printscript.ast.Variable
 import org.printscript.common.Operator
@@ -47,8 +45,6 @@ fun varDecl(name: String, type: Type, init: Expression?, l1: Int, c1: Int, l2: I
 
 fun assignment(name: String, value: Expression, l1: Int, c1: Int, l2: Int, c2: Int) =
     Assignment(name, value, span(l1, c1, l2, c2))
-
-fun program(vararg s: Statement) = ProgramNode(s.toList())
 
 fun readInputExpr(prompt: Expression, l1: Int, c1: Int, l2: Int, c2: Int) =
     ReadInput(prompt, span(l1, c1, l2, c2))
