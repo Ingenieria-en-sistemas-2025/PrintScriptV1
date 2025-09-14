@@ -7,7 +7,6 @@ import org.printscript.formatter.ListRuleRegistry
 import org.printscript.formatter.config.FormatterOptions
 import org.printscript.formatter.rules.AssignmentSpacingRule
 import org.printscript.formatter.rules.BinaryOperatorSpacingRule
-import org.printscript.formatter.rules.BlankLinesBeforePrintlnRule
 import org.printscript.formatter.rules.ColonSpacingRule
 import org.printscript.formatter.rules.FormattingRule
 import org.printscript.formatter.rules.MandatorySpacingRule
@@ -21,7 +20,6 @@ object FormatterFactoryV10 {
             ColonSpacingRule(options),
             AssignmentSpacingRule(options),
             BinaryOperatorSpacingRule(),
-            BlankLinesBeforePrintlnRule(options),
             NewlineAfterSemicolonRule(),
             WordSpacingRule(),
         )

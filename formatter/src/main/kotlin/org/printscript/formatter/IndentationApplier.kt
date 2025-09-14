@@ -3,6 +3,7 @@ package org.printscript.formatter
 import org.printscript.common.Separator
 import org.printscript.token.SeparatorToken
 import org.printscript.token.Token
+import org.printscript.token.codeText
 
 class IndentationApplier(private val indentSize: Int) : LayoutApplier {
 
@@ -15,28 +16,24 @@ class IndentationApplier(private val indentSize: Int) : LayoutApplier {
     ): Pair<List<String>, LayoutApplier.State> {
         if (prefix == null) return emptyList<String>() to state
 
-        // Si no empieza con \n, devolvés igual (otros espacios, etc.)
         if (!prefix.startsWith("\n")) {
             return listOf(prefix) to state
         }
 
         val nl = prefix.count { it == '\n' }
 
-        // 👇 Ajuste clave: si la nueva línea viene después de '}', usá level-1
         val level = when {
             prev is SeparatorToken && prev.separator == Separator.RBRACE ->
                 (state.level - 1).coerceAtLeast(0)
+
             else ->
                 computeLevel(prev, current, next, state)
         }
 
-        val chunk = buildString {
-            repeat((nl - 1).coerceAtLeast(0)) { append('\n') } // líneas intermedias sin espacios
-            append('\n')
-            if (level > 0) repeat(level * indentSize) { append(' ') }
-        }
-
-        return listOf(chunk) to state
+        val chunks = mutableListOf<String>()
+        repeat(nl) { chunks += "\n" }
+        if (level > 0) chunks += " ".repeat(level * indentSize)
+        return chunks to state
     }
 
     override fun updateAfter(prev: Token?, current: Token, state: LayoutApplier.State): LayoutApplier.State = when {
@@ -45,16 +42,27 @@ class IndentationApplier(private val indentSize: Int) : LayoutApplier {
         else -> state
     }
 
-    private fun computeLevel(prev: Token?, current: Token, next: Token?, s: LayoutApplier.State): Int = when {
-        prev.isLbrace() -> s.level + 1
-        current.isRbrace() -> (s.level - 1).coerceAtLeast(0)
-        prev.isSemicolon() -> if (next.isRbrace()) (s.level - 1).coerceAtLeast(0) else s.level
-        else -> s.level
-    }
-}
+    private fun computeLevel(prev: Token?, current: Token, next: Token?, s: LayoutApplier.State): Int {
+        val result = when {
+            prev.isLbrace() -> s.level + 1
+            current.isRbrace() -> (s.level - 1).coerceAtLeast(0)
+            prev.isSemicolon() -> if (next.isRbrace()) (s.level - 1).coerceAtLeast(0) else s.level
+            else -> s.level
+        }
 
-private fun Token?.isSeparator(kind: Separator) =
-    this is SeparatorToken && this.separator == kind
-private fun Token?.isLbrace() = this.isSeparator(Separator.LBRACE)
-private fun Token?.isRbrace() = this.isSeparator(Separator.RBRACE)
-private fun Token?.isSemicolon() = this.isSeparator(Separator.SEMICOLON)
+        if (current.codeText == "if" || prev?.codeText == "{") {
+            println("INDENT DEBUG:")
+            println("  prev: '${prev?.codeText}' current: '${current.codeText}' next: '${next?.codeText}'")
+            println("  state.level: ${s.level} → computed level: $result")
+        }
+
+        return result
+    }
+
+    private fun Token?.isSeparator(kind: Separator) =
+        this is SeparatorToken && this.separator == kind
+
+    private fun Token?.isLbrace() = this.isSeparator(Separator.LBRACE)
+    private fun Token?.isRbrace() = this.isSeparator(Separator.RBRACE)
+    private fun Token?.isSemicolon() = this.isSeparator(Separator.SEMICOLON)
+}

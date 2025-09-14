@@ -55,13 +55,12 @@ class CodeFormatter(
         lastChar: Char?,
     ): Pair<IndentState, Char?> {
         // Debug detallado para el problema del colon
-        if (prev?.codeText == ":" || current.codeText == "string") {
+        if (current.codeText == "println" || prev?.codeText == ")" || current.codeText == ";") {
             println("========== DETAILED DEBUG ==========")
             println("prev: '${prev?.codeText}' (${prev?.javaClass?.simpleName})")
             println("current: '${current.codeText}' (${current.javaClass.simpleName})")
             println("next: '${next?.codeText}' (${next?.javaClass?.simpleName})")
 
-            // Probar cada regla individualmente
             val allRules = listOf(
                 "MandatorySpacingRule" to MandatorySpacingRule(config),
                 "ColonSpacingRule" to ColonSpacingRule(config),
@@ -122,11 +121,8 @@ class CodeFormatter(
     }
 
     private fun emitText(out: Appendable, text: String, lastChar: Char?): Char? {
-        // Si es todo espacios y ya venimos de un espacio, no agregues
         if (text.isNotEmpty() && text.all { it == ' ' } && lastChar == ' ') return lastChar
-        // Si es un solo " " y venimos de inicio de línea, no agregues
         if (text == " " && lastChar == '\n') return lastChar
-
         out.append(text)
         return text.lastOrNull() ?: lastChar
     }
