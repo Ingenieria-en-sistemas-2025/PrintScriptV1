@@ -4,7 +4,9 @@ interface FormatterOptions {
     val spaceBeforeColonInDecl: Boolean
     val spaceAfterColonInDecl: Boolean
     val spaceAroundAssignment: Boolean
-    val blankLinesBeforePrintln: Int
+    val blankLinesAfterPrintln: Int
     val indentSpaces: Int
     val mandatorySingleSpaceSeparation: Boolean
+    val ifBraceBelowLine: Boolean
+    val ifBraceSameLine: Boolean
 }
