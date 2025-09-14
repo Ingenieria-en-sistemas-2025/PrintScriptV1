@@ -89,7 +89,7 @@ class Lexerv0DslTest {
 
     @Test
     fun stringConComillasSimples() = assertLexEqualsWithBuilder(
-        src = "let s: string = 'hi';",
+        src = "let s: string = 'hi' ;",
         lexActual = ::lexAllTokens,
     ) {
         kw().let().identifier("s").sep().colon().ty().stringType()

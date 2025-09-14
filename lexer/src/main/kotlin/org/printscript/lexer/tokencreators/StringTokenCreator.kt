@@ -1,14 +1,31 @@
 package org.printscript.lexer.tokencreators
 
 import org.printscript.lexer.Lexeme
+import org.printscript.lexer.error.UnterminatedString
 import org.printscript.token.StringLiteralToken
 import org.printscript.token.Token
 
 object StringTokenCreator : TokenCreator {
     override fun create(lexeme: Lexeme): Token {
-        val inner = unquote(lexeme.text) // 1) saco comillas
-        val value = unescapeBasic(inner) // 2) desescapo lo básico
-        return StringLiteralToken(value, lexeme.span) // 3) construyo token
+        val raw = lexeme.text
+        val open = raw.firstOrNull()
+        val close = raw.lastOrNull()
+        val isQuote = { c: Char? -> c == '"' || c == '\'' }
+
+        // si no cierra con la misma comilla → error léxico
+        if (open == null || close == null) {
+            throw UnterminatedString(lexeme.span)
+        }
+        if (open != close) {
+            throw UnterminatedString(lexeme.span)
+        }
+        if (!isQuote(open)) {
+            throw UnterminatedString(lexeme.span)
+        }
+
+        val inner = unquote(raw)
+        val value = unescapeBasic(inner)
+        return StringLiteralToken(value, lexeme.span)
     }
 
     private fun unquote(raw: String): String {

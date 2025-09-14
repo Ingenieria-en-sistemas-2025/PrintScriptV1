@@ -51,9 +51,9 @@ class PrintScriptv0MapConfig {
     )
 
     fun rules(): List<LexingRule> = listOf(
+        StringRule,
         IdentifierOrKeywordRule(RuleKeys.IDENT_OR_KEYWORD),
         NumberRule(RuleKeys.NUMBER),
-        StringRule,
         OperatorRule(RuleKeys.OPERATOR, operators()),
         SeparatorRule(RuleKeys.SEPARATOR, separators()),
     )

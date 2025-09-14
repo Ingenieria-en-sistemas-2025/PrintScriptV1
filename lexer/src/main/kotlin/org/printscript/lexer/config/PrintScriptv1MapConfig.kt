@@ -66,9 +66,9 @@ class PrintScriptv1MapConfig {
     fun rules(): List<LexingRule> = listOf(
         // 1.1: primero los literales booleanos para que no salgan como identificadores
         BooleanLiteralRule,
+        StringRule,
         IdentifierOrKeywordRule(RuleKeys.IDENT_OR_KEYWORD),
         NumberRule(RuleKeys.NUMBER),
-        StringRule,
         OperatorRule(RuleKeys.OPERATOR, operators()),
         SeparatorRule(RuleKeys.SEPARATOR, separators()),
     )
