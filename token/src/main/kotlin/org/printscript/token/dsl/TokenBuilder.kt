@@ -19,52 +19,37 @@ import org.printscript.token.Token
 import org.printscript.token.TokenStream
 import org.printscript.token.TypeToken
 
-class TokenBuilder {
-    private val tokens = mutableListOf<Token>()
-    private val dummySpan = Span(Position(1, 1), Position(1, 1))
+class TokenBuilder private constructor(
+    private val tokens: List<Token>, // inmutable
+    private val dummySpan: Span = Span(Position(1, 1), Position(1, 1)),
+) {
 
-    fun keyword(kw: Keyword): TokenBuilder {
-        tokens.add(KeywordToken(kw, dummySpan))
-        return this
-    }
+    constructor() : this(emptyList())
 
-    fun identifier(name: String): TokenBuilder {
-        tokens.add(IdentifierToken(name, dummySpan))
-        return this
-    }
+    fun keyword(kw: Keyword): TokenBuilder =
+        TokenBuilder(tokens + KeywordToken(kw, dummySpan))
 
-    fun number(value: String): TokenBuilder {
-        tokens.add(NumberLiteralToken(value, dummySpan))
-        return this
-    }
+    fun identifier(name: String): TokenBuilder =
+        TokenBuilder(tokens + IdentifierToken(name, dummySpan))
 
-    fun string(value: String): TokenBuilder {
-        tokens.add(StringLiteralToken(value, dummySpan))
-        return this
-    }
+    fun number(value: String): TokenBuilder =
+        TokenBuilder(tokens + NumberLiteralToken(value, dummySpan))
 
-    fun operator(op: Operator): TokenBuilder {
-        tokens.add(OperatorToken(op, dummySpan))
-        return this
-    }
+    fun string(value: String): TokenBuilder =
+        TokenBuilder(tokens + StringLiteralToken(value, dummySpan))
 
-    fun separator(sep: Separator): TokenBuilder {
-        tokens.add(SeparatorToken(sep, dummySpan))
-        return this
-    }
+    fun operator(op: Operator): TokenBuilder =
+        TokenBuilder(tokens + OperatorToken(op, dummySpan))
 
-    fun type(type: Type): TokenBuilder {
-        tokens.add(TypeToken(type, dummySpan))
-        return this
-    }
+    fun separator(sep: Separator): TokenBuilder =
+        TokenBuilder(tokens + SeparatorToken(sep, dummySpan))
 
-    fun boolean(value: Boolean): TokenBuilder {
-        tokens.add(BooleanLiteralToken(value, dummySpan))
-        return this
-    }
+    fun type(type: Type): TokenBuilder =
+        TokenBuilder(tokens + TypeToken(type, dummySpan))
 
-    fun build(): TokenStream {
-        val eof = EofToken(dummySpan)
-        return ListTokenStream.of(tokens + eof)
-    }
+    fun boolean(value: Boolean): TokenBuilder =
+        TokenBuilder(tokens + BooleanLiteralToken(value, dummySpan))
+
+    fun build(): TokenStream =
+        ListTokenStream.of(tokens + EofToken(dummySpan))
 }

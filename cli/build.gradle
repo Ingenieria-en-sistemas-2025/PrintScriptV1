@@ -1,8 +1,11 @@
 plugins {
     id 'buildlogic.kotlin-library-conventions'
+    id 'application'
 }
 
 dependencies {
+    implementation 'com.github.ajalt.clikt:clikt:4.2.0'
+
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     implementation project(':common')
     implementation project(':lexer')
@@ -11,5 +14,9 @@ dependencies {
     implementation project(':token')
     implementation project(':formatter')
     implementation project(':analyzer')
+}
+
+application {
+    mainClass = 'org.printscript.cli.PsCliKt'
 }
 

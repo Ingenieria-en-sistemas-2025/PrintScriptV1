@@ -36,7 +36,7 @@ class IfParserTests {
         val headDetector = FirstHeadDetector()
         val ts: TokenStream = TestUtils.tokens {
             sep().rbrace()
-            kw().let().identifier("z").sep().colon().ty().numberType().op().assign().number("9").sep().semicolon()
+                .kw().let().identifier("z").sep().colon().ty().numberType().op().assign().number("9").sep().semicolon()
         }
 
         val sync = Recovery.syncToNextHeadTopLevel(ts, headDetector)
@@ -54,9 +54,9 @@ class IfParserTests {
         val headDetector = FirstHeadDetector()
         val ts: TokenStream = TestUtils.tokens {
             sep().lbrace()
-            identifier("hello")
-            sep().rbrace()
-            kw().let().identifier("x").sep().colon().ty().numberType()
+                .identifier("hello")
+                .sep().rbrace()
+                .kw().let().identifier("x").sep().colon().ty().numberType()
                 .op().assign().number("5").sep().semicolon()
         }
 

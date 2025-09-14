@@ -10,7 +10,8 @@ import org.printscript.interpreter.errors.InterpreterError
 import org.printscript.interpreter.errors.Redeclaration
 import org.printscript.interpreter.errors.UndeclaredVariable
 
-data class Env private constructor(
+@ConsistentCopyVisibility
+data class Env internal constructor(
     private val bindings: Map<String, Binding>, // para no romper reglas
     private val input: InputProvider,
 ) {

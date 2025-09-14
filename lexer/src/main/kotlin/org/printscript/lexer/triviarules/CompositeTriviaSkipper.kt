@@ -6,38 +6,40 @@ import org.printscript.common.Success
 import org.printscript.lexer.Scanner
 import org.printscript.lexer.error.LexerError
 
+@Suppress("NestedBlockDepth")
 class CompositeTriviaSkipper(
     private val rules: List<TriviaRule>,
 ) : TriviaSkipper {
 
     override fun skipAll(scanner: Scanner): Result<Scanner, LexerError> {
-        var currentScanner = scanner
+        // Pinneamos el scanner inicial (posición actual) y lo despinneamos siempre.
+        scanner.pinHere()
+        try {
+            var current = scanner
 
-        while (!currentScanner.isEof) {
-            when (val advanceResult = consumeOneTrivia(currentScanner)) {
-                is Failure -> return advanceResult // error de trivia (p.ej., bloque no cerrado)
-                is Success -> {
-                    val maybeStopped = advanceOrStop(currentScanner, advanceResult.value)
-                    if (maybeStopped is Success && maybeStopped.value === currentScanner) {
-                        return maybeStopped
+            while (!current.isEof) {
+                when (val step = consumeOneTrivia(current)) {
+                    is Failure -> return step
+                    is Success -> {
+                        val advanceBy = step.value
+                        if (advanceBy == 0) return Success(current)
+                        current = current.advance(advanceBy)
                     }
-                    currentScanner = (maybeStopped as Success).value
                 }
             }
+            return Success(current)
+        } finally {
+            scanner.unpinHere()
         }
-        return Success(currentScanner) // EOF alcanzado
     }
 
     private fun consumeOneTrivia(scanner: Scanner): Result<Int, LexerError> {
         for (rule in rules) {
-            when (val matchResult = rule.matchLen(scanner)) {
-                is Failure -> return matchResult
-                is Success -> if (matchResult.value > 0) return matchResult
+            when (val r = rule.matchLen(scanner)) {
+                is Failure -> return r
+                is Success -> if (r.value > 0) return r
             }
         }
         return Success(0)
     }
-
-    private fun advanceOrStop(scanner: Scanner, advanceBy: Int): Result<Scanner, LexerError> =
-        if (advanceBy == 0) Success(scanner) else Success(scanner.advance(advanceBy))
 }

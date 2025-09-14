@@ -391,7 +391,7 @@ class ParserTests {
         val statementStream = parser.parse(
             TestUtils.tokens {
                 kw().let().identifier("x").sep().colon().ty().numberType().op().assign().number("5").sep().semicolon()
-                kw().println().sep().lparen().identifier("x").sep().rparen().sep().semicolon()
+                    .kw().println().sep().lparen().identifier("x").sep().rparen().sep().semicolon()
             },
         )
         // 1er statement
@@ -413,7 +413,7 @@ class ParserTests {
         val statementStream = parser.parse(
             TestUtils.tokens {
                 identifier("invalid")
-                kw().println().sep().lparen().string("recovered").sep().rparen().sep().semicolon()
+                    .kw().println().sep().lparen().string("recovered").sep().rparen().sep().semicolon()
             },
         )
         // Primer step tiene que ser error
