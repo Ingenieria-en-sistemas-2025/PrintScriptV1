@@ -10,21 +10,23 @@ import org.printscript.formatter.rules.BinaryOperatorSpacingRule
 import org.printscript.formatter.rules.BlankLinesBeforePrintlnRule
 import org.printscript.formatter.rules.BlockFormattingRule
 import org.printscript.formatter.rules.ColonSpacingRule
-import org.printscript.formatter.rules.FormattingRule
 import org.printscript.formatter.rules.IfKeywordSpacingRule
+import org.printscript.formatter.rules.NewlineAfterSemicolonRule
 import org.printscript.formatter.rules.WordSpacingRule
 
 object FormatterFactoryV11 {
     fun create(options: FormatterOptions): Formatter {
-        val rules: List<FormattingRule> = listOf(
+        val rules = listOf(
             ColonSpacingRule(options),
             AssignmentSpacingRule(options),
             BinaryOperatorSpacingRule(),
             IfKeywordSpacingRule(),
             BlankLinesBeforePrintlnRule(options),
             BlockFormattingRule(),
+            NewlineAfterSemicolonRule(),
             WordSpacingRule(),
         )
+
         val registry = ListRuleRegistry(rules)
         return CodeFormatter(
             config = options,

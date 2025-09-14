@@ -1,30 +1,21 @@
 package org.printscript.formatter.rules
 
 import org.printscript.common.Separator
+import org.printscript.token.EofToken
 import org.printscript.token.SeparatorToken
 import org.printscript.token.Token
 
 class BlockFormattingRule : FormattingRule {
     override fun apply(prev: Token?, current: Token, next: Token?): String? {
-        // Después de una llave de apertura, agregar salto de línea con indentación
         if (prev is SeparatorToken && prev.separator == Separator.LBRACE) {
+            if (current is SeparatorToken && current.separator == Separator.RBRACE) return null
             return "\n"
         }
-
-        // Antes de una llave de cierre, agregar salto de línea
         if (current is SeparatorToken && current.separator == Separator.RBRACE) {
+            if (prev is SeparatorToken && prev.separator == Separator.SEMICOLON) return null
+            if (next is EofToken) return null
             return "\n"
         }
-
-        // Después de punto y coma, agregar salto de línea
-        if (prev is SeparatorToken && prev.separator == Separator.SEMICOLON) {
-            // Si el siguiente token es una llave de cierre, no agregar indentación extra
-            if (next is SeparatorToken && next.separator == Separator.RBRACE) {
-                return "\n"
-            }
-            return "\n"
-        }
-
         return null
     }
 }

@@ -2,11 +2,16 @@ package org.printscript.formatter
 
 import org.printscript.common.LabeledError
 import org.printscript.common.Result
-import org.printscript.common.Separator
 import org.printscript.common.Success
 import org.printscript.formatter.config.FormatterOptions
+import org.printscript.formatter.rules.AssignmentSpacingRule
+import org.printscript.formatter.rules.BinaryOperatorSpacingRule
+import org.printscript.formatter.rules.BlankLinesBeforePrintlnRule
+import org.printscript.formatter.rules.ColonSpacingRule
+import org.printscript.formatter.rules.MandatorySpacingRule
+import org.printscript.formatter.rules.NewlineAfterSemicolonRule
+import org.printscript.formatter.rules.WordSpacingRule
 import org.printscript.token.EofToken
-import org.printscript.token.SeparatorToken
 import org.printscript.token.Token
 import org.printscript.token.TokenStream
 import org.printscript.token.codeText
@@ -49,15 +54,52 @@ class CodeFormatter(
         out: Appendable,
         lastChar: Char?,
     ): Pair<IndentState, Char?> {
+        // Debug detallado para el problema del colon
+        if (prev?.codeText == ":" || current.codeText == "string") {
+            println("========== DETAILED DEBUG ==========")
+            println("prev: '${prev?.codeText}' (${prev?.javaClass?.simpleName})")
+            println("current: '${current.codeText}' (${current.javaClass.simpleName})")
+            println("next: '${next?.codeText}' (${next?.javaClass?.simpleName})")
+
+            // Probar cada regla individualmente
+            val allRules = listOf(
+                "MandatorySpacingRule" to MandatorySpacingRule(config),
+                "ColonSpacingRule" to ColonSpacingRule(config),
+                "AssignmentSpacingRule" to AssignmentSpacingRule(config),
+                "BinaryOperatorSpacingRule" to BinaryOperatorSpacingRule(),
+                "BlankLinesAfterPrintlnRule" to BlankLinesBeforePrintlnRule(config),
+                "NewlineAfterSemicolonRule" to NewlineAfterSemicolonRule(),
+                "WordSpacingRule" to WordSpacingRule(),
+            )
+
+            allRules.forEach { (name, rule) ->
+                val result = rule.apply(prev, current, next)
+                if (result != null) {
+                    println("  $name -> '$result' (length: ${result.length})")
+                } else {
+                    println("  $name -> null")
+                }
+            }
+
+            // Resultado final del registry
+            val finalRule = registry.findApplicableRule(prev, current, next)
+            println("FINAL RESULT: '$finalRule'")
+            println("=====================================")
+        }
+
+        val rule = registry.findApplicableRule(prev, current, next)
+
         val (chunks, st1) = layout.applyPrefix(
-            registry.findApplicableRule(prev, current, next),
+            rule,
             prev,
             current,
             next,
             indent.state,
         )
         var lastChar = lastChar
-        chunks.forEach { part -> lastChar = emitText(out, part, lastChar) }
+        chunks.forEach { part ->
+            lastChar = emitText(out, part, lastChar)
+        }
         lastChar = emitText(out, current.codeText, lastChar)
         val st2 = layout.updateAfter(prev, current, st1)
         return IndentState(st2) to lastChar
@@ -70,28 +112,22 @@ class CodeFormatter(
         lastChar: Char?,
         eof: EofToken,
     ): Result<Unit, LabeledError> {
-        val (chunks, _) = layout.applyPrefix(
-            registry.findApplicableRule(prev, eof, null),
-            prev,
-            eof,
-            null,
-            indent.state,
-        )
-        var lastChar = lastChar
-        chunks.forEach { part -> lastChar = emitText(out, part, lastChar) }
-        if (prev.isRbrace()) emitText(out, "\n", lastChar)
+        // Apply formatting rules even for EOF to handle final newlines
+        val rule = registry.findApplicableRule(prev, eof, null)
+        if (rule != null) {
+            val (chunks, _) = layout.applyPrefix(rule, prev, eof, null, indent.state)
+            chunks.forEach { part -> emitText(out, part, lastChar) }
+        }
         return Success(Unit)
     }
 
     private fun emitText(out: Appendable, text: String, lastChar: Char?): Char? {
-        if (text == " ") {
-            if (lastChar == ' ' || lastChar == '\n') return lastChar
-        }
+        // Si es todo espacios y ya venimos de un espacio, no agregues
+        if (text.isNotEmpty() && text.all { it == ' ' } && lastChar == ' ') return lastChar
+        // Si es un solo " " y venimos de inicio de línea, no agregues
+        if (text == " " && lastChar == '\n') return lastChar
+
         out.append(text)
         return text.lastOrNull() ?: lastChar
     }
 }
-
-private fun Token?.isSeparator(kind: Separator) =
-    this is SeparatorToken && this.separator == kind
-private fun Token?.isRbrace() = this.isSeparator(Separator.RBRACE)

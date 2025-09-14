@@ -6,4 +6,5 @@ interface FormatterOptions {
     val spaceAroundAssignment: Boolean
     val blankLinesBeforePrintln: Int
     val indentSpaces: Int
+    val mandatorySingleSpaceSeparation: Boolean
 }
