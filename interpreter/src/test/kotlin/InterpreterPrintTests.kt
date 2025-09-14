@@ -1,5 +1,7 @@
 import org.printscript.ast.Assignment
 import org.printscript.ast.Binary
+import org.printscript.ast.IfStmt
+import org.printscript.ast.LiteralBoolean
 import org.printscript.ast.LiteralNumber
 import org.printscript.ast.LiteralString
 import org.printscript.ast.Println
@@ -238,6 +240,37 @@ class InterpreterPrintTests {
         when (res) {
             is Success -> fail("Interpreter should have failed due to parser error")
             is Failure -> println("Aborted on parser error as expected: ${res.error.humanReadable()}")
+        }
+    }
+
+    @Test
+    fun `if false skips then and only prints outside`() {
+        val stream = streamOf(
+            // const booleanValue: boolean = false;
+            VarDeclaration(
+                name = "booleanValue",
+                type = Type.BOOLEAN,
+                initializer = LiteralBoolean(false, s()),
+                span = s(),
+            ),
+            // if (booleanValue) { println("if statement is not working correctly"); }
+            IfStmt(
+                condition = Variable("booleanValue", s()),
+                thenBranch = listOf(
+                    Println(LiteralString("if statement is not working correctly", s()), s()),
+                ),
+                elseBranch = null,
+                span = s(),
+            ),
+            // println("outside of conditional");
+            Println(LiteralString("outside of conditional", s()), s()),
+        )
+
+        val res: Result<RunResult, InterpreterError> = makeInterpreter().run(stream)
+
+        when (res) {
+            is Success -> assertEquals(listOf("outside of conditional"), res.value.outputs)
+            is Failure -> fail("Interpreter failed: ${res.error.humanReadable()}")
         }
     }
 }
