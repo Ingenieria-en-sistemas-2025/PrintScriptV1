@@ -19,7 +19,7 @@ tasks.register('printGitHooksStatus') {
 
 def publishable = [
         ':common', ':token', ':ast', ':lexer', ':parser',
-        ':interpreter', ':analyzer', ':formatter', ':cli'
+        ':interpreter', ':analyzer', ':formatter', ':cli', ':runner'
 ].collect { project(it) }
 
 
