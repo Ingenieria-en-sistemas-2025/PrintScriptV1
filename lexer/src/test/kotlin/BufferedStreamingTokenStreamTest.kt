@@ -9,7 +9,7 @@ import org.printscript.lexer.TokenFactory
 import org.printscript.lexer.Tokenizer
 import org.printscript.lexer.config.PrintScriptv0MapConfig
 import org.printscript.lexer.memory.BufferedStreamingTokenStream
-import org.printscript.lexer.triviarules.CompositeTriviaSkipper
+import org.printscript.lexer.trivia.CompositeTriviaSkipper
 import org.printscript.token.EofToken
 import org.printscript.token.Token
 import org.printscript.token.TokenStream

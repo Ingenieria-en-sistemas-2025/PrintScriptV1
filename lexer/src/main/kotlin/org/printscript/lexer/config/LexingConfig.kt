@@ -3,7 +3,7 @@ package org.printscript.lexer.config
 import org.printscript.lexer.lexingrules.LexingRule
 import org.printscript.lexer.lexingrules.RuleKey
 import org.printscript.lexer.tokencreators.TokenCreator
-import org.printscript.lexer.triviarules.TriviaRule
+import org.printscript.lexer.trivia.TriviaRule
 
 data class LexingConfig(
     val rules: List<LexingRule>,

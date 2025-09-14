@@ -18,10 +18,11 @@ import org.printscript.lexer.tokencreators.OperatorTokenCreator
 import org.printscript.lexer.tokencreators.SeparatorTokenCreator
 import org.printscript.lexer.tokencreators.StringTokenCreator
 import org.printscript.lexer.tokencreators.TokenCreator
-import org.printscript.lexer.triviarules.BlockCommentRule
-import org.printscript.lexer.triviarules.LineCommentRule
-import org.printscript.lexer.triviarules.TriviaRule
-import org.printscript.lexer.triviarules.WhiteSpaceRule
+import org.printscript.lexer.trivia.BlockCommentRule
+import org.printscript.lexer.trivia.LineCommentRule
+import org.printscript.lexer.trivia.NewLineRule
+import org.printscript.lexer.trivia.TriviaRule
+import org.printscript.lexer.trivia.WhiteSpaceRule
 
 class PrintScriptv0MapConfig {
 
@@ -59,8 +60,9 @@ class PrintScriptv0MapConfig {
     )
 
     fun triviaRules(): List<TriviaRule> = listOf(
-        BlockCommentRule,
         LineCommentRule,
+        BlockCommentRule,
+        NewLineRule,
         WhiteSpaceRule,
     )
 

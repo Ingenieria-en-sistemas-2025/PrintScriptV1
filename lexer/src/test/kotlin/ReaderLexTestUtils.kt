@@ -7,7 +7,7 @@ import org.printscript.lexer.TokenCollector
 import org.printscript.lexer.TokenFactory
 import org.printscript.lexer.Tokenizer
 import org.printscript.lexer.config.LexingConfigFactory
-import org.printscript.lexer.triviarules.CompositeTriviaSkipper
+import org.printscript.lexer.trivia.CompositeTriviaSkipper
 import org.printscript.token.Token
 import java.io.StringReader
 import kotlin.test.fail

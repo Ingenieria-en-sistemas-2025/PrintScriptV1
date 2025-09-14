@@ -20,17 +20,17 @@ import org.printscript.lexer.tokencreators.OperatorTokenCreator
 import org.printscript.lexer.tokencreators.SeparatorTokenCreator
 import org.printscript.lexer.tokencreators.StringTokenCreator
 import org.printscript.lexer.tokencreators.TokenCreator
-import org.printscript.lexer.triviarules.BlockCommentRule
-import org.printscript.lexer.triviarules.LineCommentRule
-import org.printscript.lexer.triviarules.TriviaRule
-import org.printscript.lexer.triviarules.WhiteSpaceRule
+import org.printscript.lexer.trivia.BlockCommentRule
+import org.printscript.lexer.trivia.LineCommentRule
+import org.printscript.lexer.trivia.NewLineRule
+import org.printscript.lexer.trivia.TriviaRule
+import org.printscript.lexer.trivia.WhiteSpaceRule
 
 class PrintScriptv1MapConfig {
 
     fun keywords(): Map<String, Keyword> = mapOf(
         "let" to Keyword.LET,
         "println" to Keyword.PRINTLN,
-        // 1.1
         "const" to Keyword.CONST,
         "if" to Keyword.IF,
         "else" to Keyword.ELSE,
@@ -41,7 +41,6 @@ class PrintScriptv1MapConfig {
     fun types(): Map<String, Type> = mapOf(
         "string" to Type.STRING,
         "number" to Type.NUMBER,
-        // 1.1
         "boolean" to Type.BOOLEAN,
     )
 
@@ -58,13 +57,11 @@ class PrintScriptv1MapConfig {
         ")" to Separator.RPAREN,
         ";" to Separator.SEMICOLON,
         ":" to Separator.COLON,
-        // 1.1
         "{" to Separator.LBRACE,
         "}" to Separator.RBRACE,
     )
 
     fun rules(): List<LexingRule> = listOf(
-        // 1.1: primero los literales booleanos para que no salgan como identificadores
         BooleanLiteralRule,
         StringRule,
         IdentifierOrKeywordRule(RuleKeys.IDENT_OR_KEYWORD),
@@ -83,8 +80,9 @@ class PrintScriptv1MapConfig {
     )
 
     fun triviaRules(): List<TriviaRule> = listOf(
-        BlockCommentRule,
         LineCommentRule,
+        BlockCommentRule,
+        NewLineRule,
         WhiteSpaceRule,
     )
 }

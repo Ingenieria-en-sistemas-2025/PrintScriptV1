@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cli/PrintScriptV1.cli.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cli/PrintScriptV1.cli.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/cli/PrintScriptV1.cli.test.iml" filepath="$PROJECT_DIR$/.idea/modules/cli/PrintScriptV1.cli.test.iml" />
     </modules>
   </component>

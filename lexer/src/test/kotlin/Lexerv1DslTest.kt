@@ -8,7 +8,7 @@ import org.printscript.lexer.Tokenizer
 import org.printscript.lexer.config.PrintScriptv1MapConfig
 import org.printscript.lexer.error.LexerError
 import org.printscript.lexer.error.UnexpectedChar
-import org.printscript.lexer.triviarules.CompositeTriviaSkipper
+import org.printscript.lexer.trivia.CompositeTriviaSkipper
 import org.printscript.token.Token
 import org.printscript.token.dsl.kw
 import org.printscript.token.dsl.op

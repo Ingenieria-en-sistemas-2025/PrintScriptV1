@@ -1,12 +1,13 @@
 package org.printscript.lexer.config
 
 import org.printscript.common.Version
+import org.printscript.lexer.LexingMode
 import org.printscript.lexer.LongestMatchTokenMatcher
 import org.printscript.lexer.TokenFactory
 import org.printscript.lexer.Tokenizer
 import org.printscript.lexer.memory.BufferedStreamingTokenStream
 import org.printscript.lexer.memory.ReaderChunkFeed
-import org.printscript.lexer.triviarules.CompositeTriviaSkipper
+import org.printscript.lexer.trivia.CompositeTriviaSkipper
 import org.printscript.token.TokenStream
 import java.io.Reader
 
@@ -23,12 +24,13 @@ class LexerFactory {
     )
 
     // tokenizer desde string
-    fun tokenizer(version: Version, src: String): Tokenizer {
+    @JvmOverloads
+    fun tokenizer(version: Version, src: String, mode: LexingMode = LexingMode.SkipTrivia): Tokenizer {
         val cfg = LexingConfigFactory.forVersion(version)
         val matcher = LongestMatchTokenMatcher(cfg.rules)
         val skipper = CompositeTriviaSkipper(cfg.trivia)
         val factory = TokenFactory(cfg.creators)
-        return Tokenizer.of(src, matcher, skipper, factory)
+        return Tokenizer.of(src, matcher, skipper, factory, mode)
     }
 
     // tokenizer desde reader, archivos, usando line iterator feed
@@ -37,6 +39,7 @@ class LexerFactory {
         version: Version,
         reader: Reader,
         feedOptions: FeedOptions = FeedOptions(),
+        mode: LexingMode = LexingMode.SkipTrivia,
     ): Tokenizer {
         val cfg = LexingConfigFactory.forVersion(version)
         val matcher = LongestMatchTokenMatcher(cfg.rules)
@@ -49,20 +52,25 @@ class LexerFactory {
             chunkSize = feedOptions.chunkSize,
             keepTail = feedOptions.keepTail,
         )
-        return Tokenizer.of(feed, matcher, skipper, factory)
+        return Tokenizer.of(feed, matcher, skipper, factory, mode)
     }
 
-    fun tokenStream(version: Version, src: String): TokenStream {
-        val tz = tokenizer(version, src)
+    @JvmOverloads
+    fun tokenStream(version: Version, src: String, emitTrivia: Boolean = false): TokenStream {
+        val mode = if (emitTrivia) LexingMode.EmitTrivia else LexingMode.SkipTrivia
+        val tz = tokenizer(version, src, mode)
         return BufferedStreamingTokenStream.of(tz)
     }
 
+    @JvmOverloads
     fun tokenStream(
         version: Version,
         reader: Reader,
         feedOptions: FeedOptions = FeedOptions(),
+        emitTrivia: Boolean = false,
     ): TokenStream {
-        val tz = tokenizer(version, reader, feedOptions)
+        val mode = if (emitTrivia) LexingMode.EmitTrivia else LexingMode.SkipTrivia
+        val tz = tokenizer(version, reader, feedOptions, mode)
         return BufferedStreamingTokenStream.of(tz)
     }
 }
