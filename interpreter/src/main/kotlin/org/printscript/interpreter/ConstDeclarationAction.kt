@@ -18,8 +18,8 @@ class ConstDeclarationAction : StatementAction<ConstDeclaration> {
         )
 
         return eval.evaluate(stmt.initializer, envWithPrompt).flatMap { value ->
-            env.declare(stmt.name, stmt.type, value, stmt.span)
-                .map { newEnv -> ExecResult(newEnv, outAcc) } // devuelvo out acumulado + env base actualizado
+            env.declareConst(stmt.name, stmt.type, value, stmt.span)
+                .map { newEnv -> ExecResult(newEnv, outAcc) }
         }
     }
 }

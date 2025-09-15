@@ -23,12 +23,11 @@ class VarDeclarationAction : StatementAction<VarDeclaration> {
 
         return if (initEval != null) {
             initEval.flatMap { v ->
-                env.declare(stmt.name, stmt.type, v, stmt.span)
+                env.declareVar(stmt.name, stmt.type, v, stmt.span)
                     .map { newEnv -> ExecResult(newEnv, outAcc) }
             }
         } else {
-            // sin initializer
-            env.declare(stmt.name, stmt.type, null, stmt.span)
+            env.declareVar(stmt.name, stmt.type, null, stmt.span)
                 .map { newEnv -> ExecResult(newEnv, outAcc) }
         }
     }

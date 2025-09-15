@@ -58,9 +58,8 @@ class DefaultExprEvaluator(
                     when (evaluatedName) {
                         is Value.Str -> {
                             val name: String = evaluatedName.s
-                            val binding = env.lookup(name)
-                                ?: return@flatMap Failure(UndeclaredVariable(expr.span, name))
-                            Success(binding.value)
+                            val v = env.readEnvVar(name)
+                            Success(Value.Str(v ?: ""))
                         }
                         else -> Failure(
                             ExpectedStringForEnvName(expr.span, ExprHelpers.typeName(evaluatedName)),
