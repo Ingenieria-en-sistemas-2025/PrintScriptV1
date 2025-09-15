@@ -15,9 +15,13 @@ import org.printscript.token.TokenStream
 import java.io.Reader
 
 object LanguageWiringFactory {
-    fun forVersion(version: Version, formatterOptions: FormatterOptions = FormatterConfig()): LanguageWiring {
+    fun forVersion(
+        version: Version,
+        formatterOptions: FormatterOptions = FormatterConfig(),
+        printer: ((String) -> Unit)? = null,
+    ): LanguageWiring {
         val lexerFactory = LexerFactory()
-        val tsFromSource: (String) -> TokenStream = { src -> lexerFactory.tokenStream(version, src) }
+        // val tsFromSource: (String) -> TokenStream = { src -> lexerFactory.tokenStream(version, src) }
         val tsFromReader: (Reader) -> TokenStream = { r -> lexerFactory.tokenStream(version, r) }
 
         val parser = GlobalParserFactory.forVersion(version)
@@ -29,14 +33,18 @@ object LanguageWiringFactory {
             .forVersion(version, formatterOptions) ?: error("Formatter not available for version $version")
 
         val interpreterFor: (InputProvider?) -> Interpreter = { inputOverride ->
-            GlobalInterpreterFactory.forVersion(version, inputOverride)
+            if (printer == null) {
+                GlobalInterpreterFactory.forVersion(version, inputOverride)
+            } else {
+                GlobalInterpreterFactory.forVersion(version, inputOverride, printer)
+            }
         }
 
         val stmtStreamFromTokens: (TokenStream) -> StatementStream = parser::parse
 
         return LanguageWiring(
             version = version,
-            tokenStreamFromSource = tsFromSource,
+            // tokenStreamFromSource = tsFromSource,
             tokenStreamFromReader = tsFromReader,
             parser = parser,
             analyzer = analyzer,
@@ -47,6 +55,5 @@ object LanguageWiringFactory {
     }
 }
 
-// elige la func correcta del wiring y construye el TokenStream con el lexer
 internal fun tokenStream(io: ProgramIo, w: LanguageWiring): TokenStream =
-    io.source?.let(w.tokenStreamFromSource) ?: w.tokenStreamFromReader(io.reader!!)
+    w.tokenStreamFromReader(io.reader!!)

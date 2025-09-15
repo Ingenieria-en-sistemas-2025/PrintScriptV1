@@ -20,6 +20,7 @@ class IdentifierStyleRuleStreaming(
     override val id = "PS-ID-STYLE"
 
     override fun onStatement(statement: Statement, context: AnalyzerContext, out: DiagnosticEmitter) {
+        if (!context.config.identifiers.enabled) return
         val conv = conventionProvider(context.config.identifiers)
         val sev = if (context.config.identifiers.failOnViolation) Severity.ERROR else Severity.WARNING
 

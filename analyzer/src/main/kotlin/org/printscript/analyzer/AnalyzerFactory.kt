@@ -17,7 +17,6 @@ object AnalyzerFactory {
         return DefaultStreamingAnalyzer(rules)
     }
 
-    @Deprecated("Preferir forVersion(version, config)")
     fun forVersion(v: Version): StreamingAnalyzer =
         when (v) {
             Version.V0 -> DefaultStreamingAnalyzer(

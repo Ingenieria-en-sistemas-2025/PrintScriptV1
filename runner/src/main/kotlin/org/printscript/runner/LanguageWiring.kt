@@ -12,7 +12,7 @@ import java.io.Reader
 
 data class LanguageWiring(
     val version: Version,
-    val tokenStreamFromSource: (String) -> TokenStream,
+    // val tokenStreamFromSource: (String) -> TokenStream,
     val tokenStreamFromReader: (Reader) -> TokenStream,
     val parser: Parser,
     val analyzer: StreamingAnalyzer,

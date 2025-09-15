@@ -33,32 +33,12 @@ class IdentifierTest {
     }
 
     @Test
-    fun camelCaseWarnByDefault() {
-        val s1 = varDecl("a_b", Type.STRING, litStr("x", 1, 20), 1, 1, 1, 25)
-
-        val cfg = AnalyzerConfig(
-            identifiers = IdentifiersConfig(
-                failOnViolation = false,
-            ),
-        )
-
-        val engine = DefaultStreamingAnalyzer(listOf(IdentifierStyleRuleStreaming()))
-        val out = CollectorEmitter()
-        val res = engine.analyze(streamOf(s1), cfg, out)
-
-        assertTrue(res is Success<Unit>)
-        assertEquals(1, out.diags.size)
-        assertEquals("PS-ID-STYLE", out.diags[0].ruleId)
-        assertEquals(Severity.WARNING, out.diags[0].severity)
-        assertEquals(1, out.diags[0].span.start.line)
-    }
-
-    @Test
     fun camelCaseFailOnViolationElevaASERROR() {
         val s1 = varDecl("a_b", Type.STRING, litStr("x", 1, 20), 1, 1, 1, 25)
 
         val cfg = AnalyzerConfig(
             identifiers = IdentifiersConfig(
+                enabled = true,
                 failOnViolation = true,
             ),
         )
@@ -77,7 +57,7 @@ class IdentifierTest {
     fun assignmentNameIsChecked() {
         val s1 = assignment("a_b", litNum("1", 1, 10), 1, 1, 1, 12)
 
-        val cfg = AnalyzerConfig(identifiers = IdentifiersConfig(failOnViolation = true))
+        val cfg = AnalyzerConfig(identifiers = IdentifiersConfig(enabled = true, failOnViolation = true))
         val engine = DefaultStreamingAnalyzer(listOf(IdentifierStyleRuleStreaming()))
         val out = CollectorEmitter()
         val res = engine.analyze(streamOf(s1), cfg, out)
@@ -95,6 +75,7 @@ class IdentifierTest {
 
         val cfg = AnalyzerConfig(
             identifiers = IdentifiersConfig(
+                enabled = true,
                 // CAMEL esperado → 'a_b' inválido tanto en declaración como en uso
                 checkReferences = true,
                 failOnViolation = false,

@@ -14,18 +14,16 @@ import org.printscript.runner.ValidationReport
 import org.printscript.runner.hasErrors
 import org.printscript.runner.tokenStream
 
-object ValidateRunner : RunningMethod<ValidationReport> {
+class ValidateRunnerWithConfig(private val config: AnalyzerConfig) : RunningMethod<ValidationReport> {
     override fun run(version: Version, io: ProgramIo): Result<ValidationReport, RunnerError> {
         val w = LanguageWiringFactory.forVersion(version)
 
         val ts = tokenStream(io, w)
         val stmts = w.statementStreamFromTokens(ts)
 
-        // analyzer
         val emitter = RunnerDiagnosticCollector()
-        val cfg = AnalyzerConfig()
 
-        return when (val ar = w.analyzer.analyze(stmts, cfg, emitter)) {
+        return when (val ar = w.analyzer.analyze(stmts, config, emitter)) {
             is Success -> {
                 val diags = emitter.diagnostics
                 Success(ValidationReport(diags, diags.hasErrors()))

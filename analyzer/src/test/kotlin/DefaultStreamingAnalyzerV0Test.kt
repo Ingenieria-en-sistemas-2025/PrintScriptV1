@@ -37,7 +37,7 @@ class DefaultStreamingAnalyzerV0Test {
         val s3 = printlnNode(variable("mi_var", 3, 9), 3, 1, 3, 16)
 
         val cfg = AnalyzerConfig(
-            identifiers = IdentifiersConfig(style = IdentifierStyle.CAMEL_CASE), // "mi_var" viola camelCase
+            identifiers = IdentifiersConfig(enabled = true, style = IdentifierStyle.CAMEL_CASE), // "mi_var" viola camelCase
             printlnRule = PrintlnRuleConfig(enabled = true),
         )
 
