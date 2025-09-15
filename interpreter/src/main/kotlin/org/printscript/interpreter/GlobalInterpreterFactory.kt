@@ -12,16 +12,21 @@ object GlobalInterpreterFactory {
             Version.V0 -> NoInputProvider
             Version.V1 -> StdInProvider
         }
-        val env = Env.empty(input).withPrinter(printer)
+
+        val (env0, out0) =
+            if (printer != null) {
+                Env.empty(input).withPrinter(printer, true) to Output.sink()
+            } else {
+                Env.empty(input) to Output.empty()
+            }
+
         val evaluator = DefaultExprEvaluator()
         val executor = StmtActionExecutor(evaluator)
 
-        val out = if (printer != null) Output.sink() else Output.empty()
-
         return ProgramInterpreter(
-            executor,
-            initialEnv = env,
-            initialOut = out,
+            executor = executor,
+            initialEnv = env0,
+            initialOut = out0,
         )
     }
 }

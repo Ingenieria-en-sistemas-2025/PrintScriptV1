@@ -13,15 +13,13 @@ import org.printscript.lexer.config.LexerFactory
 import org.printscript.parser.factories.GlobalParserFactory
 import org.printscript.token.TokenStream
 import java.io.Reader
-
 object LanguageWiringFactory {
     fun forVersion(
         version: Version,
         formatterOptions: FormatterOptions = FormatterConfig(),
-        printer: ((String) -> Unit)? = null,
+        printer: ((String) -> Unit)? = null, // <- nullable
     ): LanguageWiring {
         val lexerFactory = LexerFactory()
-        // val tsFromSource: (String) -> TokenStream = { src -> lexerFactory.tokenStream(version, src) }
         val tsFromReader: (Reader) -> TokenStream = { r -> lexerFactory.tokenStream(version, r) }
 
         val parser = GlobalParserFactory.forVersion(version)
@@ -40,7 +38,6 @@ object LanguageWiringFactory {
 
         return LanguageWiring(
             version = version,
-            // tokenStreamFromSource = tsFromSource,
             tokenStreamFromReader = tsFromReader,
             parser = parser,
             analyzer = analyzer,
