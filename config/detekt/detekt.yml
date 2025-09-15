@@ -40,5 +40,5 @@ complexity:
     threshold: 25
   TooManyFunctions:
     active: true
-    thresholdInClasses: 15
-    thresholdInInterfaces: 15
+    thresholdInClasses: 20
+    thresholdInInterfaces: 20

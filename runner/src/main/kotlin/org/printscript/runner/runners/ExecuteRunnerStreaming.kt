@@ -11,7 +11,7 @@ import org.printscript.runner.RunnerError
 import org.printscript.runner.tokenStream
 
 class ExecuteRunnerStreaming(
-    private val printer: (String) -> Unit,
+    private val printer: ((String) -> Unit)?,
 ) : RunningMethod<Unit> {
 
     override fun run(version: Version, io: ProgramIo): Result<Unit, RunnerError> {

@@ -18,12 +18,18 @@ class PrintlnAction : StatementAction<Println> {
                 is Value.Bool -> v.b.toString()
             }
 
-            // siempre emito (para PrintEmitter / PrintCounter / prompts, etc.)
+            // Siempre emitimos (para PrintEmitter / PrintCounter / prompts, etc.)
             env.emit(line)
 
-            // si hay printer externo, no acumuko en Output para evitar OOM;
-            // si no hay, mantengo el collecting para los tests que leen asList().
-            val nextOut = if (env.hasPrinter()) out else out.append(line)
+            // DECISIÓN CLAVE:
+            // - Si hay printer y preferimos "sink", NO acumulamos.
+            // - Si no hay printer, o hay printer pero NO preferimos "sink", SÍ acumulamos.
+            val nextOut =
+                if (env.hasPrinter() && env.preferSinkWithPrinter()) {
+                    out
+                } else {
+                    out.append(line)
+                }
 
             ExecResult(env, nextOut)
         }

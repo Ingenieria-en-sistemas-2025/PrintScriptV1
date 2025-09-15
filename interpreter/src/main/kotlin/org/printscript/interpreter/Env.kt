@@ -19,10 +19,11 @@ data class Env internal constructor(
     private val bindings: Map<String, Binding>, // para no romper reglas
     private val input: InputProvider,
     private val printer: Printer? = null,
+    private val preferSinkWithPrinter: Boolean = true,
 ) {
     companion object {
         fun empty(input: InputProvider = NoInputProvider): Env =
-            Env(emptyMap(), input, null)
+            Env(emptyMap(), input, null, true)
     }
 
     fun lookup(name: String): Binding? = bindings[name] // si var existe devuelvo su binding, sino null
@@ -43,8 +44,11 @@ data class Env internal constructor(
     }
 
     fun hasPrinter(): Boolean = printer != null
+    fun preferSinkWithPrinter(): Boolean = preferSinkWithPrinter
 
-    fun withPrinter(p: Printer?): Env = copy(printer = p)
+    fun withPrinter(p: Printer?, preferSink: Boolean = true): Env =
+        copy(printer = p, preferSinkWithPrinter = preferSink)
+
     fun emit(line: String) { printer?.invoke(line) }
 
     fun withInput(newInput: InputProvider): Env = copy(input = newInput)
