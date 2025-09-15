@@ -1,5 +1,6 @@
 plugins {
     id 'buildlogic.kotlin-library-conventions'
+    id 'java-library'
 }
 
 dependencies {
