@@ -8,17 +8,23 @@ import org.printscript.runner.Interpreting
 import org.printscript.runner.LanguageWiringFactory
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.RunnerError
-import org.printscript.runner.tokenStream
 
 class ExecuteRunnerStreaming(
-    private val printer: ((String) -> Unit)?, // <- nullable
+    private val printer: ((String) -> Unit)?, // nullable
+    private val collectAlsoWithPrinter: Boolean = false, // ⬅️ NUEVO
 ) : RunningMethod<Unit> {
 
     override fun run(version: Version, io: ProgramIo): Result<Unit, RunnerError> {
-        val w = LanguageWiringFactory.forVersion(version, printer = printer)
+        val w = LanguageWiringFactory.forVersion(
+            version,
+            printer = printer,
+            collectAlsoWithPrinter = collectAlsoWithPrinter,
+        )
+
         val ts = tokenStream(io, w)
         val stmts = w.statementStreamFromTokens(ts)
         val interpreter = w.interpreterFor(io.inputProviderOverride)
+
         return when (val rr = interpreter.run(stmts)) {
             is Success -> Success(Unit)
             is Failure -> Failure(RunnerError(Interpreting, "runtime error", rr.error))

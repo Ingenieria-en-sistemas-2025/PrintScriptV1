@@ -7,14 +7,23 @@ object GlobalInterpreterFactory {
         version: Version,
         inputOverride: InputProvider? = null,
         printer: Printer? = null,
+        collectAlsoWithPrinter: Boolean = false,
     ): Interpreter {
         val input = inputOverride ?: when (version) {
             Version.V0 -> NoInputProvider
             Version.V1 -> StdInProvider
         }
-        val env = Env.empty(input).withPrinter(printer)
+
+        val env = Env.empty(input).withPrinter(printer, collectAlsoWithPrinter)
+
         val evaluator = DefaultExprEvaluator()
         val executor = StmtActionExecutor(evaluator)
-        return ProgramInterpreter(executor, initialEnv = env, initialOut = Output.empty())
+
+        // Tu Output sigue siendo el collector puro; no hace falta sink.
+        return ProgramInterpreter(
+            executor,
+            initialEnv = env,
+            initialOut = Output.empty(),
+        )
     }
 }

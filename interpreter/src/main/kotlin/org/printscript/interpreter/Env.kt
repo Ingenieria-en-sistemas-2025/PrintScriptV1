@@ -19,6 +19,7 @@ data class Env internal constructor(
     private val bindings: Map<String, Binding>, // para no romper reglas
     private val input: InputProvider,
     private val printer: Printer? = null,
+    private val collectAlsoWhenPrinter: Boolean = false,
 ) {
     companion object {
         fun empty(input: InputProvider = NoInputProvider): Env =
@@ -42,9 +43,11 @@ data class Env internal constructor(
         return Success(copy(bindings = bindings + (name to Binding(type, v, isConst = true))))
     }
 
-    fun withPrinter(p: Printer?): Env = copy(printer = p)
+    fun withPrinter(p: Printer?, collectAlso: Boolean = false): Env =
+        copy(printer = p, collectAlsoWhenPrinter = collectAlso)
     fun emit(line: String) { printer?.invoke(line) }
     fun hasPrinter(): Boolean = printer != null
+    fun shouldCollectWithPrinter(): Boolean = collectAlsoWhenPrinter
 
     fun withInput(newInput: InputProvider): Env = copy(input = newInput)
 

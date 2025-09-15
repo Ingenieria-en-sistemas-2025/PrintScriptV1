@@ -15,7 +15,8 @@ class PrintlnAction : StatementAction<Println> {
 
             env.emit(line)
 
-            val nextOut = if (env.hasPrinter()) out else out.append(line)
+            val mustCollect = !env.hasPrinter() || env.shouldCollectWithPrinter()
+            val nextOut = if (mustCollect) out.append(line) else out
 
             ExecResult(env, nextOut)
         }
