@@ -12,7 +12,7 @@ import org.printscript.runner.tokenStream
 
 class ExecuteRunnerStreaming(
     private val printer: ((String) -> Unit)?, // nullable
-    private val collectAlsoWithPrinter: Boolean = false, // ⬅️ NUEVO
+    private val collectAlsoWithPrinter: Boolean = false,
 ) : RunningMethod<Unit> {
 
     override fun run(version: Version, io: ProgramIo): Result<Unit, RunnerError> {
