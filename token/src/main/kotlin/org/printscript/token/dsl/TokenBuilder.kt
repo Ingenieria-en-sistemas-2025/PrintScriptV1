@@ -6,11 +6,14 @@ import org.printscript.common.Position
 import org.printscript.common.Separator
 import org.printscript.common.Span
 import org.printscript.common.Type
+import org.printscript.token.BlockCommentToken
 import org.printscript.token.BooleanLiteralToken
 import org.printscript.token.EofToken
 import org.printscript.token.IdentifierToken
 import org.printscript.token.KeywordToken
+import org.printscript.token.LineCommentToken
 import org.printscript.token.ListTokenStream
+import org.printscript.token.NewlineToken
 import org.printscript.token.NumberLiteralToken
 import org.printscript.token.OperatorToken
 import org.printscript.token.SeparatorToken
@@ -18,12 +21,12 @@ import org.printscript.token.StringLiteralToken
 import org.printscript.token.Token
 import org.printscript.token.TokenStream
 import org.printscript.token.TypeToken
+import org.printscript.token.WhitespaceToken
 
 class TokenBuilder private constructor(
     private val tokens: List<Token>, // inmutable
     private val dummySpan: Span = Span(Position(1, 1), Position(1, 1)),
 ) {
-
     constructor() : this(emptyList())
 
     fun keyword(kw: Keyword): TokenBuilder =
@@ -50,6 +53,33 @@ class TokenBuilder private constructor(
     fun boolean(value: Boolean): TokenBuilder =
         TokenBuilder(tokens + BooleanLiteralToken(value, dummySpan))
 
+    // ===== Trivia directa =====
+    fun whitespace(raw: String): TokenBuilder =
+        TokenBuilder(tokens + WhitespaceToken(raw, dummySpan))
+
+    fun newline(): TokenBuilder =
+        TokenBuilder(tokens + NewlineToken(dummySpan))
+
+    fun lineComment(raw: String): TokenBuilder =
+        TokenBuilder(tokens + LineCommentToken(raw, dummySpan))
+
+    fun blockComment(raw: String): TokenBuilder =
+        TokenBuilder(tokens + BlockCommentToken(raw, dummySpan))
+
+    // Namespace para DSL de trivia
+    fun tv(): TriviaDsl = TriviaDsl(this)
+
     fun build(): TokenStream =
         ListTokenStream.of(tokens + EofToken(dummySpan))
 }
+
+// Mini-DSL para componer trivia encadenable: tv().ws("  ").nl()...
+class TriviaDsl(private val b: TokenBuilder) {
+    fun ws(raw: String): TokenBuilder = b.whitespace(raw)
+    fun nl(): TokenBuilder = b.newline()
+    fun lcomment(raw: String): TokenBuilder = b.lineComment(raw)
+    fun bcomment(raw: String): TokenBuilder = b.blockComment(raw)
+}
+
+// Helper opcional, paridad con kw()/op()/sep()/ty()
+fun TokenBuilder.trivia(): TriviaDsl = this.tv()
