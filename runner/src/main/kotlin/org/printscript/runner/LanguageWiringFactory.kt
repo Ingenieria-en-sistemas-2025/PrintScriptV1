@@ -13,13 +13,15 @@ import org.printscript.lexer.config.LexerFactory
 import org.printscript.parser.factories.GlobalParserFactory
 import org.printscript.token.TokenStream
 import java.io.Reader
+
 object LanguageWiringFactory {
     fun forVersion(
         version: Version,
         formatterOptions: FormatterOptions = FormatterConfig(),
-        printer: ((String) -> Unit)? = null, // <- nullable
+        printer: ((String) -> Unit)? = null,
     ): LanguageWiring {
         val lexerFactory = LexerFactory()
+        // val tsFromSource: (String) -> TokenStream = { src -> lexerFactory.tokenStream(version, src) }
         val tsFromReader: (Reader) -> TokenStream = { r -> lexerFactory.tokenStream(version, r) }
 
         val parser = GlobalParserFactory.forVersion(version)
@@ -31,13 +33,18 @@ object LanguageWiringFactory {
             .forVersion(version, formatterOptions) ?: error("Formatter not available for version $version")
 
         val interpreterFor: (InputProvider?) -> Interpreter = { inputOverride ->
-            GlobalInterpreterFactory.forVersion(version, inputOverride, printer)
+            if (printer == null) {
+                GlobalInterpreterFactory.forVersion(version, inputOverride)
+            } else {
+                GlobalInterpreterFactory.forVersion(version, inputOverride, printer)
+            }
         }
 
         val stmtStreamFromTokens: (TokenStream) -> StatementStream = parser::parse
 
         return LanguageWiring(
             version = version,
+            // tokenStreamFromSource = tsFromSource,
             tokenStreamFromReader = tsFromReader,
             parser = parser,
             analyzer = analyzer,

@@ -6,7 +6,6 @@ import org.printscript.common.Failure
 import org.printscript.common.Result
 import org.printscript.common.Success
 import org.printscript.interpreter.errors.InterpreterError
-
 class ProgramInterpreter(
     private val executor: StmtExecutor,
     private val initialEnv: Env = Env.empty(),
