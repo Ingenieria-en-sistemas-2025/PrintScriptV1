@@ -11,17 +11,14 @@ import org.printscript.runner.RunnerError
 import org.printscript.runner.tokenStream
 
 class ExecuteRunnerStreaming(
-    private val printer: (String) -> Unit,
+    private val printer: ((String) -> Unit)?, // <- nullable
 ) : RunningMethod<Unit> {
 
     override fun run(version: Version, io: ProgramIo): Result<Unit, RunnerError> {
         val w = LanguageWiringFactory.forVersion(version, printer = printer)
-
         val ts = tokenStream(io, w)
         val stmts = w.statementStreamFromTokens(ts)
-
         val interpreter = w.interpreterFor(io.inputProviderOverride)
-
         return when (val rr = interpreter.run(stmts)) {
             is Success -> Success(Unit)
             is Failure -> Failure(RunnerError(Interpreting, "runtime error", rr.error))

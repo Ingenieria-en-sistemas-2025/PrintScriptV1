@@ -12,7 +12,11 @@ class PrintlnAction : StatementAction<Println> {
                 is Value.Num -> ExprHelpers.formatNumber(v.n)
                 is Value.Bool -> v.b.toString()
             }
+
             env.emit(line)
-            ExecResult(env, out.append(line))
+
+            val nextOut = if (env.hasPrinter()) out else out.append(line)
+
+            ExecResult(env, nextOut)
         }
 }

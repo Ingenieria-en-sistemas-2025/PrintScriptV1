@@ -44,6 +44,7 @@ data class Env internal constructor(
 
     fun withPrinter(p: Printer?): Env = copy(printer = p)
     fun emit(line: String) { printer?.invoke(line) }
+    fun hasPrinter(): Boolean = printer != null
 
     fun withInput(newInput: InputProvider): Env = copy(input = newInput)
 
