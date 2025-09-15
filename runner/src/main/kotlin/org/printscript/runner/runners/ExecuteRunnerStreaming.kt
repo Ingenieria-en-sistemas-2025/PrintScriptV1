@@ -8,6 +8,7 @@ import org.printscript.runner.Interpreting
 import org.printscript.runner.LanguageWiringFactory
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.RunnerError
+import org.printscript.runner.tokenStream
 
 class ExecuteRunnerStreaming(
     private val printer: ((String) -> Unit)?, // nullable

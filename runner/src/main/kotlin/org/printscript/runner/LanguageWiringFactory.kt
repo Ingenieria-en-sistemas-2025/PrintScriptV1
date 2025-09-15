@@ -19,32 +19,30 @@ object LanguageWiringFactory {
         version: Version,
         formatterOptions: FormatterOptions = FormatterConfig(),
         printer: ((String) -> Unit)? = null,
+        collectAlsoWithPrinter: Boolean = false,
     ): LanguageWiring {
         val lexerFactory = LexerFactory()
-        // val tsFromSource: (String) -> TokenStream = { src -> lexerFactory.tokenStream(version, src) }
         val tsFromReader: (Reader) -> TokenStream = { r -> lexerFactory.tokenStream(version, r) }
 
         val parser = GlobalParserFactory.forVersion(version)
             ?: error("Parser not available for version $version")
-
         val analyzer = AnalyzerFactory.forVersion(version)
-
         val formatter = GlobalFormatterFactory
             .forVersion(version, formatterOptions) ?: error("Formatter not available for version $version")
 
         val interpreterFor: (InputProvider?) -> Interpreter = { inputOverride ->
-            if (printer == null) {
-                GlobalInterpreterFactory.forVersion(version, inputOverride)
-            } else {
-                GlobalInterpreterFactory.forVersion(version, inputOverride, printer)
-            }
+            GlobalInterpreterFactory.forVersion(
+                version,
+                inputOverride,
+                printer,
+                collectAlsoWithPrinter,
+            )
         }
 
         val stmtStreamFromTokens: (TokenStream) -> StatementStream = parser::parse
 
         return LanguageWiring(
             version = version,
-            // tokenStreamFromSource = tsFromSource,
             tokenStreamFromReader = tsFromReader,
             parser = parser,
             analyzer = analyzer,
