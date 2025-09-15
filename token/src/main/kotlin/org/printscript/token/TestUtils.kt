@@ -15,10 +15,10 @@ object TestUtils {
     }
 
     fun <T> assertSuccess(result: Result<T, LabeledError>): T =
-        result.fold(
-            onSuccess = { it },
-            onFailure = { error("Expected Success, got Failure: ${it.humanReadable()}") },
-        )
+        when (result) {
+            is Success -> result.value
+            is Failure -> error("Expected Success, got Failure: ${result.error.humanReadable()}")
+        }
 
     fun <T> assertFailure(result: Result<T, LabeledError>): LabeledError =
         when (result) {
