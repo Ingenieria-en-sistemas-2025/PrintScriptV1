@@ -1,9 +1,15 @@
 package org.printscript.interpreter
 
-data class Output(private val lines: List<String>) {
-    companion object { fun empty() = Output(emptyList()) }
+interface Output {
+    fun append(s: String): Output
+    fun asList(): List<String>
 
-    fun append(line: String): Output = Output(lines + line)
-    fun asList(): List<String> = lines
-    override fun toString(): String = lines.joinToString("\n")
+    companion object {
+        fun empty(): Output = Collecting(emptyList())
+        fun sink(): Output = object : Output {
+            override fun append(s: String): Output = this
+            override fun asList(): List<String> = emptyList()
+            override fun toString() = "Output.Sink"
+        }
+    }
 }

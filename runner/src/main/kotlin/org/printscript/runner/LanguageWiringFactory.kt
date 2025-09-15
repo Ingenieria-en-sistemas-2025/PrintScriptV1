@@ -33,11 +33,7 @@ object LanguageWiringFactory {
             .forVersion(version, formatterOptions) ?: error("Formatter not available for version $version")
 
         val interpreterFor: (InputProvider?) -> Interpreter = { inputOverride ->
-            if (printer == null) {
-                GlobalInterpreterFactory.forVersion(version, inputOverride)
-            } else {
-                GlobalInterpreterFactory.forVersion(version, inputOverride, printer)
-            }
+            GlobalInterpreterFactory.forVersion(version, inputOverride, printer)
         }
 
         val stmtStreamFromTokens: (TokenStream) -> StatementStream = parser::parse

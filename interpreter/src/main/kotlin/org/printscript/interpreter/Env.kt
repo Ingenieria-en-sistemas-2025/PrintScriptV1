@@ -42,6 +42,8 @@ data class Env internal constructor(
         return Success(copy(bindings = bindings + (name to Binding(type, v, isConst = true))))
     }
 
+    fun hasPrinter(): Boolean = printer != null
+
     fun withPrinter(p: Printer?): Env = copy(printer = p)
     fun emit(line: String) { printer?.invoke(line) }
 

@@ -15,6 +15,13 @@ object GlobalInterpreterFactory {
         val env = Env.empty(input).withPrinter(printer)
         val evaluator = DefaultExprEvaluator()
         val executor = StmtActionExecutor(evaluator)
-        return ProgramInterpreter(executor, initialEnv = env, initialOut = Output.empty())
+
+        val out = if (printer != null) Output.sink() else Output.empty()
+
+        return ProgramInterpreter(
+            executor,
+            initialEnv = env,
+            initialOut = out,
+        )
     }
 }
