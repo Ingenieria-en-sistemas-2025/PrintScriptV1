@@ -4,13 +4,14 @@ plugins {
 }
 
 dependencies {
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    implementation(project(":common"))
-    implementation(project(":lexer"))
-    implementation(project(":parser"))
-    implementation(project(":analyzer"))
-    implementation(project(":formatter"))
-    implementation(project(':ast'))
-    implementation(project(":interpreter"))
-    implementation(project(':token'))
+    api(project(":common"))
+    api(project(":lexer"))
+    api(project(":parser"))
+    api(project(":analyzer"))
+    api(project(":formatter"))
+    api(project(":ast"))
+    api(project(":interpreter"))
+    api(project(":token"))
+
+    testImplementation "org.jetbrains.kotlin:kotlin-test"
 }
