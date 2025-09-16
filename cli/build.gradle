@@ -21,3 +21,6 @@ application {
     mainClass = 'org.printscript.cli.PsCliKt'
 }
 
+tasks.test {
+    systemProperty("ps.cli.test", "true")
+}
