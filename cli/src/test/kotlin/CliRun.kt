@@ -62,7 +62,6 @@ open class CliHarness {
         }
         var code = 0
         try {
-            // invocamos el CLI “real”
             PrintScriptCli()
                 .subcommands(
                     ValidateCmd(),
