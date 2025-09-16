@@ -22,6 +22,7 @@ object LanguageWiringFactory {
         collectAlsoWithPrinter: Boolean = false,
     ): LanguageWiring {
         val lexerFactory = LexerFactory()
+
         val tsFromReader: (Reader) -> TokenStream = { r -> lexerFactory.tokenStream(version, r) }
 
         val parser = GlobalParserFactory.forVersion(version)
