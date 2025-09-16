@@ -33,7 +33,7 @@ class LexerFactory {
         return Tokenizer.of(src, matcher, skipper, factory, mode)
     }
 
-    // tokenizer desde reader, archivos, usando line iterator feed
+    // tokenizer desde reader, archivos, usando reader chunk feed
     @JvmOverloads
     fun tokenizer(
         version: Version,

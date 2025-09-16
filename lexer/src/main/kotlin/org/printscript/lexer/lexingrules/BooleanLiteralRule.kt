@@ -1,8 +1,6 @@
 package org.printscript.lexer.lexingrules
 
-object BooleanLiteralRule : LexingRule {
-    override val key: RuleKey = RuleKey("BOOLEAN_LITERAL")
-    private val re = Regex("""(?:true|false)\b""")
+class BooleanLiteralRule(override val key: RuleKey, val pattern: Regex) : LexingRule {
     override fun matchLength(input: CharSequence): Int =
-        re.matchAt(input, 0)?.value?.length ?: 0
+        pattern.matchAt(input, 0)?.value?.length ?: 0
 }

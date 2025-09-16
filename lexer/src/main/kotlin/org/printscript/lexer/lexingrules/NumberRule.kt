@@ -1,8 +1,6 @@
 package org.printscript.lexer.lexingrules
 
-private val NUM_REGEX = Regex("\\d+(?:\\.\\d+)?")
-
-class NumberRule(override val key: RuleKey) : LexingRule {
+class NumberRule(override val key: RuleKey, val pattern: Regex) : LexingRule {
     override fun matchLength(input: CharSequence): Int =
-        NUM_REGEX.matchAt(input, 0)?.value?.length ?: 0
+        pattern.matchAt(input, 0)?.value?.length ?: 0
 }

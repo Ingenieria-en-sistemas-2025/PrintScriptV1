@@ -53,8 +53,8 @@ class PrintScriptv0MapConfig {
 
     fun rules(): List<LexingRule> = listOf(
         StringRule,
-        IdentifierOrKeywordRule(RuleKeys.IDENT_OR_KEYWORD),
-        NumberRule(RuleKeys.NUMBER),
+        IdentifierOrKeywordRule(RuleKeys.IDENT_OR_KEYWORD, Regex("[A-Za-z_][A-Za-z0-9_]*")),
+        NumberRule(RuleKeys.NUMBER, Regex("\\d+(?:\\.\\d+)?")),
         OperatorRule(RuleKeys.OPERATOR, operators()),
         SeparatorRule(RuleKeys.SEPARATOR, separators()),
     )

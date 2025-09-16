@@ -1,31 +1,28 @@
 package org.printscript.lexer.tokencreators
 
+import org.printscript.common.Failure
+import org.printscript.common.Result
+import org.printscript.common.Span
+import org.printscript.common.Success
 import org.printscript.lexer.Lexeme
+import org.printscript.lexer.error.LexerError
 import org.printscript.lexer.error.UnterminatedString
 import org.printscript.token.StringLiteralToken
 import org.printscript.token.Token
 
 object StringTokenCreator : TokenCreator {
-    override fun create(lexeme: Lexeme): Token {
+
+    override fun create(lexeme: Lexeme): Result<Token, LexerError> {
         val raw = lexeme.text
-        val open = raw.firstOrNull()
-        val close = raw.lastOrNull()
-        val isQuote = { c: Char? -> c == '"' || c == '\'' }
 
-        // si no cierra con la misma comilla → error léxico
-        if (open == null || close == null) {
-            throw UnterminatedString(lexeme.span)
+        return when (val v = validateBalancedQuotes(raw, lexeme.span)) {
+            is Failure -> Failure(v.error)
+            is Success -> {
+                val inner = unquote(raw)
+                val value = unescapeBasic(inner)
+                Success(StringLiteralToken(value, lexeme.span))
+            }
         }
-        if (open != close) {
-            throw UnterminatedString(lexeme.span)
-        }
-        if (!isQuote(open)) {
-            throw UnterminatedString(lexeme.span)
-        }
-
-        val inner = unquote(raw)
-        val value = unescapeBasic(inner)
-        return StringLiteralToken(value, lexeme.span)
     }
 
     private fun unquote(raw: String): String {
@@ -55,6 +52,23 @@ object StringTokenCreator : TokenCreator {
             i += 2
         }
         return out.toString()
+    }
+
+    private fun validateBalancedQuotes(raw: String, span: Span): Result<Char, LexerError> {
+        val open = raw.firstOrNull()
+        val close = raw.lastOrNull()
+        val isQuote = { c: Char? -> c == '"' || c == '\'' }
+
+        if (open == null || close == null) {
+            return Failure(UnterminatedString(span))
+        }
+        if (open != close) {
+            return Failure(UnterminatedString(span))
+        }
+        if (!isQuote(open)) {
+            return Failure(UnterminatedString(span))
+        }
+        return Success(open)
     }
 
     private fun mapEscape(n: Char): Char? = when (n) {

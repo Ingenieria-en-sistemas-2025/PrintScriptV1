@@ -40,4 +40,42 @@ class DefaultStreamingAnalyzerV1Test {
         assertEquals(1, out.diags.size)
         assertEquals("PS-READINPUT-SIMPLE", out.diags.first().ruleId)
     }
+
+    @Test
+    fun testWithNoError() {
+        // Programa: let x : number=1; println("ok");
+        val ast = listOf(
+            varDecl(
+                name = "x",
+                type = Type.NUMBER,
+                init = litNum("1", 1, 16),
+                l1 = 1,
+                c1 = 1,
+                l2 = 1,
+                c2 = 17,
+            ),
+            printlnNode(
+                expr = litStr("ok", 1, 27),
+                l1 = 1,
+                c1 = 19,
+                l2 = 1,
+                c2 = 32,
+            ),
+        )
+
+        val cfg = AnalyzerConfig(
+            identifiers = IdentifiersConfig(style = IdentifierStyle.CAMEL_CASE),
+            printlnRule = PrintlnRuleConfig(enabled = true),
+            readInputRule = ReadInputRuleConfig(enabled = true),
+        )
+
+        val engine = AnalyzerFactory.forVersion(Version.V1)
+        val out = CollectorEmitter()
+
+        // Nota: uso el spread para pasar la lista como vararg si streamOf lo requiere.
+        val res = engine.analyze(streamOf(*ast.toTypedArray()), cfg, out)
+
+        assertTrue(res is Success<Unit>)
+        assertEquals(0, out.diags.size)
+    }
 }
