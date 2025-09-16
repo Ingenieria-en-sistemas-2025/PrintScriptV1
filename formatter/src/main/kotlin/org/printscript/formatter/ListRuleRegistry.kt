@@ -3,6 +3,7 @@ package org.printscript.formatter
 import org.printscript.formatter.rules.FormattingRule
 import org.printscript.token.Token
 
+// Registrar las reglas
 class ListRuleRegistry(
     private val rules: List<FormattingRule>,
 ) : RuleRegistry {
