@@ -14,32 +14,64 @@ import org.printscript.ast.VarDeclaration
 
 object AstWalk {
 
-    fun expressionsOf(stmt: Statement): Sequence<Expression> = sequence {
-        fun walkExpr(e: Expression): Sequence<Expression> = sequence {
-            yield(e)
+    private const val INITIAL_STACK_CAPACITY = 8 // evita "MagicNumber"
+
+    /** Recorre las expresiones de un Statement en preorden, sin corutinas. */
+    fun expressionsOf(stmt: Statement): Sequence<Expression> =
+        object : Sequence<Expression> {
+            override fun iterator(): Iterator<Expression> = ExprIterator(stmt)
+        }
+
+    /** Iterador iterativo (stack) que evita secuencias/continuations. */
+    private class ExprIterator(root: Statement) : kotlin.collections.AbstractIterator<Expression>() {
+        // La pila contiene Statements o Expressions pendientes de visitar.
+        private val stack = ArrayDeque<Any>(INITIAL_STACK_CAPACITY).apply { addLast(root) }
+
+        override fun computeNext() {
+            while (stack.isNotEmpty()) {
+                val node = stack.removeLast()
+
+                if (node is Expression) {
+                    pushExprChildren(node)
+                    setNext(node) // yieldea el propio nodo
+                    return
+                }
+
+                if (node is Statement) {
+                    pushStmtChildren(node)
+                    continue
+                }
+            }
+            done()
+        }
+
+        private fun pushExprChildren(e: Expression) {
             when (e) {
                 is Binary -> {
-                    yieldAll(walkExpr(e.left))
-                    yieldAll(walkExpr(e.right))
+                    stack.addLast(e.right)
+                    stack.addLast(e.left)
                 }
-                is Grouping -> yieldAll(walkExpr(e.expression))
-                is ReadInput -> yieldAll(walkExpr(e.prompt))
-                is ReadEnv -> yieldAll(walkExpr(e.variableName))
-                else -> Unit
+                is Grouping -> stack.addLast(e.expression)
+                is ReadInput -> stack.addLast(e.prompt)
+                is ReadEnv -> stack.addLast(e.variableName)
+                else -> { /* Variable, literales, etc.: sin hijos */ }
             }
         }
 
-        when (stmt) {
-            is VarDeclaration -> stmt.initializer?.let { yieldAll(walkExpr(it)) }
-            is ConstDeclaration -> yieldAll(walkExpr(stmt.initializer))
-            is Assignment -> yieldAll(walkExpr(stmt.value))
-            is Println -> yieldAll(walkExpr(stmt.value))
-            is IfStmt -> {
-                yieldAll(walkExpr(stmt.condition))
-                stmt.thenBranch.forEach { yieldAll(expressionsOf(it)) }
-                stmt.elseBranch?.forEach { yieldAll(expressionsOf(it)) }
+        private fun pushStmtChildren(s: Statement) {
+            when (s) {
+                is VarDeclaration -> s.initializer?.let { stack.addLast(it) }
+                is ConstDeclaration -> stack.addLast(s.initializer)
+                is Assignment -> stack.addLast(s.value)
+                is Println -> stack.addLast(s.value)
+                is IfStmt -> {
+                    // push en orden inverso porque la pila es LIFO:
+                    s.elseBranch?.asReversed()?.forEach { stack.addLast(it) }
+                    s.thenBranch.asReversed().forEach { stack.addLast(it) }
+                    stack.addLast(s.condition)
+                }
+                else -> {}
             }
-            else -> Unit
         }
     }
 }
