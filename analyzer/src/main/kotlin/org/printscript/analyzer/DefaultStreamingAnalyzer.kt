@@ -30,6 +30,15 @@ class DefaultStreamingAnalyzer(private val rules: List<StreamingRule>) : Streami
                     "Analyzer crashed (unsupported op): ${e.message}",
                 ),
             )
+        } catch (e: TooManyDiagnosticsException) {
+            // devolvemos Failure con un LabeledError claro
+            Failure(
+                LabeledError.of(
+                    Span(Position(1, 1), Position(1, 1)),
+                    "Analyzer aborted: demasiados diagnósticos (> ${e.maxErrors}). " +
+                        "Emisión total: ${e.total}.",
+                ),
+            )
         } catch (e: Exception) {
             Failure(
                 LabeledError.of(
