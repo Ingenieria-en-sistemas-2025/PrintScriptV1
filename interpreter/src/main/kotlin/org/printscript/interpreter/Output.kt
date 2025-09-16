@@ -1,9 +1,14 @@
 package org.printscript.interpreter
 
-data class Output(private val lines: List<String>) {
-    companion object { fun empty() = Output(emptyList()) }
+class Output private constructor(
+    private val lines: MutableList<String>,
+) {
+    companion object { fun empty() = Output(mutableListOf()) }
 
-    fun append(line: String): Output = Output(lines + line)
-    fun asList(): List<String> = lines
+    fun append(line: String): Output {
+        lines.add(line) // O(1) amortizado
+        return this // devolvés el mismo buffer
+    }
+    fun asList(): List<String> = lines.toList() // copia final
     override fun toString(): String = lines.joinToString("\n")
 }
