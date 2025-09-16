@@ -9,7 +9,7 @@ import org.printscript.token.EofToken
 import org.printscript.token.Token
 import org.printscript.token.TokenStream
 
-class BufferedStreamingTokenStream private constructor( // modularizar, expresividad.
+class BufferedStreamingTokenStream private constructor(
     private val shared: SharedState,
     private val logicalIndex: Int,
 ) : TokenStream {
@@ -17,7 +17,7 @@ class BufferedStreamingTokenStream private constructor( // modularizar, expresiv
     private class SharedState(
         var tokenizer: Tokenizer,
         val buffer: ArrayList<Token> = arrayListOf(),
-        val maxRetained: Int = 4096, // ver que valor iria aca
+        val maxRetained: Int = 4096,
         var baseOffset: Int = 0, // cuantos tokens descartamos del frente
     )
 

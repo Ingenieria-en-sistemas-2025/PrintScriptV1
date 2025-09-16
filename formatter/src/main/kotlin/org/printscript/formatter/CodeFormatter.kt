@@ -80,7 +80,7 @@ class CodeFormatter(
             trivia
         }
 
-        // Aplica regla (si hay) o emite token + indentación post '\n' de la trivia
+        // Aplica regla (si hay) o emite token + indentación post \n de la trivia
         return applyRuleOrEmitRaw(prev, current, next, indent, normalizedTrivia, out, lastChar)
     }
 
@@ -97,7 +97,7 @@ class CodeFormatter(
             currentLastChar = emitText(out, triviaText, currentLastChar)
         }
 
-        // Regla de cierre (p.ej., forzar \n final)
+        // Regla de cierre (ej forzar \n final)
         val rule = registry.findApplicableRule(prev, eof, null)
         if (rule != null) {
             val (chunks, _) = layout.applyPrefix(rule, prev, eof, null, indent.state)
