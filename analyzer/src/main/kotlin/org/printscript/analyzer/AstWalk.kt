@@ -14,18 +14,19 @@ import org.printscript.ast.VarDeclaration
 
 object AstWalk {
 
-    private const val INITIAL_STACK_CAPACITY = 8 // evita "MagicNumber"
+    private const val INITIAL_STACK_CAPACITY = 8 // para no tener "MagicNumber"
 
-    /** Recorre las expresiones de un Statement en preorden, sin corutinas. */
+    // Recorre las expresiones de un Statement en preorden, sin corutinas.
+    // La secuencia no recorre nada hasta que alguien la itera.
     fun expressionsOf(stmt: Statement): Sequence<Expression> =
         object : Sequence<Expression> {
             override fun iterator(): Iterator<Expression> = ExprIterator(stmt)
         }
 
-    /** Iterador iterativo (stack) que evita secuencias/continuations. */
+    // Iterador iterativo (stack) que evita secuencias/continuations.
     private class ExprIterator(root: Statement) : kotlin.collections.AbstractIterator<Expression>() {
         // La pila contiene Statements o Expressions pendientes de visitar.
-        private val stack = ArrayDeque<Any>(INITIAL_STACK_CAPACITY).apply { addLast(root) }
+        private val stack = ArrayDeque<Any>(INITIAL_STACK_CAPACITY).apply { addLast(root) } // solo el root
 
         override fun computeNext() {
             while (stack.isNotEmpty()) {
@@ -33,7 +34,7 @@ object AstWalk {
 
                 if (node is Expression) {
                     pushExprChildren(node)
-                    setNext(node) // yieldea el propio nodo
+                    setNext(node) // yieldea el propio nodo -> produce (emite) este elemento y devuelve el control al consumidor.
                     return
                 }
 

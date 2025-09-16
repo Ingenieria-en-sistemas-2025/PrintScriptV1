@@ -1,8 +1,7 @@
-package org.printscript.lexer
-
 import org.printscript.common.Failure
 import org.printscript.common.Result
 import org.printscript.common.Success
+import org.printscript.lexer.Tokenizer
 import org.printscript.lexer.error.LexerError
 import org.printscript.token.EofToken
 import org.printscript.token.Token

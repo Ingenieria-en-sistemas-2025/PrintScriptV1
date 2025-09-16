@@ -48,6 +48,8 @@ class DefaultStreamingAnalyzer(private val rules: List<StreamingRule>) : Streami
             )
         }
 
+    // siempre llama a sí misma en última posición -> no usa el stack,se convierte en un while implicito.
+
     private tailrec fun loop(current: StatementStream, context: AnalyzerContext, out: DiagnosticEmitter): Result<Unit, LabeledError> =
         when (val step = current.nextStep()) {
             is Step.Item -> {

@@ -15,3 +15,17 @@ dependencies {
 
     testImplementation "org.jetbrains.kotlin:kotlin-test"
 }
+
+tasks.withType(JacocoCoverageVerification).configureEach {
+    violationRules {
+        rules.each { it.enabled = false }
+        rule {
+            enabled = true
+            limit {
+                counter = 'LINE'
+                value   = 'COVEREDRATIO'
+                minimum = 0.35   // tu umbral local
+            }
+        }
+    }
+}

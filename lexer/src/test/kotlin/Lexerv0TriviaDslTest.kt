@@ -1,8 +1,8 @@
+
 import Utilities.assertLexEqualsWithBuilder
 import org.printscript.common.Success
 import org.printscript.lexer.LexingMode
 import org.printscript.lexer.LongestMatchTokenMatcher
-import org.printscript.lexer.TokenCollector
 import org.printscript.lexer.TokenFactory
 import org.printscript.lexer.Tokenizer
 import org.printscript.lexer.config.PrintScriptv0MapConfig
@@ -33,7 +33,7 @@ class Lexerv0TriviaDslTest {
     }
 
     @Test
-    fun trivia_blockComment_simple() = assertLexEqualsWithBuilder(
+    fun triviaBlockCommentSimple() = assertLexEqualsWithBuilder(
         src = "/* bloque */",
         lexActual = { s -> lexAllTokens(s) },
     ) {
@@ -41,7 +41,7 @@ class Lexerv0TriviaDslTest {
     }
 
     @Test
-    fun trivia_intercalada_entre_tokens() = assertLexEqualsWithBuilder(
+    fun triviaIntercaladaEntreTokens() = assertLexEqualsWithBuilder(
         src = "let  a/*X*/=1; // fin\n",
         lexActual = { s -> lexAllTokens(s) },
     ) {
@@ -66,7 +66,7 @@ class Lexerv0TriviaDslTest {
     }
 
     @Test
-    fun trivia_newlines_variantes_unix_y_windows() = assertLexEqualsWithBuilder(
+    fun triviaNewlinesVariantesUnixyWindows() = assertLexEqualsWithBuilder(
         src = "\n\r\n",
         lexActual = { s -> lexAllTokens(s) },
     ) {

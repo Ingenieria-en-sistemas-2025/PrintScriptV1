@@ -7,7 +7,7 @@ import kotlin.test.Test
 class ScannerIntegrationTest {
 
     @Test
-    fun advance_updatesLineAndColumn_overNewlines() {
+    fun advanceUpdatesLineAndColumnOverNewlines() {
         val text = "a\nb\ncd"
         val scan = Scanner(ReaderChunkFeed(StringReader(text), maxWindowCapacity = 4, chunkSize = 2, keepTail = 1))
         // pos inicial (1,1)
@@ -28,7 +28,7 @@ class ScannerIntegrationTest {
     }
 
     @Test
-    fun slice_crossesChunks_andMaterializes() {
+    fun sliceCrossesChunksAndMaterializes() {
         val text = "abcdef"
         val scan = Scanner(ReaderChunkFeed(StringReader(text), maxWindowCapacity = 9, chunkSize = 2, keepTail = 1))
         val sl = scan.slice(5) // pide 0..4

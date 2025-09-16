@@ -6,8 +6,8 @@ import org.printscript.lexer.lexingrules.LexingRule
 
 class LongestMatchTokenMatcher(
     private val rules: List<LexingRule>,
-    private val initialProbe: Int = DEFAULT_INITIAL_PROBE, // tamaño inicial del slice
-    private val maxProbe: Int = DEFAULT_MAX_PROBE, // cota superior del slice
+    private val initialProbe: Int = DEFAULT_INITIAL_PROBE, // tamaño inicial del slice que se le muestra a las reglas
+    private val maxProbe: Int = DEFAULT_MAX_PROBE, // cota superior del slice, evita crecimiento infinito.
 ) : TokenMatcher {
 
     companion object {

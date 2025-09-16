@@ -1,9 +1,9 @@
+
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.printscript.common.Success
 import org.printscript.common.Version
-import org.printscript.lexer.TokenCollector
 import org.printscript.lexer.config.LexerFactory
 import org.printscript.lexer.memory.ReaderChunkFeed
 import java.io.StringReader
@@ -14,7 +14,7 @@ import kotlin.test.assertNull
 class ReaderChunkFeedTest {
 
     @Test
-    fun refillAndCompact_withoutPin_discardsHead() {
+    fun refillAndCompactWithoutPinDiscardsHead() {
         val text = "abcdefghij" // 10 chars
         val feed = ReaderChunkFeed(
             reader = StringReader(text),
@@ -33,7 +33,7 @@ class ReaderChunkFeedTest {
     }
 
     @Test
-    fun pinPreventsDiscard_untilUnpin() {
+    fun pinPreventsDiscardUntilUnpin() {
         val text = "0123456789ABCDEFGHIJ" // 20 chars
         val feed = ReaderChunkFeed(
             reader = StringReader(text),
@@ -57,7 +57,7 @@ class ReaderChunkFeedTest {
     }
 
     @Test
-    fun fixedSlice_returnsPartialAtEOF_insteadOfExploding() {
+    fun fixedSliceReturnsPartialAtEOFInsteadOfExploding() {
         val text = "hello"
         val feed = ReaderChunkFeed(StringReader(text), maxWindowCapacity = 4, chunkSize = 2, keepTail = 1)
         // Pedimos slice desde 3 con len 5 (3..7), pero solo hay hasta 4 → devuelve 2 chars
@@ -67,7 +67,7 @@ class ReaderChunkFeedTest {
     }
 
     @Test
-    fun rollingSlice_grows_andMayThrowIfHeadEvicted() {
+    fun rollingSliceGowsAndMayThrowIfHeadEvicted() {
         val text = "abcdef"
         val feed = ReaderChunkFeed(StringReader(text), maxWindowCapacity = 4, chunkSize = 2, keepTail = 1)
 
@@ -81,7 +81,7 @@ class ReaderChunkFeedTest {
     }
 
     @Test
-    fun eofFrom_semantics() {
+    fun eofFromSemantics() {
         val text = "xyz"
         val feed = ReaderChunkFeed(StringReader(text), maxWindowCapacity = 2, chunkSize = 2, keepTail = 1)
 
@@ -95,7 +95,7 @@ class ReaderChunkFeedTest {
     }
 
     @Test
-    fun pinImpossible_returnsFalse_withoutEOF() {
+    fun pinImpossibleReturnsFalseWithoutEOF() {
         val feed = ReaderChunkFeed(StringReader("0123456789"), maxWindowCapacity = 4, chunkSize = 2, keepTail = 1)
         assertTrue(feed.ensureAvailable(3)) // carga algo
         feed.pin(0) // pin en 0
@@ -121,7 +121,7 @@ class ReaderChunkFeedTest {
     }
 
     @Test
-    fun lex_token_spanning_chunk_boundary() {
+    fun lexTokenSpanningChunkBoundary() {
         val src = "let identifierLong: number = 1;"
         val factory = LexerFactory()
         val tz = factory.tokenizer(
@@ -141,7 +141,7 @@ class ReaderChunkFeedTest {
     }
 
     @Test
-    fun rollingSlice_subSequence_materialized_returns_empty_if_head_evicted() {
+    fun rollingSliceSubSequenceMaterializedReturnsEmptyIfHeadEvicted() {
         val feed = ReaderChunkFeed(StringReader("abcdef"), maxWindowCapacity = 4, chunkSize = 2, keepTail = 1)
         val rs = feed.rollingSlice(0)
 

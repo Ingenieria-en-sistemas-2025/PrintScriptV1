@@ -123,10 +123,10 @@ class ReaderChunkFeed(
         val pin = pinnedFromAbsIndex ?: end
         val tail = end - keepTail
 
-        val anchor = kotlin.math.min(pin, tail)
+        val anchor = kotlin.math.min(pin, tail) // mantené al menos keepTail caracteres recientes. no podemos recortar más allá del pin, ni “comernos” la cola protegida.
         val keepFromAbs = kotlin.math.max(startAbs, anchor)
 
-        val keepCount = end - keepFromAbs
+        val keepCount = end - keepFromAbs // cuántos chars quedan.
         if (keepCount <= 0) {
             startAbs = keepFromAbs
             len = 0
