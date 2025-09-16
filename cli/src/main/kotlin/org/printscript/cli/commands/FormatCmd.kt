@@ -11,7 +11,7 @@ import org.printscript.common.Failure
 import org.printscript.common.Success
 import org.printscript.common.Version
 import org.printscript.runner.ProgramIo
-import org.printscript.runner.runners.FormatRunner
+import org.printscript.runner.runners.FormatRunnerStreaming
 import java.io.IOException
 import java.nio.file.Path
 import kotlin.io.path.Path as KtPath
@@ -29,7 +29,9 @@ class FormatCmd : CliktCommand(
         spinner.start()
         try {
             when (val r = doFormat(version)) {
-                is Success -> echo(r.value)
+                is Success -> {
+                    // no hay que hacer echo del string porque ya se escribió a System.out
+                }
                 is Failure -> {
                     val e = r.error
                     echo("Format error (${e.stage}): ${e.message}")
@@ -49,7 +51,7 @@ class FormatCmd : CliktCommand(
         CliSupport.newReader(common.file).use { reader ->
             val configPath: Path? = common.config?.let { KtPath(it) }
             val io = ProgramIo(reader = reader, configPath = configPath)
-            val runner = FormatRunner(overrideIndent = indent)
+            val runner = FormatRunnerStreaming(out = System.out, overrideIndent = indent)
             runner.run(version, io)
         }
 }

@@ -23,7 +23,7 @@ object LanguageWiringFactory {
     ): LanguageWiring {
         val lexerFactory = LexerFactory()
 
-        val tsFromReader: (Reader) -> TokenStream = { r -> lexerFactory.tokenStream(version, r) }
+        val tsFromReader: (Reader) -> TokenStream = { reader -> lexerFactory.tokenStream(version, reader) } // toma un Reader y devuelve un TokenStream
 
         val parser = GlobalParserFactory.forVersion(version)
             ?: error("Parser not available for version $version")
@@ -54,5 +54,5 @@ object LanguageWiringFactory {
     }
 }
 
-internal fun tokenStream(io: ProgramIo, w: LanguageWiring): TokenStream =
-    w.tokenStreamFromReader(io.reader!!)
+internal fun tokenStream(io: ProgramIo, wiring: LanguageWiring): TokenStream =
+    wiring.tokenStreamFromReader(io.reader!!)

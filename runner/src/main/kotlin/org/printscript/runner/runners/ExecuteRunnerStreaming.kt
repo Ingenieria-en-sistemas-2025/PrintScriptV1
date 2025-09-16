@@ -10,25 +10,27 @@ import org.printscript.runner.ProgramIo
 import org.printscript.runner.RunnerError
 import org.printscript.runner.tokenStream
 
+// permite inyectar un printer (para imprimir en vivo) y opcionalmente coleccionar tmb
 class ExecuteRunnerStreaming(
-    private val printer: ((String) -> Unit)?, // nullable
-    private val collectAlsoWithPrinter: Boolean = false,
+    private val printer: ((String) -> Unit)?, // va llamando a printer cada vez que hay algo para mostrar
+    private val collectAlsoWithPrinter: Boolean = false, // permite coleccionar internamente
 ) : RunningMethod<Unit> {
 
     override fun run(version: Version, io: ProgramIo): Result<Unit, RunnerError> {
-        val w = LanguageWiringFactory.forVersion(
+        val languageWiring = LanguageWiringFactory.forVersion(
             version,
             printer = printer,
             collectAlsoWithPrinter = collectAlsoWithPrinter,
         )
 
-        val ts = tokenStream(io, w)
-        val stmts = w.statementStreamFromTokens(ts)
-        val interpreter = w.interpreterFor(io.inputProviderOverride)
+        // Tokeniza y produce el stream de statements
+        val tokenStream = tokenStream(io, languageWiring)
+        val statementStream = languageWiring.statementStreamFromTokens(tokenStream)
+        val interpreter = languageWiring.interpreterFor(io.inputProviderOverride)
 
-        return when (val rr = interpreter.run(stmts)) {
+        return when (val execResult = interpreter.run(statementStream)) {
             is Success -> Success(Unit)
-            is Failure -> Failure(RunnerError(Interpreting, "runtime error", rr.error))
+            is Failure -> Failure(RunnerError(Interpreting, "runtime error", execResult.error))
         }
     }
 }

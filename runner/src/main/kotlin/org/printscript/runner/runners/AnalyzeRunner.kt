@@ -13,19 +13,21 @@ import org.printscript.runner.RunnerDiagnosticCollector
 import org.printscript.runner.RunnerError
 import org.printscript.runner.tokenStream
 
+// analiza el codigo y devuelve todos los diagnosticos
 object AnalyzeRunner : RunningMethod<List<Diagnostic>> {
     override fun run(version: Version, io: ProgramIo): Result<List<Diagnostic>, RunnerError> {
-        val w = LanguageWiringFactory.forVersion(version)
+        val wiring = LanguageWiringFactory.forVersion(version)
 
-        val ts = tokenStream(io, w)
-        val stmts = w.statementStreamFromTokens(ts)
+        // tokenizar el reader de io y obtener un stream de statements
+        val ts = tokenStream(io, wiring)
+        val stmts = wiring.statementStreamFromTokens(ts)
 
         val emitter = RunnerDiagnosticCollector()
-        val cfg = AnalyzerConfig()
+        val defaultAnalyzerConfig = AnalyzerConfig() // Config por defecto para el analyzer
 
-        return when (val r = w.analyzer.analyze(stmts, cfg, emitter)) {
-            is Success -> Success(emitter.diagnostics)
-            is Failure -> Failure(RunnerError(Analyzing, "analyze error", r.error))
+        return when (val analysisResult = wiring.analyzer.analyze(stmts, defaultAnalyzerConfig, emitter)) {
+            is Success -> Success(emitter.diagnostics) // devuelvo disgnosticos reunidos
+            is Failure -> Failure(RunnerError(Analyzing, "analyze error", analysisResult.error))
         }
     }
 }
