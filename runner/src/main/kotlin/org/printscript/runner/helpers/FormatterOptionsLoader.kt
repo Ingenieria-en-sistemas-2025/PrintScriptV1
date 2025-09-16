@@ -10,7 +10,7 @@ import kotlin.io.path.Path
 
 object FormatterOptionsLoader {
 
-    /** Carga desde ruta; si es null/blank o falla, devuelve defaults. */
+    // Carga desde ruta; si es null/blank o falla, devuelve defaults.
     fun fromPath(path: String?): FormatterOptions {
         if (path.isNullOrBlank()) return FormatterConfig()
         return try {
@@ -26,7 +26,7 @@ object FormatterOptionsLoader {
         }
     }
 
-    /** Carga desde stream; si es null o falla, devuelve defaults. */
+    // Carga desde stream; si es null o falla, devuelve defaults.
     fun fromStream(config: InputStream?): FormatterOptions =
         try {
             if (config == null) {
@@ -39,7 +39,7 @@ object FormatterOptionsLoader {
             FormatterConfig()
         }
 
-    /** Carga desde bytes; si es vacío o falla, devuelve defaults. */
+    // Carga desde bytes; si es vacío o falla, devuelve defaults.
     fun fromBytes(bytes: ByteArray?): FormatterOptions =
         try {
             if (bytes == null || bytes.isEmpty()) {

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.io.TempDir
 import org.printscript.analyzer.Diagnostic
 import org.printscript.analyzer.config.AnalyzerConfig
 import org.printscript.formatter.config.FormatterConfig
-import org.printscript.runner.CappedDiagnosticCollector
 import org.printscript.runner.Lexing
 import org.printscript.runner.Parsing
 import org.printscript.runner.ProgramIo
@@ -21,7 +20,6 @@ import org.printscript.runner.runners.FormatRunnerStreaming
 import org.printscript.runner.runners.FormatRunnerWithOptionsStreaming
 import org.printscript.runner.runners.RunningMethod
 import org.printscript.runner.runners.ValidateRunner
-import org.printscript.runner.runners.ValidateRunnerWithConfig
 import java.io.StringReader
 import java.io.StringWriter
 import java.nio.file.Files
@@ -34,15 +32,6 @@ class CompleteRunnerTest {
 
     @TempDir
     lateinit var tempDir: Path
-
-    @Test
-    fun testCappedDiagnosticCollectorStartsEmpty() {
-        val collector = CappedDiagnosticCollector()
-        assertFalse(collector.hasErrors())
-        assertFalse(collector.truncated())
-        assertTrue(collector.snapshot().isEmpty())
-        assertEquals(Pair(0, 0), collector.stats())
-    }
 
     @Test
     fun testRunnerErrorHoldsStageMessageAndCause() {
@@ -138,15 +127,6 @@ class CompleteRunnerTest {
     @Test
     fun testValidateRunnerCreation() {
         val runner = ValidateRunner()
-        assertNotNull(runner)
-        assertTrue(runner is RunningMethod<ValidationReport>)
-    }
-
-    @Test
-    fun testValidateRunnerWithConfigCreation() {
-        val config = AnalyzerConfig()
-        val runner = ValidateRunnerWithConfig(config)
-
         assertNotNull(runner)
         assertTrue(runner is RunningMethod<ValidationReport>)
     }

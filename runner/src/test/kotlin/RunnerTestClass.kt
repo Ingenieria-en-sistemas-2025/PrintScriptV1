@@ -10,7 +10,6 @@ import org.printscript.runner.runners.ExecuteRunnerStreaming
 import org.printscript.runner.runners.FormatRunnerStreaming
 import org.printscript.runner.runners.FormatRunnerWithOptionsStreaming
 import org.printscript.runner.runners.ValidateRunner
-import org.printscript.runner.runners.ValidateRunnerWithConfig
 import java.io.StringReader
 import java.io.StringWriter
 import java.nio.file.Files
@@ -119,22 +118,6 @@ class RunnerTestClass {
         val config = AnalyzerConfigLoaderFromPath.fromPath(null)
         assertNotNull(config)
         assertEquals(AnalyzerConfig(), config)
-    }
-
-    @Test
-    fun testValidateRunnerWithConfigCreation() {
-        val config = AnalyzerConfig()
-        val runner = ValidateRunnerWithConfig(config)
-
-        assertNotNull(runner)
-    }
-
-    @Test
-    fun testValidateRunnerWithConfigUsesProvidedConfig() {
-        val config = AnalyzerConfig()
-        val runner = ValidateRunnerWithConfig(config)
-
-        assertNotNull(runner)
     }
 
     @Test

@@ -23,7 +23,7 @@ object LanguageWiringFactory {
     ): LanguageWiring {
         val lexerFactory = LexerFactory()
 
-        val tsFromReader: (Reader) -> TokenStream = { reader -> lexerFactory.tokenStream(version, reader) } // toma un Reader y devuelve un TokenStream
+        val tsFromReader: (Reader) -> TokenStream = { reader -> lexerFactory.tokenStream(version, reader) } // toma un Reader y devuelve un TokenStream (con los defaults)
 
         val parser = GlobalParserFactory.forVersion(version)
             ?: error("Parser not available for version $version")
