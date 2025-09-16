@@ -3,7 +3,6 @@ package org.printscript.formatter
 import org.printscript.common.Separator
 import org.printscript.token.SeparatorToken
 import org.printscript.token.Token
-import org.printscript.token.codeText
 
 class IndentationApplier(private val indentSize: Int) : LayoutApplier {
 
@@ -14,18 +13,18 @@ class IndentationApplier(private val indentSize: Int) : LayoutApplier {
         next: Token?,
         state: LayoutApplier.State,
     ): Pair<List<String>, LayoutApplier.State> {
-        if (prefix == null) return emptyList<String>() to state
+        var usedPrefix = ""
+        if (prefix != null) usedPrefix = prefix
 
-        if (!prefix.startsWith("\n")) {
-            return listOf(prefix) to state
+        if (!usedPrefix.startsWith("\n")) {
+            return listOf(usedPrefix) to state
         }
 
-        val nl = prefix.count { it == '\n' }
+        val nl = usedPrefix.count { it == '\n' }
 
         val level = when {
             prev is SeparatorToken && prev.separator == Separator.RBRACE ->
                 (state.level - 1).coerceAtLeast(0)
-
             else ->
                 computeLevel(prev, current, next, state)
         }
@@ -42,18 +41,17 @@ class IndentationApplier(private val indentSize: Int) : LayoutApplier {
         else -> state
     }
 
+    override fun spacing(state: LayoutApplier.State): String {
+        if (state.level > 0) return " ".repeat((state.level * indentSize) - 1)
+        return ""
+    }
+
     private fun computeLevel(prev: Token?, current: Token, next: Token?, s: LayoutApplier.State): Int {
         val result = when {
             prev.isLbrace() -> s.level + 1
             current.isRbrace() -> (s.level - 1).coerceAtLeast(0)
             prev.isSemicolon() -> if (next.isRbrace()) (s.level - 1).coerceAtLeast(0) else s.level
             else -> s.level
-        }
-
-        if (current.codeText == "if" || prev?.codeText == "{") {
-            println("INDENT DEBUG:")
-            println("  prev: '${prev?.codeText}' current: '${current.codeText}' next: '${next?.codeText}'")
-            println("  state.level: ${s.level} → computed level: $result")
         }
 
         return result

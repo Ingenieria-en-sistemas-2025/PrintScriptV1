@@ -8,15 +8,17 @@ import org.printscript.token.Token
 class IfBraceNewlineRule(private val config: FormatterOptions) : FormattingRule {
     override fun apply(prev: Token?, current: Token, next: Token?): String? {
         if (current is SeparatorToken && current.separator == Separator.LBRACE) {
-            if (prev is SeparatorToken && prev.separator == Separator.RPAREN) {
-                return when {
-                    config.ifBraceBelowLine -> "\n"
-                    config.ifBraceSameLine -> " "
-                    else -> null
-                }
+            val below = (config.ifBraceBelowLine == true)
+            val same = (config.ifBraceSameLine == true)
+
+            if (!below && !same) return null
+
+            return when {
+                below -> "\n"
+                same -> " "
+                else -> null
             }
         }
-
         return null
     }
 }

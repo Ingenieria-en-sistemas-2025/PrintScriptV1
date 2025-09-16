@@ -18,18 +18,29 @@ import org.printscript.formatter.rules.WordSpacingRule
 
 object FormatterFactoryV11 {
     fun create(options: FormatterOptions): Formatter {
-        val rules = listOf(
-            MandatorySpacingRule(options),
-            ColonSpacingRule(options),
-            AssignmentSpacingRule(options),
-            BinaryOperatorSpacingRule(),
-            BlankLinesBeforePrintlnRule(options),
-            IfBraceNewlineRule(options),
-            IfKeywordSpacingRule(),
-            BlockFormattingRule(),
-            NewlineAfterSemicolonRule(),
-            WordSpacingRule(),
-        )
+        val rules = buildList {
+            if (options.mandatorySingleSpaceSeparation == true) {
+                add(MandatorySpacingRule(options))
+            }
+            if (options.spaceBeforeColonInDecl != null || options.spaceAfterColonInDecl != null) {
+                add(ColonSpacingRule(options))
+            }
+            options.spaceAroundAssignment?.let {
+                add(AssignmentSpacingRule(options))
+            }
+            add(BinaryOperatorSpacingRule())
+
+            options.blankLinesAfterPrintln?.let {
+                add(BlankLinesBeforePrintlnRule(options))
+            }
+            if (options.ifBraceBelowLine == true || options.ifBraceSameLine == true) {
+                add(IfBraceNewlineRule(options))
+            }
+            add(IfKeywordSpacingRule())
+            add(BlockFormattingRule())
+            add(NewlineAfterSemicolonRule())
+            add(WordSpacingRule())
+        }
 
         val registry = ListRuleRegistry(rules)
         return CodeFormatter(

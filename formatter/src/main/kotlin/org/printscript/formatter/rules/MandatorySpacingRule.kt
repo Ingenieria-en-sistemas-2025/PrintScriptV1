@@ -11,59 +11,54 @@ import org.printscript.token.SeparatorToken
 import org.printscript.token.Token
 
 class MandatorySpacingRule(private val config: FormatterOptions) : FormattingRule {
-    @Suppress("ReturnCount")
+
     override fun apply(prev: Token?, current: Token, next: Token?): String? {
-        if (!config.mandatorySingleSpaceSeparation) return null
+        if (config.mandatorySingleSpaceSeparation != true) return null
+        return if (needsSpace(prev, current)) " " else null
+    }
+    private fun needsSpace(prev: Token?, current: Token): Boolean = when {
+        // Antes de :
+        isColon(current) && prev is IdentifierToken -> true
+        // Antes de =
+        isAssign(current) -> true
+        // Antes de (
+        isLparen(current) && (isPrintln(prev) || isIf(prev)) -> true
+        // Antes de )
+        isRparen(current) -> true
+        // Post :
+        isColon(prev) -> true
+        // Post =
+        isAssign(prev) -> true
+        // Post (
+        isLparen(prev) -> true
+        // Post de keywords (let, const, println)
+        isKeywordNeedingSpace(prev) -> true
+        else -> false
+    }
 
-        // 1. Antes de ':'
-        if (current is SeparatorToken && current.separator == Separator.COLON) {
-            if (prev is IdentifierToken) {
-                return " "
-            }
-        }
+    private fun isColon(t: Token?) =
+        t is SeparatorToken && t.separator == Separator.COLON
 
-        // 2. Antes de '='
-        if (current is OperatorToken && current.operator == Operator.ASSIGN) {
-            return " "
-        }
+    private fun isLparen(t: Token?) =
+        t is SeparatorToken && t.separator == Separator.LPAREN
 
-        // 3. Antes de '(' después de println, if, etc.
-        if (current is SeparatorToken && current.separator == Separator.LPAREN) {
-            if (prev is IdentifierToken && prev.identifier == "println") {
-                return " "
-            }
-            if (prev is KeywordToken && prev.kind == Keyword.IF) {
-                return " "
-            }
-        }
+    private fun isRparen(t: Token?) =
+        t is SeparatorToken && t.separator == Separator.RPAREN
 
-        // 4. Antes de ')'
-        if (current is SeparatorToken && current.separator == Separator.RPAREN) {
-            return " "
-        }
+    private fun isAssign(t: Token?) =
+        t is OperatorToken && t.operator == Operator.ASSIGN
 
-        // 5. Después de ':' en declaraciones de tipo
-        if (prev is SeparatorToken && prev.separator == Separator.COLON) {
-            return " "
-        }
+    private fun isPrintln(t: Token?) =
+        t is IdentifierToken && t.identifier == "println"
 
-        // 6. Después de '=' (operadores de asignación)
-        if (prev is OperatorToken && prev.operator == Operator.ASSIGN) {
-            return " "
-        }
+    private fun isIf(t: Token?) =
+        t is KeywordToken && t.kind == Keyword.IF
 
-        // 7. Después de '('
-        if (prev is SeparatorToken && prev.separator == Separator.LPAREN) {
-            return " "
+    private fun isKeywordNeedingSpace(t: Token?): Boolean {
+        if (t !is KeywordToken) return false
+        return when (t.kind) {
+            Keyword.LET, Keyword.CONST, Keyword.PRINTLN -> true
+            else -> false
         }
-
-        // 8. Después de keywords como 'let'
-        if (prev is KeywordToken) {
-            when (prev.kind) {
-                Keyword.LET, Keyword.CONST, Keyword.PRINTLN -> return " "
-                else -> {}
-            }
-        }
-        return null
     }
 }
