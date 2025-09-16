@@ -10,8 +10,8 @@ spotless {
                 "max_line_length": "400",    // REGLA 1 personalizada
                 "indent_size"     : "4"      // REGLA 2 personalizada
         ])
-        trimTrailingWhitespace()         // paso adicional
-        endWithNewline()                 // paso adicional
+        trimTrailingWhitespace()         // paso adicional, elimina esapcios al final linea
+        endWithNewline()                 // paso adicional, archivo termina con salto de linea.
     }
     kotlinGradle {
         target("**/*.gradle.kts")
