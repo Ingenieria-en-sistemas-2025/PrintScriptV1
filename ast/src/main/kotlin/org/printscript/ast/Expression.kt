@@ -9,7 +9,7 @@ data class Binary(
     val left: Expression,
     val right: Expression,
     val operator: Operator,
-    val span: Span,
+    override val span: Span,
 ) : Expression
 
 data class Grouping(
