@@ -13,8 +13,7 @@ import org.printscript.runner.ProgramIo
 import org.printscript.runner.helpers.DiagnosticStringFormatter
 import org.printscript.runner.runners.ValidateRunner
 import java.io.IOException
-import java.nio.file.Path
-import kotlin.io.path.Path as KtPath
+import java.nio.file.Files
 
 class ValidateCmd : CliktCommand(
     name = "validate",
@@ -50,9 +49,13 @@ class ValidateCmd : CliktCommand(
     }
 
     private fun doValidate(version: Version) =
-        CliSupport.newReader(common.file).use { reader ->
-            val cfgPath: Path? = common.config?.let { KtPath(it) }
-            val io = ProgramIo(reader = reader, configPath = cfgPath)
+        Files.newBufferedReader(common.file).use { reader ->
+            require(Files.exists(common.file)) { "No encuentro el archivo fuente: ${common.file.toAbsolutePath()}" }
+            if (common.config != null) {
+                require(Files.exists(common.config)) { "No encuentro el archivo de config: ${common.config!!.toAbsolutePath()}" }
+            }
+
+            val io = ProgramIo(reader = reader, configPath = common.config)
             ValidateRunner().run(version, io)
         }
 }

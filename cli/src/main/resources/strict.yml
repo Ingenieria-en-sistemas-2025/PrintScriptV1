@@ -1,0 +1,6 @@
+identifiers:
+  style: CAMEL_CASE
+  checkReferences: true
+  failOnViolation: true
+printlnRule:
+  enabled: true

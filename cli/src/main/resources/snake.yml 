@@ -1,0 +1,6 @@
+identifiers:
+  style: SNAKE_CASE
+  checkReferences: true
+  failOnViolation: true
+printlnRule:
+  enabled: false

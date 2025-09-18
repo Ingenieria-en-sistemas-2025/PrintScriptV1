@@ -13,15 +13,13 @@ import org.printscript.common.Version
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.runners.FormatRunnerStreaming
 import java.io.IOException
-import java.nio.file.Path
-import kotlin.io.path.Path as KtPath
 
 class FormatCmd : CliktCommand(
     name = "format",
     help = "Formatea el código fuente",
 ) {
     private val common by CommonOptions()
-    private val indent by option("--indent", help = "Cantidad de espacios por indentación").int()
+    private val indent by option("--indent", help = "Cantidad de espacios por indentación").int() // sobreescribe la cantidad de espacios de indentación definida en la config
 
     override fun run() {
         val version = CliSupport.resolveVersion(common.version)
@@ -48,10 +46,15 @@ class FormatCmd : CliktCommand(
     }
 
     private fun doFormat(version: Version) =
-        CliSupport.newReader(common.file).use { reader ->
-            val configPath: Path? = common.config?.let { KtPath(it) }
-            val io = ProgramIo(reader = reader, configPath = configPath)
-            val runner = FormatRunnerStreaming(out = System.out, overrideIndent = indent)
+        java.nio.file.Files.newBufferedReader(common.file).use { reader ->
+            val io = ProgramIo(
+                reader = reader,
+                configPath = common.config,
+            )
+            val runner = FormatRunnerStreaming(
+                out = System.out,
+                overrideIndent = indent,
+            )
             runner.run(version, io)
         }
 }

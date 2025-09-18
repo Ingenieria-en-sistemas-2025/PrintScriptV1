@@ -13,6 +13,7 @@ import org.printscript.common.Version
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.runners.ExecuteRunnerStreaming
 import java.io.IOException
+import java.nio.file.Files
 
 class ExecuteCmd : CliktCommand(
     name = "execute",
@@ -23,8 +24,11 @@ class ExecuteCmd : CliktCommand(
 
     override fun run() {
         val version = CliSupport.resolveVersion(common.version)
-        val spinner = ProgressSpinner("Ejecutando")
-        spinner.start()
+
+        // Si hay TTY (modo interactivo), no muestres spinner
+        val interactive = System.console() != null
+        val spinner = if (interactive) null else ProgressSpinner("Ejecutando").also { it.start() }
+
         try {
             when (val rr = doExecute(version)) {
                 is Success -> Unit
@@ -39,17 +43,22 @@ class ExecuteCmd : CliktCommand(
         } catch (iae: IllegalArgumentException) {
             echo("Error ejecutando (argumentos): ${iae.message}")
         } finally {
-            spinner.stop()
+            spinner?.stop()
         }
     }
 
     private fun doExecute(version: Version) =
-        CliSupport.newReader(common.file).use { reader ->
+        Files.newBufferedReader(common.file).use { reader ->
             val io = ProgramIo(reader = reader)
             val runner = ExecuteRunnerStreaming(
-                printer = { line -> println(line) },
+                printer = { line ->
+                    println(line)
+                    System.out.flush()
+                },
                 collectAlsoWithPrinter = collect,
             )
+            println()
+            System.out.flush()
             runner.run(version, io)
         }
 }

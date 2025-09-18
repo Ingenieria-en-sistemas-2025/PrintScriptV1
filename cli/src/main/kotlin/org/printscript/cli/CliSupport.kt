@@ -1,4 +1,3 @@
-// cli/src/main/kotlin/org/printscript/cli/CliSupport.kt
 package org.printscript.cli
 
 import org.printscript.common.Position
@@ -19,6 +18,8 @@ object CliSupport {
             else -> error("Versión desconocida: $raw (use 1.0 o 1.1)")
         }
 
+    // sirve para abrir el archivo cuyo nombre me pasan como string y devolverme un lector de texto
+    // (BufferedReader) para poder leerlo
     fun newReader(path: String): BufferedReader =
         Files.newBufferedReader(Path.of(path), StandardCharsets.UTF_8)
 

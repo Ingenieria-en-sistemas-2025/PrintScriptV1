@@ -1,4 +1,3 @@
-// cli/src/main/kotlin/org/printscript/cli/commands/AnalyzeCmd.kt
 package org.printscript.cli.commands
 
 import com.github.ajalt.clikt.core.CliktCommand
@@ -12,10 +11,11 @@ import org.printscript.runner.ProgramIo
 import org.printscript.runner.helpers.DiagnosticStringFormatter
 import org.printscript.runner.runners.AnalyzeRunner
 import java.io.IOException
+import java.nio.file.Files
 
 class AnalyzeCmd : CliktCommand(
     name = "analyze",
-    help = "Analiza y lista diagnósticos (warnings/errores) con config por defecto",
+    help = "Analiza y lista diagnósticos (warnings/errores) usando la config indicada (YAML/JSON) o defaults",
 ) {
     private val common by CommonOptions()
 
@@ -47,8 +47,11 @@ class AnalyzeCmd : CliktCommand(
     }
 
     private fun doAnalyze(version: Version): Result<List<org.printscript.analyzer.Diagnostic>, org.printscript.runner.RunnerError> =
-        CliSupport.newReader(common.file).use { reader ->
-            val io = ProgramIo(reader = reader)
+        Files.newBufferedReader(common.file).use { reader ->
+            val io = ProgramIo(
+                reader = reader,
+                configPath = common.config,
+            )
             AnalyzeRunner.run(version, io)
         }
 }
