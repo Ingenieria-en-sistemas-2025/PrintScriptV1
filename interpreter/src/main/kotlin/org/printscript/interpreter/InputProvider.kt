@@ -10,14 +10,3 @@ object NoInputProvider : InputProvider {
     override fun read(prompt: String): String =
         error("Input no disponible en esta versión")
 }
-
-// object StdInProvider : InputProvider {
-//    override fun read(prompt: String) = kotlin.run {
-//        print(prompt)
-//        readlnOrNull().orEmpty() //espera que el usuario escriba algo y presione Enter
-//    }
-// }
-// object NoInputProvider : InputProvider {
-//    override fun read(prompt: String): String =
-//        error("Input no disponible en esta versión")
-// }
