@@ -9,7 +9,7 @@ import org.printscript.common.Result
 import org.printscript.common.Version
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.helpers.DiagnosticStringFormatter
-import org.printscript.runner.runners.AnalyzeRunner
+import org.printscript.runner.runners.Runner
 import java.io.IOException
 import java.nio.file.Files
 
@@ -52,6 +52,6 @@ class AnalyzeCmd : CliktCommand(
                 reader = reader,
                 configPath = common.config,
             )
-            AnalyzeRunner.run(version, io)
+            Runner.analyze(version, io)
         }
 }

@@ -3,7 +3,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import org.printscript.analyzer.Diagnostic
-import org.printscript.analyzer.config.AnalyzerConfig
 import org.printscript.formatter.config.FormatterConfig
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.RunnerDiagnosticCollector
@@ -11,7 +10,7 @@ import org.printscript.runner.RunnerError
 import org.printscript.runner.Stage
 import org.printscript.runner.ValidationReport
 import org.printscript.runner.hasErrors
-import org.printscript.runner.helpers.AnalyzerConfigLoaderFromPath
+import org.printscript.runner.helpers.AnalyzerConfigResolver
 import org.printscript.runner.helpers.FormatterOptionsLoader
 import org.printscript.runner.onlyWarnings
 import org.printscript.runner.runners.ExecuteRunnerStreaming
@@ -131,33 +130,11 @@ class CompleteRunnerTest {
     }
 
     @Test
-    fun testAnalyzerConfigLoaderFromPathHandlesNullPath() {
-        val config = AnalyzerConfigLoaderFromPath.fromPath(null)
-        assertNotNull(config)
-        assertEquals(AnalyzerConfig(), config)
-    }
-
-    @Test
-    fun testAnalyzerConfigLoaderFromPathHandlesBlankPath() {
-        val config = AnalyzerConfigLoaderFromPath.fromPath("   ")
-        assertNotNull(config)
-        assertEquals(AnalyzerConfig(), config)
-    }
-
-    @Test
-    fun testAnalyzerConfigLoaderFromPathHandlesNonExistentFile() {
-        val nonExistentPath = tempDir.resolve("nonexistent.json").toString()
-        val config = AnalyzerConfigLoaderFromPath.fromPath(nonExistentPath)
-        assertNotNull(config)
-        assertEquals(AnalyzerConfig(), config)
-    }
-
-    @Test
     fun testAnalyzerConfigLoaderFromPathLoadsValidConfig() {
         val configFile = tempDir.resolve("config.json")
         Files.write(configFile, """{"identifiers": {"checkDeclaration": true}}""".toByteArray())
 
-        val config = AnalyzerConfigLoaderFromPath.fromPath(configFile.toString())
+        val config = AnalyzerConfigResolver.fromPathStrict(configFile.toString())
         assertNotNull(config)
     }
 

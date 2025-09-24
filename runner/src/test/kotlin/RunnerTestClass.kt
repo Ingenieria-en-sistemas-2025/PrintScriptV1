@@ -1,10 +1,9 @@
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import org.printscript.analyzer.config.AnalyzerConfig
 import org.printscript.formatter.config.FormatterConfig
 import org.printscript.runner.ProgramIo
-import org.printscript.runner.helpers.AnalyzerConfigLoaderFromPath
+import org.printscript.runner.helpers.AnalyzerConfigResolver
 import org.printscript.runner.helpers.FormatterOptionsLoader
 import org.printscript.runner.runners.ExecuteRunnerStreaming
 import org.printscript.runner.runners.FormatRunnerStreaming
@@ -109,15 +108,8 @@ class RunnerTestClass {
         val configFile = tempDir.resolve("analyzer.json")
         Files.write(configFile, """{"identifiers": {"checkDeclaration": true}}""".toByteArray())
 
-        val config = AnalyzerConfigLoaderFromPath.fromPath(configFile.toString())
+        val config = AnalyzerConfigResolver.fromPathStrict(configFile.toString())
         assertNotNull(config)
-    }
-
-    @Test
-    fun testValidateRunnerHandlesNullConfigPath() {
-        val config = AnalyzerConfigLoaderFromPath.fromPath(null)
-        assertNotNull(config)
-        assertEquals(AnalyzerConfig(), config)
     }
 
     @Test

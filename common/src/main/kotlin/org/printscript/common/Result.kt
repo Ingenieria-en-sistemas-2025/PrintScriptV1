@@ -6,7 +6,6 @@ sealed interface Result<out T, out E> { // out “solo puedo producir (devolver)
     fun getOrNull(): T?
     fun errorOrNull(): E?
 
-    // Si es org.printscript.common.Success, transforma T en U, si es org.printscript.common.Failure, lo deja igual
     fun <U> map(transform: (T) -> U): Result<U, E>
 
     // Diferencia con map: diferencia con map: no devuelve un valor simple (U), sino otro org.printscript.common.Result<U, E>

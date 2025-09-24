@@ -1,7 +1,5 @@
 package org.printscript.cli
 
-import kotlin.concurrent.thread
-
 class ProgressSpinner(private val label: String) {
     companion object {
         private const val DEFAULT_INTERVAL_MS = 80L
