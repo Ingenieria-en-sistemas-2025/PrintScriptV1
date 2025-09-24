@@ -5,11 +5,10 @@ import org.junit.jupiter.api.io.TempDir
 import org.printscript.analyzer.Diagnostic
 import org.printscript.analyzer.config.AnalyzerConfig
 import org.printscript.formatter.config.FormatterConfig
-import org.printscript.runner.Lexing
-import org.printscript.runner.Parsing
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.RunnerDiagnosticCollector
 import org.printscript.runner.RunnerError
+import org.printscript.runner.Stage
 import org.printscript.runner.ValidationReport
 import org.printscript.runner.hasErrors
 import org.printscript.runner.helpers.AnalyzerConfigLoaderFromPath
@@ -36,18 +35,18 @@ class CompleteRunnerTest {
     @Test
     fun testRunnerErrorHoldsStageMessageAndCause() {
         val cause = RuntimeException("Test exception")
-        val error = RunnerError(Parsing, "Parse error occurred", cause)
+        val error = RunnerError(Stage.Parsing, "Parse error occurred", cause)
 
-        assertEquals(Parsing, error.stage)
+        assertEquals(Stage.Parsing, error.stage)
         assertEquals("Parse error occurred", error.message)
         assertEquals(cause, error.cause)
     }
 
     @Test
     fun testRunnerErrorCanHaveNullCause() {
-        val error = RunnerError(Lexing, "Lexing failed")
+        val error = RunnerError(Stage.Lexing, "Lexing failed")
 
-        assertEquals(Lexing, error.stage)
+        assertEquals(Stage.Lexing, error.stage)
         assertEquals("Lexing failed", error.message)
         assertNull(error.cause)
     }

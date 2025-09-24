@@ -11,4 +11,11 @@ data class ProgramIo(
     val inputProviderOverride: InputProvider? = null,
 ) {
     init { require((source != null) xor (reader != null)) { "Provide source OR reader" } }
+
+    fun openReader(): Reader =
+        when {
+            reader != null -> reader
+            source != null -> java.io.StringReader(source)
+            else -> error("ProgramIo without reader or source")
+        }
 }

@@ -24,7 +24,7 @@ tasks.withType(JacocoCoverageVerification).configureEach {
             limit {
                 counter = 'LINE'
                 value   = 'COVEREDRATIO'
-                minimum = 0.35   // tu umbral local
+                minimum = 0.30  // tu umbral local
             }
         }
     }

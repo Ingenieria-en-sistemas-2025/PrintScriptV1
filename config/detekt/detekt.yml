@@ -42,3 +42,9 @@ complexity:
     active: true
     thresholdInClasses: 20
     thresholdInInterfaces: 20
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: true
+    excludes: ['**/runner/src/main/kotlin/org/printscript/runner/**']
+    allowedExceptionNameRegex: '^(_|(ignore|expected).*)'

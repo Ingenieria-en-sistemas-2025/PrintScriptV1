@@ -54,5 +54,5 @@ object LanguageWiringFactory {
     }
 }
 
-internal fun tokenStream(io: ProgramIo, wiring: LanguageWiring): TokenStream =
-    wiring.tokenStreamFromReader(io.reader!!)
+internal fun tokenStream(io: ProgramIo, w: LanguageWiring): TokenStream =
+    w.tokenStreamFromReader(io.openReader())

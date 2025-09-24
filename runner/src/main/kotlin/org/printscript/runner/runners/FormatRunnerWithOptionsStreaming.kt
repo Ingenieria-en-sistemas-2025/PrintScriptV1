@@ -5,10 +5,10 @@ import org.printscript.common.Result
 import org.printscript.common.Success
 import org.printscript.common.Version
 import org.printscript.formatter.config.FormatterOptions
-import org.printscript.runner.Formatting
 import org.printscript.runner.LanguageWiringFactory
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.RunnerError
+import org.printscript.runner.Stage
 import org.printscript.runner.tokenStream
 
 /**
@@ -16,8 +16,6 @@ import org.printscript.runner.tokenStream
  * recibe directamente un FormatterOptions ya construido (stream/bytes/etc).
  */
 
-// Usa exactamente el objeto FormatterOptions que ya le pasaste (en memoria).
-// No lee archivos, no aplica overrides. Formatea directo a out.
 class FormatRunnerWithOptionsStreaming(
     private val out: Appendable,
     private val options: FormatterOptions,
@@ -25,11 +23,15 @@ class FormatRunnerWithOptionsStreaming(
 
     override fun run(version: Version, io: ProgramIo): Result<Unit, RunnerError> {
         val wiring = LanguageWiringFactory.forVersion(version, formatterOptions = options)
-        val tokens = tokenStream(io, wiring)
+        val tokens = try { tokenStream(io, wiring) } catch (t: Throwable) { return Failure(RunnerError(Stage.Lexing, "lexing failed", t)) }
 
-        return when (val fmtResult = wiring.formatter.format(tokens, out)) {
-            is Success -> Success(Unit)
-            is Failure -> Failure(RunnerError(Formatting, "format error", fmtResult.error))
+        return try {
+            when (val fmt = wiring.formatter.format(tokens, out)) {
+                is Success -> Success(Unit)
+                is Failure -> Failure(RunnerError(Stage.Formatting, "format error", fmt.error as? Throwable))
+            }
+        } catch (t: Throwable) {
+            Failure(RunnerError(Stage.Formatting, "unexpected format failure", t))
         }
     }
 }
