@@ -19,9 +19,9 @@ class ValidateRunner : RunningMethod<ValidationReport> {
     override fun run(version: Version, io: ProgramIo): Result<ValidationReport, RunnerError> = try {
         val w = LanguageWiringFactory.forVersion(version)
 
-        val ts = try { tokenStream(io, w) } catch (t: Throwable) { return Failure(RunnerError(Stage.Lexing, "lexing failed", t)) }
+        val ts = try { tokenStream(io, w) } catch (e: Exception) { return Failure(RunnerError(Stage.Lexing, "lexing failed", e)) }
 
-        val stmts = try { w.statementStreamFromTokens(ts) } catch (t: Throwable) { return Failure(RunnerError(Stage.Parsing, "parsing failed", t)) }
+        val stmts = try { w.statementStreamFromTokens(ts) } catch (e: Exception) { return Failure(RunnerError(Stage.Parsing, "parsing failed", e)) }
 
         val emitter = RunnerDiagnosticCollector()
 
@@ -37,7 +37,7 @@ class ValidateRunner : RunningMethod<ValidationReport> {
             }
             is Failure -> Failure(RunnerError(Stage.Analyzing, "analyze error", ar.error as? Throwable))
         }
-    } catch (t: Throwable) {
-        Failure(RunnerError(Stage.Analyzing, "unexpected validate failure", t))
+    } catch (e: Exception) {
+        Failure(RunnerError(Stage.Analyzing, "unexpected validate failure", e))
     }
 }

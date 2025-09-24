@@ -19,8 +19,9 @@ object AnalyzeRunner : RunningMethod<List<Diagnostic>> {
     override fun run(version: Version, io: ProgramIo): Result<List<Diagnostic>, RunnerError> {
         val wiring = LanguageWiringFactory.forVersion(version)
 
-        val ts = try { tokenStream(io, wiring) } catch (t: Throwable) { return Failure(RunnerError(Stage.Lexing, "lexing failed", t)) }
-        val stmts = try { wiring.statementStreamFromTokens(ts) } catch (t: Throwable) { return Failure(RunnerError(Stage.Parsing, "parsing failed", t)) }
+        val ts = try { tokenStream(io, wiring) } catch (e: Exception) { return Failure(RunnerError(Stage.Lexing, "lexing failed", e)) }
+
+        val stmts = try { wiring.statementStreamFromTokens(ts) } catch (e: Exception) { return Failure(RunnerError(Stage.Parsing, "parsing failed", e)) }
 
         val cfg = when (val cfgRes = AnalyzerConfigResolver.fromPathStrict(io.configPath?.toString())) {
             is Success -> cfgRes.value
@@ -29,7 +30,7 @@ object AnalyzeRunner : RunningMethod<List<Diagnostic>> {
 
         val emitter = RunnerDiagnosticCollector()
         return when (val analysisResult = wiring.analyzer.analyze(stmts, cfg, emitter)) {
-            is Success -> Success(emitter.diagnostics) // devuelvo diagnosticos reunidos
+            is Success -> Success(emitter.diagnostics)
             is Failure -> Failure(RunnerError(Stage.Analyzing, "analyze error", analysisResult.error as? Throwable))
         }
     }

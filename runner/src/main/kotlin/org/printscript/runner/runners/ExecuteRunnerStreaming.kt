@@ -16,23 +16,25 @@ class ExecuteRunnerStreaming(
 ) : RunningMethod<Unit> {
 
     override fun run(version: Version, io: ProgramIo): Result<Unit, RunnerError> {
-        val languageWiring = LanguageWiringFactory.forVersion(
+        val wiring = LanguageWiringFactory.forVersion(
             version,
             printer = printer,
             collectAlsoWithPrinter = collectAlsoWithPrinter,
         )
 
-        val tokenStream = try { tokenStream(io, languageWiring) } catch (t: Throwable) { return Failure(RunnerError(Stage.Lexing, "lexing failed", t)) }
-        val statementStream = try { languageWiring.statementStreamFromTokens(tokenStream) } catch (t: Throwable) { return Failure(RunnerError(Stage.Parsing, "parsing failed", t)) }
-        val interpreter = languageWiring.interpreterFor(io.inputProviderOverride)
+        val tokenStream = try { tokenStream(io, wiring) } catch (e: Exception) { return Failure(RunnerError(Stage.Lexing, "lexing failed", e)) }
+
+        val stmts = try { wiring.statementStreamFromTokens(tokenStream) } catch (e: Exception) { return Failure(RunnerError(Stage.Parsing, "parsing failed", e)) }
+
+        val interpreter = wiring.interpreterFor(io.inputProviderOverride)
 
         return try {
-            when (val exec = interpreter.run(statementStream)) {
+            when (val exec = interpreter.run(stmts)) {
                 is Success -> Success(Unit)
                 is Failure -> Failure(RunnerError(Stage.Interpreting, "runtime error", exec.error as? Throwable))
             }
-        } catch (t: Throwable) {
-            Failure(RunnerError(Stage.Interpreting, "unexpected runtime failure", t))
+        } catch (e: Exception) {
+            Failure(RunnerError(Stage.Interpreting, "unexpected runtime failure", e))
         }
     }
 }

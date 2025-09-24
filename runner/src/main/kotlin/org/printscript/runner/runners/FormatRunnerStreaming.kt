@@ -33,22 +33,20 @@ class FormatRunnerStreaming(
         val effectiveOptions: FormatterOptions = when {
             overrideIndent == null -> baseOptions
             baseOptions is FormatterConfig -> baseOptions.copy(indentSpaces = overrideIndent)
-            else -> object : FormatterOptions by baseOptions {
-                override val indentSpaces: Int = overrideIndent
-            }
+            else -> object : FormatterOptions by baseOptions { override val indentSpaces: Int = overrideIndent }
         }
 
         val wiring = LanguageWiringFactory.forVersion(version, formatterOptions = effectiveOptions)
 
-        val tokens = try { tokenStream(io, wiring) } catch (t: Throwable) { return Failure(RunnerError(Stage.Lexing, "lexing failed", t)) }
+        val tokens = try { tokenStream(io, wiring) } catch (e: Exception) { return Failure(RunnerError(Stage.Lexing, "lexing failed", e)) }
 
         return try {
             when (val fmt = wiring.formatter.format(tokens, out)) {
                 is Success -> Success(Unit)
                 is Failure -> Failure(RunnerError(Stage.Formatting, "format error", fmt.error as? Throwable))
             }
-        } catch (t: Throwable) {
-            Failure(RunnerError(Stage.Formatting, "unexpected format failure", t))
+        } catch (e: Exception) {
+            Failure(RunnerError(Stage.Formatting, "unexpected format failure", e))
         }
     }
 }

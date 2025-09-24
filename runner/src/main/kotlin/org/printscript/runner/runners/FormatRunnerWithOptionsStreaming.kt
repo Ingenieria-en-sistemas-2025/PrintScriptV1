@@ -23,15 +23,16 @@ class FormatRunnerWithOptionsStreaming(
 
     override fun run(version: Version, io: ProgramIo): Result<Unit, RunnerError> {
         val wiring = LanguageWiringFactory.forVersion(version, formatterOptions = options)
-        val tokens = try { tokenStream(io, wiring) } catch (t: Throwable) { return Failure(RunnerError(Stage.Lexing, "lexing failed", t)) }
+
+        val tokens = try { tokenStream(io, wiring) } catch (e: Exception) { return Failure(RunnerError(Stage.Lexing, "lexing failed", e)) }
 
         return try {
             when (val fmt = wiring.formatter.format(tokens, out)) {
                 is Success -> Success(Unit)
                 is Failure -> Failure(RunnerError(Stage.Formatting, "format error", fmt.error as? Throwable))
             }
-        } catch (t: Throwable) {
-            Failure(RunnerError(Stage.Formatting, "unexpected format failure", t))
+        } catch (e: Exception) {
+            Failure(RunnerError(Stage.Formatting, "unexpected format failure", e))
         }
     }
 }
