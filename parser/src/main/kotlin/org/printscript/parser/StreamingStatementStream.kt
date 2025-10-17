@@ -36,7 +36,8 @@ class StreamingStatementStream private constructor(
             is Failure -> {
                 val sync = Recovery.syncToNextHeadTopLevel(ts, headDetector)
                 val progressed = if (sync.next === ts) {
-                    advanceToNextHeadOrEof(ts, headDetector)
+                    val afterOne = Recovery.advanceOne(ts) ?: ts
+                    advanceToNextHeadOrEof(afterOne, headDetector)
                 } else {
                     sync.next
                 }
