@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.printscript.ast.Println
 import org.printscript.ast.Step
 import org.printscript.ast.VarDeclaration
 import org.printscript.common.Failure
@@ -71,23 +72,20 @@ class IfParserTests {
     }
 
     @Test
-    fun testRecoverySkipsInvalidHeadsUntilFindsTopLevelOne() {
+    fun testRecoveryAdvancesWhenAlreadyAtTopLevelHead() {
         val headDetector = FirstHeadDetector()
-
-        val ts: TokenStream = TestUtils.tokens {
-            identifier("zzz")
-            kw().let().identifier("ok").sep().colon().ty().numberType()
-                .op().assign().number("1").sep().semicolon()
+        val ts = TestUtils.tokens {
+            kw().let().identifier("a").sep().colon().ty().numberType()
+                .op().assign().number("1") // <--- falta ';'
+            kw().println().sep().lparen().string("x").sep().rparen().sep().semicolon()
         }
-
         val sync = Recovery.syncToNextHeadTopLevel(ts, headDetector)
         val parser = GlobalParserFactory.forVersion(Version.V0)!!
         val stream = parser.parse(sync.next)
 
-        val (stmtOk, afterOk) = assertItem(stream)
-        assertTrue(stmtOk is VarDeclaration)
-        assertEquals("ok", (stmtOk as VarDeclaration).name)
-        assertTrue(afterOk.nextStep() is Step.Eof)
+        val (stmt, after) = assertItem(stream)
+        assertTrue(stmt is Println)
+        assertTrue(after.nextStep() is Step.Eof)
     }
 
     @Test

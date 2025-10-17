@@ -32,8 +32,9 @@ class StreamingStatementStream private constructor(
                 Step.Item(stmt, of(rest, parseOne, headDetector))
             }
             is Failure -> {
-                val syncResult = Recovery.syncToNextHeadTopLevel(ts, headDetector) // tokenStream resync con Head topLevel
-                Step.Error(result.error, of(syncResult.next, parseOne, headDetector))
+                val syncResult = Recovery.syncToNextHeadTopLevel(ts, headDetector)
+                val progressed = if (syncResult.next === ts) Recovery.advanceOne(ts) ?: ts else syncResult.next // tokenStream resync con Head topLevel
+                Step.Error(result.error, of(progressed, parseOne, headDetector))
             }
         }
     }

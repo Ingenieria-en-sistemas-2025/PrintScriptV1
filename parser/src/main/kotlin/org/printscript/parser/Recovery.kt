@@ -27,6 +27,10 @@ object Recovery {
         val tok = (peek as Success).value
         if (tok is EofToken) return SyncResult(ts)
 
+        if (isTopLevelHead(ts, headDetector, depth)) {
+            return SyncResult(ts)
+        }
+
         if (tok is SeparatorToken) {
             val step = handleSeparator(tok, ts, depth)
             return if (step.stop) {
@@ -35,9 +39,6 @@ object Recovery {
                 syncRec(step.next, step.depth, headDetector)
             }
         }
-
-        // Head valid y topLevel? corta antes del head
-        if (isTopLevelHead(ts, headDetector, depth)) return SyncResult(ts)
 
         // token normal que no es head -> avanzar 1 y seguir
         val next = advanceOne(ts) ?: return SyncResult(ts)
@@ -65,7 +66,7 @@ object Recovery {
         }
     }
 
-    private fun advanceOne(ts: TokenStream): TokenStream? =
+    fun advanceOne(ts: TokenStream): TokenStream? =
         (ts.next() as? Success)?.value?.second
 
     private fun isTopLevelHead(
