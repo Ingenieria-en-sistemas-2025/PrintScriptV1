@@ -8,8 +8,10 @@ import org.printscript.common.LabeledError
 import org.printscript.common.Result
 import org.printscript.common.Success
 import org.printscript.parser.head.HeadDetector
+import org.printscript.token.EofToken
 import org.printscript.token.TokenStream
 
+private const val MAX_RECOVERY_STEPS = 10_000
 class StreamingStatementStream private constructor(
     private val ts: TokenStream,
     private val parseOne: (TokenStream) -> Result<Pair<Statement, TokenStream>, LabeledError>,
@@ -32,10 +34,34 @@ class StreamingStatementStream private constructor(
                 Step.Item(stmt, of(rest, parseOne, headDetector))
             }
             is Failure -> {
-                val syncResult = Recovery.syncToNextHeadTopLevel(ts, headDetector)
-                val progressed = if (syncResult.next === ts) Recovery.advanceOne(ts) ?: ts else syncResult.next // tokenStream resync con Head topLevel
+                val sync = Recovery.syncToNextHeadTopLevel(ts, headDetector)
+                val progressed = if (sync.next === ts) {
+                    advanceToNextHeadOrEof(ts, headDetector)
+                } else {
+                    sync.next
+                }
                 Step.Error(result.error, of(progressed, parseOne, headDetector))
             }
         }
     }
+
+    private fun advanceToNextHeadOrEof(start: TokenStream, hd: HeadDetector): TokenStream {
+        var cur = start
+        var steps = 0
+        while (true) {
+            if (steps++ > MAX_RECOVERY_STEPS) return cur
+            val pk = cur.peek()
+            if (pk is Failure) return cur
+            val tok = (pk as Success).value
+            if (tok is EofToken) return cur
+            if (isTopLevelHead(cur, hd)) return cur
+            cur = Recovery.advanceOne(cur) ?: return cur
+        }
+    }
+
+    private fun isTopLevelHead(ts: TokenStream, hd: HeadDetector): Boolean =
+        when (val r = hd.detect(ts)) {
+            is Success -> r.value !is org.printscript.parser.head.Unknown
+            is Failure -> false
+        }
 }
