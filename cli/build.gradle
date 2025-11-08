@@ -32,7 +32,6 @@ tasks.named('run', JavaExec) {
 
 
 tasks.withType(JacocoCoverageVerification).configureEach {
-    // Deshabilitá las reglas heredadas del convention (en vez de clear(), que suele fallar)
     violationRules {
         rules.each { it.enabled = false }
         rule {

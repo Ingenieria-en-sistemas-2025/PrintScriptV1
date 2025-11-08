@@ -8,14 +8,15 @@ import org.printscript.cli.commands.FormatCmd
 import org.printscript.cli.commands.ValidateCmd
 
 fun main(args: Array<String>) {
-    PrintScriptCli()
+    PrintScriptCli() // comando raiz, el programa
         .subcommands(
             ValidateCmd(),
             ExecuteCmd(),
             FormatCmd(),
             AnalyzeCmd(),
         )
-        .main(args)
+        .main(args) // le entrega a Clikt los args de la consola
+    // Clikt los parsea decide q subcomando corre y maneja errores y eso
 }
 
 class PrintScriptCli : CliktCommand(

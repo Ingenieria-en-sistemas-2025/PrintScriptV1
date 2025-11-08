@@ -25,8 +25,7 @@ class ExecuteCmd : CliktCommand(
     override fun run() {
         val version = CliSupport.resolveVersion(common.version)
 
-        // Si hay TTY (modo interactivo), no muestres spinner
-        val interactive = System.console() != null
+        val interactive = System.console() != null // si hay una consola interactiva, no muestra spinner
         val spinner = if (interactive) null else ProgressSpinner("Ejecutando").also { it.start() }
 
         try {
@@ -38,9 +37,9 @@ class ExecuteCmd : CliktCommand(
                     e.cause?.let { echo("  causa: $it") }
                 }
             }
-        } catch (ioe: IOException) {
+        } catch (ioe: IOException) { // errores de archivo/lectura
             echo("Error ejecutando (IO): ${ioe.message}")
-        } catch (iae: IllegalArgumentException) {
+        } catch (iae: IllegalArgumentException) { // errores de validación
             echo("Error ejecutando (argumentos): ${iae.message}")
         } finally {
             spinner?.stop()
@@ -52,13 +51,16 @@ class ExecuteCmd : CliktCommand(
             val io = ProgramIo(reader = reader)
             val runner = ExecuteRunnerStreaming(
                 printer = { line ->
-                    println(line)
-                    System.out.flush()
+                    println(line) // se invoca cada vez que el programa tiene algo que imprimir
+                    System.out.flush() // obliga a que se escriba enseguida (sin quedar en buffer)
                 },
-                collectAlsoWithPrinter = collect,
+                collectAlsoWithPrinter = collect, // tmb coleccione
             )
             println()
             System.out.flush()
             runner.run(version, io)
         }
 }
+
+// newBufferReader: abre un archivo de texto y te devuelve un BufferedReader
+// (para leer texto linea por linea de manera eficiente)
