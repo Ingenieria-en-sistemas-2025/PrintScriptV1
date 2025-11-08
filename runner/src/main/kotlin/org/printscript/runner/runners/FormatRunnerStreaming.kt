@@ -6,10 +6,10 @@ import org.printscript.common.Success
 import org.printscript.common.Version
 import org.printscript.formatter.config.FormatterConfig
 import org.printscript.formatter.config.FormatterOptions
-import org.printscript.runner.Formatting
 import org.printscript.runner.LanguageWiringFactory
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.RunnerError
+import org.printscript.runner.Stage
 import org.printscript.runner.helpers.FormatterOptionsLoader
 import org.printscript.runner.tokenStream
 
@@ -28,28 +28,25 @@ class FormatRunnerStreaming(
 ) : RunningMethod<Unit> {
 
     override fun run(version: Version, io: ProgramIo): Result<Unit, RunnerError> {
-        // 1) Cargar opciones base (archivo o defaults)
         val baseOptions: FormatterOptions = FormatterOptionsLoader.fromPath(io.configPath?.toString())
 
-        // 2) Aplicar override de indent si vino por flag
         val effectiveOptions: FormatterOptions = when {
             overrideIndent == null -> baseOptions
             baseOptions is FormatterConfig -> baseOptions.copy(indentSpaces = overrideIndent)
-            else -> object : FormatterOptions by baseOptions {
-                override val indentSpaces: Int = overrideIndent
-            }
+            else -> object : FormatterOptions by baseOptions { override val indentSpaces: Int = overrideIndent }
         }
 
-        // 3) Wiring con esas opciones
         val wiring = LanguageWiringFactory.forVersion(version, formatterOptions = effectiveOptions)
 
-        // 4) Tokenizar
-        val tokens = tokenStream(io, wiring)
+        val tokens = try { tokenStream(io, wiring) } catch (e: Exception) { return Failure(RunnerError(Stage.Lexing, "lexing failed", e)) }
 
-        // 5) Formatear directo al Appendable
-        return when (val fmtResult = wiring.formatter.format(tokens, out)) {
-            is Success -> Success(Unit)
-            is Failure -> Failure(RunnerError(Formatting, "format error", fmtResult.error))
+        return try {
+            when (val fmt = wiring.formatter.format(tokens, out)) {
+                is Success -> Success(Unit)
+                is Failure -> Failure(RunnerError(Stage.Formatting, "format error", fmt.error as? Throwable))
+            }
+        } catch (e: Exception) {
+            Failure(RunnerError(Stage.Formatting, "unexpected format failure", e))
         }
     }
 }

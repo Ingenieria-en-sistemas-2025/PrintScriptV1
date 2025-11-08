@@ -11,7 +11,7 @@ import org.printscript.common.Success
 import org.printscript.common.Version
 import org.printscript.runner.ProgramIo
 import org.printscript.runner.helpers.DiagnosticStringFormatter
-import org.printscript.runner.runners.ValidateRunner
+import org.printscript.runner.runners.Runner
 import java.io.IOException
 import java.nio.file.Files
 
@@ -56,6 +56,6 @@ class ValidateCmd : CliktCommand(
             }
 
             val io = ProgramIo(reader = reader, configPath = common.config)
-            ValidateRunner().run(version, io)
+            Runner.validate(version, io)
         }
 }

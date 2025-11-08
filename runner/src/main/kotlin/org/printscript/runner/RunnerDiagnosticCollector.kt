@@ -5,11 +5,11 @@ import org.printscript.analyzer.DiagnosticEmitter
 import org.printscript.analyzer.Severity
 
 internal class RunnerDiagnosticCollector : DiagnosticEmitter {
-    private val _list = mutableListOf<Diagnostic>()
-    val diagnostics: List<Diagnostic> get() = _list.toList()
+    private val list = mutableListOf<Diagnostic>()
+    val diagnostics: List<Diagnostic> get() = list.toList()
 
     override fun report(diagnostic: Diagnostic) {
-        _list += diagnostic
+        list += diagnostic
     }
 }
 

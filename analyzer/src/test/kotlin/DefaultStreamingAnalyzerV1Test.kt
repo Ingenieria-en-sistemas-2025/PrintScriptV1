@@ -72,7 +72,6 @@ class DefaultStreamingAnalyzerV1Test {
         val engine = AnalyzerFactory.forVersion(Version.V1)
         val out = CollectorEmitter()
 
-        // Nota: uso el spread para pasar la lista como vararg si streamOf lo requiere.
         val res = engine.analyze(streamOf(*ast.toTypedArray()), cfg, out)
 
         assertTrue(res is Success<Unit>)

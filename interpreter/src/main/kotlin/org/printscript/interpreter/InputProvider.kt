@@ -3,7 +3,7 @@ interface InputProvider { fun read(prompt: String): String }
 
 object StdInProvider : InputProvider {
     override fun read(prompt: String): String =
-        readlnOrNull().orEmpty() // NO imprime el prompt (el TCK no captura stdout)
+        readlnOrNull().orEmpty()
 }
 
 object NoInputProvider : InputProvider {
