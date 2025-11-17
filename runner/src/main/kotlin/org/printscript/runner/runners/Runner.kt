@@ -59,6 +59,9 @@ object Runner {
             is Failure -> Failure(RunnerError(Stage.Analyzing, "analyze error", ar.error as? Throwable))
         }
     }
+
+    fun parse(v: Version, io: ProgramIo): Result<List<Diagnostic>, RunnerError> =
+        ParseRunner.run(v, io)
 }
 
 data class ExecutionReport(val lines: List<String>)
